@@ -36,6 +36,5 @@ const Main = () => {
         </div>
     );
 };
-import './Main.css';
 
 export default Main;
