@@ -13,9 +13,9 @@ const ContextProvider = (props) => {
     const [resultData, setResultData] = useState("");
 
     const delayPara = (index, nextWord) => {
-        setTimeout(function(){
-            setResultData(prev=>prev+nextWord);
-        }, 75*index)
+        setTimeout(function () {
+            setResultData(prev => prev + nextWord);
+        }, 40 * index)
     }
 
     const onSent = async () => {
@@ -37,7 +37,12 @@ const ContextProvider = (props) => {
         }
         let newResponse2 = newResponse.split("*").join("<br/>");
 
-        setResultData(newResponse2);
+        // create typing effect
+        let newResponseArray = newResponse2.split(" ");
+        for (let i = 0; i < newResponseArray.length; i++) {
+            delayPara(i, newResponseArray[i] + " ");
+        }
+
         setLoading(false);
         setInput("");
     }
