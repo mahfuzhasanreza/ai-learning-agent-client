@@ -66,11 +66,13 @@ const ContextProvider = (props) => {
             }}
         />;
 
+        setResultData(newResponse4);
+
         // create typing effect
-        let newResponseArray = newResponse4.split(" ");
-        for (let i = 0; i < newResponseArray.length; i++) {
-            delayPara(i, newResponseArray[i] + " ");
-        }
+        // let newResponseArray = newResponse2.split(" ");
+        // for (let i = 0; i < newResponseArray.length; i++) {
+        //     delayPara(i, newResponseArray[i] + " ");
+        // }
 
         setLoading(false);
         setInput("");
