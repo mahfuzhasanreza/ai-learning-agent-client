@@ -17,7 +17,7 @@ async function runChat(prompt) {
         const data = await response.json();
         console.log(data);
 
-        return data;
+        return data.response;
     } catch (error) {
         console.error("Error:", error);
     }
