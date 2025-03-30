@@ -1,5 +1,9 @@
 import { createContext, useState } from "react";
 import runChat from "../config/chatResponse";
+import Markdown from "react-markdown";
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export const Context = createContext();
 
@@ -37,8 +41,33 @@ const ContextProvider = (props) => {
         }
         let newResponse2 = newResponse.split("*").join("<br/>");
 
+        let newResponse3 = <Markdown remarkPlugins={[remarkGfm]}>{response}</Markdown>;
+
+        let newResponse4 = <Markdown
+            children={response}
+            components={{
+                code(props) {
+                    const { children, className, node, ...rest } = props
+                    const match = /language-(\w+)/.exec(className || '')
+                    return match ? (
+                        <SyntaxHighlighter
+                            {...rest}
+                            PreTag="div"
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                            style={dark}
+                        />
+                    ) : (
+                        <code {...rest} className={className}>
+                            {children}
+                        </code>
+                    )
+                }
+            }}
+        />;
+
         // create typing effect
-        let newResponseArray = newResponse2.split(" ");
+        let newResponseArray = newResponse4.split(" ");
         for (let i = 0; i < newResponseArray.length; i++) {
             delayPara(i, newResponseArray[i] + " ");
         }

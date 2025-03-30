@@ -54,7 +54,8 @@ const Main = () => {
                                     <hr />
                                 </div>
                                 :
-                                <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                                // <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                                <p>{resultData}</p>
                             }
                         </div>
                     </div>
