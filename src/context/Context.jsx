@@ -15,6 +15,8 @@ const ContextProvider = (props) => {
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
+    const [conversation, setConversation] = useState([]);
+    const [activeChat, setActiveChat] = useState("");
 
     // const delayPara = (index, nextWord) => {
     //     setTimeout(function () {
@@ -25,6 +27,7 @@ const ContextProvider = (props) => {
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
+        setActiveChat("");
     }
 
     const onSent = async (prompt) => {
@@ -39,10 +42,16 @@ const ContextProvider = (props) => {
         } else {
             response = await runChat(input);
             setRecentPrompt(input);
-            
-            if(!loading && !showResult){
+
+            if (!loading && !showResult) {
                 setNewChatPrompts(prev => [...prev, input]);
+                setActiveChat(input);
+
+                setConversation(prev => [...prev, { chat: input, input: input, response: response }]);
+            } else {
+                setConversation((prev) => [...prev, { chat: activeChat, input: input, response: response }]);
             }
+
         }
 
         // manually add formatting for bold and new line
@@ -104,6 +113,9 @@ const ContextProvider = (props) => {
         input,
         setInput,
         newChat,
+        conversation,
+        activeChat,
+        setActiveChat,
     }
 
     return (

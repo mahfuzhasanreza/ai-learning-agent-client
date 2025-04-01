@@ -5,7 +5,9 @@ import { Context } from '../../context/Context';
 
 const Main = () => {
 
-    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input } = useContext(Context);
+    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat } = useContext(Context);
+    console.log(conversation);
+    console.log(activeChat, "activeChat");
 
     return (
         <div className='main'>
@@ -41,7 +43,40 @@ const Main = () => {
                         </div>
                     </>
                     : <div className='result'>
-                        <div className="result-title">
+                        {conversation
+                            .filter(item => item.chat === activeChat)
+                            .map((item, index) => {
+                                return (
+                                    <div key={index}>
+                                        <div className="result-title">
+                                            <img src={assets.user_icon} alt="" />
+                                            <p>{item.input}</p>
+                                        </div>
+                                        <div className="result-data">
+                                            <img src={assets.logo} alt="" />
+                                            <p>{item.response}</p>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+
+                        {loading ?
+                            <>
+                                <div className="result-title">
+                                    <img src={assets.user_icon} alt="" />
+                                    <p>{input}</p>
+                                </div>
+                                <div className="result-data">
+                                    <img src={assets.logo} alt="" />
+                                    <div className='loader'>
+                                        <hr />
+                                        <hr />
+                                        <hr />
+                                    </div>
+                                </div>
+                            </> : null}
+
+                        {/* <div className="result-title">
                             <img src={assets.user_icon} alt="" />
                             <p>{recentPrompt}</p>
                         </div>
@@ -57,13 +92,13 @@ const Main = () => {
                                 // <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
                                 <p>{resultData}</p>
                             }
-                        </div>
+                        </div> */}
                     </div>
                 }
 
                 <div className="main-bottom">
                     <div className="search-box">
-                        <input onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Enter a prompt here' />
+                        <input onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Enter your query' />
                         <img src={assets.gallery_icon} alt="" />
                         <img src={assets.mic_icon} alt="" />
                         {input ? <img onClick={() => onSent()} src={assets.send_icon} alt="" /> : null}
