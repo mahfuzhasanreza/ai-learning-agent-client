@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import runChat from "../config/chatResponse";
 import Markdown from "react-markdown";
-import remarkGfm from 'remark-gfm';
+// import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -16,11 +16,11 @@ const ContextProvider = (props) => {
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
 
-    const delayPara = (index, nextWord) => {
-        setTimeout(function () {
-            setResultData(prev => prev + nextWord);
-        }, 40 * index)
-    }
+    // const delayPara = (index, nextWord) => {
+    //     setTimeout(function () {
+    //         setResultData(prev => prev + nextWord);
+    //     }, 40 * index)
+    // }
 
     const onSent = async () => {
         setResultData("");
@@ -30,18 +30,18 @@ const ContextProvider = (props) => {
 
         const response = await runChat(input);
 
-        let responseArray = response.split("**");
-        let newResponse;
-        for (let i = 0; i < responseArray.length; i++) {
-            if (i === 0 || i % 2 !== 1) {
-                newResponse += responseArray[i];
-            } else {
-                newResponse += "<b>" + responseArray[i] + "</b>";
-            }
-        }
-        let newResponse2 = newResponse.split("*").join("<br/>");
-
-        let newResponse3 = <Markdown remarkPlugins={[remarkGfm]}>{response}</Markdown>;
+        // manually add formatting for bold and new line
+        // let responseArray = response.split("**");
+        // let newResponse;
+        // for (let i = 0; i < responseArray.length; i++) {
+        //     if (i === 0 || i % 2 !== 1) {
+        //         newResponse += responseArray[i];
+        //     } else {
+        //         newResponse += "<b>" + responseArray[i] + "</b>";
+        //     }
+        // }
+        // let newResponse2 = newResponse.split("*").join("<br/>");
+        // let newResponse3 = <Markdown remarkPlugins={[remarkGfm]}>{response}</Markdown>;
 
         let newResponse4 = <Markdown
             children={response}
@@ -65,11 +65,10 @@ const ContextProvider = (props) => {
                 }
             }}
         />;
-
         setResultData(newResponse4);
 
         // create typing effect
-        // let newResponseArray = newResponse2.split(" ");
+        // let newResponseArray = newResponse4.split(" ");
         // for (let i = 0; i < newResponseArray.length; i++) {
         //     delayPara(i, newResponseArray[i] + " ");
         // }
