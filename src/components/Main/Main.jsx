@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { IoMdMicOff } from "react-icons/io";
 
 const Main = () => {
 
@@ -12,6 +14,23 @@ const Main = () => {
     // const loadPrompt = async(prompt) => {
     //     await onSent(prompt);
     // }
+
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+
+    if (!browserSupportsSpeechRecognition) {
+        return <span>Browser doesn't support speech recognition.</span>;
+    }
+
+    useEffect(() => {
+        if (listening && transcript) {
+            setInput(transcript);
+        }
+    }, [transcript, listening]);
 
     return (
         <div className='main'>
@@ -28,19 +47,19 @@ const Main = () => {
                             <p>How can I help you today?</p>
                         </div>
                         <div className="cards">
-                            <div onClick={()=>onSent("What is C Programming?")} className="card">
+                            <div onClick={() => onSent("What is C Programming?")} className="card">
                                 <p>What is C Programming?</p>
                                 <img src={assets.compass_icon} alt="" />
                             </div>
-                            <div onClick={()=>onSent("How can I learn C Programme?")} className="card">
+                            <div onClick={() => onSent("How can I learn C Programme?")} className="card">
                                 <p>How can I learn C Programme?</p>
                                 <img src={assets.bulb_icon} alt="" />
                             </div>
-                            <div onClick={()=>onSent("Give me the details about C Programming including functions, structures, pointers etc")} className="card">
+                            <div onClick={() => onSent("Give me the details about C Programming including functions, structures, pointers etc")} className="card">
                                 <p>Give me the details about C Programming including functions, structures, pointers etc</p>
                                 <img src={assets.message_icon} alt="" />
                             </div>
-                            <div onClick={()=>onSent("As a beginner how can I learn programming? Which language should I learn first?")} className="card">
+                            <div onClick={() => onSent("As a beginner how can I learn programming? Which language should I learn first?")} className="card">
                                 <p>As a beginner how can I learn programming? Which language should I learn first?</p>
                                 <img src={assets.code_icon} alt="" />
                             </div>
@@ -102,10 +121,28 @@ const Main = () => {
 
                 <div className="main-bottom">
                     <div className="search-box">
-                        <input onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Enter your query' />
+                        <input
+                            onChange={(e) => setInput(e.target.value)}
+                            value={listening && transcript ? transcript : input}
+                            type="text"
+                            placeholder="Enter your query"
+                        />
+
                         <img src={assets.gallery_icon} alt="" />
-                        <img src={assets.mic_icon} alt="" />
-                        {input ? <img onClick={() => onSent()} src={assets.send_icon} alt="" /> : null}
+
+                        {
+                            listening ?
+                                <IoMdMicOff onClick={()=>{
+                                    SpeechRecognition.stopListening();
+                                    resetTranscript();
+                                }} />
+                                :
+                                <img
+                                onClick={() => SpeechRecognition.startListening({ continuous: true })}
+                                    src={assets.mic_icon} alt="" />
+                        }
+
+                        {input || listening ? <img onClick={() => onSent()} src={assets.send_icon} alt="" /> : null}
                     </div>
                     <p className="bottom-info">AI Learning Agent may not give accurate answered! So double-check its responses.</p>
                 </div>
