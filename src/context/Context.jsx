@@ -11,7 +11,7 @@ const ContextProvider = (props) => {
 
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
-    const [prevPrompts, setPrevPrompts] = useState([]);
+    const [newChatPrompts, setNewChatPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
@@ -39,7 +39,10 @@ const ContextProvider = (props) => {
         } else {
             response = await runChat(input);
             setRecentPrompt(input);
-            setPrevPrompts(prev => [...prev, input]);
+            
+            if(!loading && !showResult){
+                setNewChatPrompts(prev => [...prev, input]);
+            }
         }
 
         // manually add formatting for bold and new line
@@ -90,8 +93,8 @@ const ContextProvider = (props) => {
     }
 
     const contextValue = {
-        prevPrompts,
-        setPrevPrompts,
+        newChatPrompts,
+        setNewChatPrompts,
         onSent,
         setRecentPrompt,
         recentPrompt,
