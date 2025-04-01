@@ -6,8 +6,12 @@ import { Context } from '../../context/Context';
 const Main = () => {
 
     const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat } = useContext(Context);
-    console.log(conversation);
-    console.log(activeChat, "activeChat");
+    // console.log(conversation);
+    // console.log(activeChat, "activeChat");
+
+    // const loadPrompt = async(prompt) => {
+    //     await onSent(prompt);
+    // }
 
     return (
         <div className='main'>
@@ -24,20 +28,20 @@ const Main = () => {
                             <p>How can I help you today?</p>
                         </div>
                         <div className="cards">
-                            <div className="card">
-                                <p>Suggest me some girlfriend for me</p>
+                            <div onClick={()=>onSent("What is C Programming?")} className="card">
+                                <p>What is C Programming?</p>
                                 <img src={assets.compass_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Suggest me some girlfriend for me</p>
+                            <div onClick={()=>onSent("How can I learn C Programme?")} className="card">
+                                <p>How can I learn C Programme?</p>
                                 <img src={assets.bulb_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Suggest me some girlfriend for me</p>
+                            <div onClick={()=>onSent("Give me the details about C Programming including functions, structures, pointers etc")} className="card">
+                                <p>Give me the details about C Programming including functions, structures, pointers etc</p>
                                 <img src={assets.message_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Suggest me some girlfriend for me</p>
+                            <div onClick={()=>onSent("As a beginner how can I learn programming? Which language should I learn first?")} className="card">
+                                <p>As a beginner how can I learn programming? Which language should I learn first?</p>
                                 <img src={assets.code_icon} alt="" />
                             </div>
                         </div>

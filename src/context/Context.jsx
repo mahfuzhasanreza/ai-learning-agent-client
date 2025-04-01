@@ -37,8 +37,20 @@ const ContextProvider = (props) => {
 
         let response;
         if (prompt !== undefined) {
+            setInput(prompt);
             response = await runChat(prompt);
             setRecentPrompt(prompt);
+
+            if (!loading && !showResult) {
+                setNewChatPrompts(prev => 
+                    prev.includes(prompt) ? prev : [...prev, prompt]
+                );
+                setActiveChat(prompt);
+                
+                setConversation(prev => [...prev, { chat: prompt, input: prompt, response: newResponse4 }]);
+            } else {
+                setConversation((prev) => [...prev, { chat: activeChat, input: prompt, response: newResponse4 }]);
+            }
         } else {
             response = await runChat(input);
             setRecentPrompt(input);
@@ -47,9 +59,9 @@ const ContextProvider = (props) => {
                 setNewChatPrompts(prev => [...prev, input]);
                 setActiveChat(input);
 
-                setConversation(prev => [...prev, { chat: input, input: input, response: response }]);
+                setConversation(prev => [...prev, { chat: input, input: input, response: newResponse4 }]);
             } else {
-                setConversation((prev) => [...prev, { chat: activeChat, input: input, response: response }]);
+                setConversation((prev) => [...prev, { chat: activeChat, input: input, response: newResponse4 }]);
             }
 
         }
