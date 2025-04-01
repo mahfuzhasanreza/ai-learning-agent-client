@@ -132,7 +132,9 @@ const Main = () => {
 
                         {
                             listening ?
-                                <IoMdMicOff onClick={()=>{
+                                <IoMdMicOff 
+                                className='cursor-pointer size-5'
+                                onClick={()=>{
                                     SpeechRecognition.stopListening();
                                     resetTranscript();
                                 }} />
