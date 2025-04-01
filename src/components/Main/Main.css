@@ -183,15 +183,17 @@
 @media screen and (max-width: 600px) {
     .main .greet {
         font-size: 40px;
-        margin: 5px;
+        margin: 2px;
+        margin-bottom: 0px;
     }
 
     .main .cards {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        margin-bottom: 10px;
     }
 
     .main .card {
-        height: 120px;
+        height: 180px;
     }
 
     .main .card img {
