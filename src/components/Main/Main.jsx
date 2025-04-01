@@ -18,24 +18,24 @@ const Main = () => {
                 {!showResult
                     ? <>
                         <div className="greet">
-                            <p><span>Hello, Machud.</span></p>
+                            <p><span>Hello, User.</span></p>
                             <p>How can I help you today?</p>
                         </div>
                         <div className="cards">
                             <div className="card">
-                                <p>Suggest me a girlfriend for me</p>
+                                <p>Suggest me some girlfriend for me</p>
                                 <img src={assets.compass_icon} alt="" />
                             </div>
                             <div className="card">
-                                <p>Suggest me a girlfriend for me</p>
+                                <p>Suggest me some girlfriend for me</p>
                                 <img src={assets.bulb_icon} alt="" />
                             </div>
                             <div className="card">
-                                <p>Suggest me a girlfriend for me</p>
+                                <p>Suggest me some girlfriend for me</p>
                                 <img src={assets.message_icon} alt="" />
                             </div>
                             <div className="card">
-                                <p>Suggest me a girlfriend for me</p>
+                                <p>Suggest me some girlfriend for me</p>
                                 <img src={assets.code_icon} alt="" />
                             </div>
                         </div>
@@ -66,7 +66,7 @@ const Main = () => {
                         <input onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Enter a prompt here' />
                         <img src={assets.gallery_icon} alt="" />
                         <img src={assets.mic_icon} alt="" />
-                        <img onClick={() => onSent()} src={assets.send_icon} alt="" />
+                        {input ? <img onClick={() => onSent()} src={assets.send_icon} alt="" /> : null}
                     </div>
                     <p className="bottom-info">AI Learning Agent may not give accurate answered! So double-check its responses.</p>
                 </div>

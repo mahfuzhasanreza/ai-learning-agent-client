@@ -179,3 +179,68 @@
     font-weight: 300;
     line-height: 1.8;
 }
+
+@media screen and (max-width: 600px) {
+    .main .greet {
+        font-size: 40px;
+        margin: 5px;
+    }
+
+    .main .cards {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .main .card {
+        height: 120px;
+    }
+
+    .main .card img {
+        width: 30px;
+    }
+
+    .main .card p {
+        font-size: 15px;
+    }
+
+    .main-bottom {
+        padding: 0px 10px;
+    }
+
+    .result-data p{
+        font-size: 15px;
+    }
+
+    .main-bottom input{
+        flex: none;
+        width: 150px;
+    }
+    
+    .main-bottom img{
+        width: 20px;
+    }
+
+    .search-box input {
+        font-size: 16px;
+    }
+    
+    .search-box {
+        padding: 7px 10px;
+        gap: 15px;
+    }
+    
+    .search-box img {
+        width: 22px;
+    }
+    
+    .search-box input {
+        flex: 1;
+        font-size: 16px;
+    }
+    
+    .main .bottom-info {
+        font-size: 10px;
+        margin: 15px auto;
+        font-weight: 200;
+    }
+    
+}
