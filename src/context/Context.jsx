@@ -11,7 +11,7 @@ const ContextProvider = (props) => {
 
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
-    const [prevPrompt, setPrevPrompt] = useState([]);
+    const [prevPrompts, setPrevPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
@@ -22,13 +22,20 @@ const ContextProvider = (props) => {
     //     }, 40 * index)
     // }
 
-    const onSent = async () => {
+    const onSent = async (prompt) => {
         setResultData("");
         setLoading(true);
         setShowResult(true);
-        setRecentPrompt(input);
 
-        const response = await runChat(input);
+        let response;
+        if (prompt !== undefined) {
+            response = await runChat(prompt);
+            setRecentPrompt(prompt);
+        } else {
+            response = await runChat(input);
+            setRecentPrompt(input);
+            setPrevPrompts(prev => [...prev, input]);
+        }
 
         // manually add formatting for bold and new line
         // let responseArray = response.split("**");
@@ -78,8 +85,8 @@ const ContextProvider = (props) => {
     }
 
     const contextValue = {
-        prevPrompt,
-        setPrevPrompt,
+        prevPrompts,
+        setPrevPrompts,
         onSent,
         setRecentPrompt,
         recentPrompt,
