@@ -4,6 +4,7 @@ import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { IoMdMicOff } from "react-icons/io";
+import { GrAttachment } from "react-icons/gr";
 
 const Main = () => {
 
@@ -121,11 +122,13 @@ const Main = () => {
 
                 <div className="main-bottom">
                     <div className="search-box">
+                        <GrAttachment className='attachment-icon' />
+                        
                         <input
                             onChange={(e) => setInput(e.target.value)}
                             value={listening && transcript ? transcript : input}
                             type="text"
-                            placeholder="Enter your query"
+                            placeholder="Talk to AIDA..."
                         />
 
                         <img src={assets.gallery_icon} alt="" />
@@ -144,9 +147,9 @@ const Main = () => {
                                     src={assets.mic_icon} alt="" />
                         }
 
-                        {input || listening ? <img onClick={() => onSent()} src={assets.send_icon} alt="" /> : null}
+                        {input || listening ? <img onClick={() => onSent()} className='send-icon' src={assets.send_icon} alt="" /> : null}
                     </div>
-                    <p className="bottom-info">AI Learning Agent may not give accurate answered! So double-check its responses.</p>
+                    <p className="bottom-info">AIDA can make mistakes. Check our Terms & Conditions.</p>
                 </div>
             </div>
         </div>

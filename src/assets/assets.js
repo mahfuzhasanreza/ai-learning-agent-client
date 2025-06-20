@@ -13,6 +13,12 @@ import message_icon from './message_icon.png'
 import code_icon from './code_icon.png'
 import send_icon from './send_icon.png'
 import logo from './logo.png'
+import home_icon from './home_icon.png'
+import pillar_icon from './pillar_icon.png'
+import details_icon from './details_icon.png'
+import man from './man.png'
+import cal from './cal.png'
+import not from './not.png'
 
 export const assets = {
     history_icon,
@@ -29,5 +35,11 @@ export const assets = {
     message_icon,
     code_icon,
     send_icon,
-    logo
+    logo,
+    home_icon,
+    pillar_icon,
+    details_icon,
+    man,
+    cal,
+    not,
 }

@@ -13,8 +13,62 @@
 
 .sidebar .menu{
     display: block;
-    margin-left: 10px;
     cursor: pointer;
+    width: 3rem;
+}
+
+.sidebar .menu-other{
+    display: block;
+    margin-top: 2rem;
+    cursor: pointer;
+    width: 3rem;
+}
+
+.sidebar .user-icon{
+    display: block;
+    margin-top: 2rem;
+    cursor: pointer;
+    width: 3rem;
+    /* circle */
+    border-radius: 50%;
+}
+
+.sidebar .details-menu{
+    display: block;
+    margin-top: 2rem;
+    cursor: pointer;
+    font-size: 2.6rem;
+    color: #282828e1;
+    margin-left: 3px;
+
+    background-color: transparent;
+    border: 8px solid transparent;
+}
+
+.sidebar .details-menu-bg-green{
+    display: block;
+    margin-top: 2rem;
+    margin-left: 3px;
+    cursor: pointer;
+    font-size: 2.6rem;
+    color: white;
+
+    background-color: #4F46E5;
+    border: 8px solid #4F46E5;
+    border-radius: 50%;
+}
+
+.sidebar .details-menu-bg-gre{
+    display: block;
+    margin-top: 2rem;
+    margin-left: 12px;
+    cursor: pointer;
+    font-size: 2rem;
+    color: white;
+    background-color: #4F46E5;
+    
+    border: 5px solid #4F46E5;
+    border-radius: 50%;
 }
 
 .sidebar .new-chat{
@@ -48,7 +102,7 @@
     padding: 10px;
     padding-right: 40px;
     border-radius: 50px;
-    color: #282828;
+    color: #282828e1;
     cursor: pointer;
 }
 
