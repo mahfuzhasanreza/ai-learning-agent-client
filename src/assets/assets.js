@@ -19,6 +19,11 @@ import details_icon from './details_icon.png'
 import man from './man.png'
 import cal from './cal.png'
 import not from './not.png'
+import crown from './crown.png'
+import Vector from './Vector.png'
+import Lightbulb from './Lightbulb.png'
+import CaretDown from './CaretDown.png'
+
 
 export const assets = {
     history_icon,
@@ -42,4 +47,9 @@ export const assets = {
     man,
     cal,
     not,
+    crown,
+    Vector,
+    CaretDown
+    ,
+    Lightbulb
 }
