@@ -5,6 +5,8 @@ import { Context } from '../../context/Context';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { IoMdMicOff } from "react-icons/io";
 import { GrAttachment } from "react-icons/gr";
+import { MdOutlineLightMode } from "react-icons/md";
+import { MdOutlineDarkMode } from "react-icons/md";
 
 const Main = () => {
 
@@ -35,10 +37,20 @@ const Main = () => {
 
     return (
         <div className='main'>
-            <div className="nav">
-                <p>AI Learning Agent</p>
-                <img src={assets.user_icon} alt="" />
+            <div className="nav border-b-2 border-gray-300 text-gray-600">
+                <div className='flex gap-2'>
+                    <p className='ml-3 font-semibold'>Model GPT 7.0</p>
+                    <img className='cursor-pointer' src={assets.CaretDown} alt="" />
+                </div>
+                <div className='flex text-2xl gap-4 mr-16'>
+                    <MdOutlineLightMode className='cursor-pointer font-bold text-blue-600' />
+                    <MdOutlineDarkMode className='cursor-pointer'/>
+                </div>
+                <div className='mr-3'>
+                    <img className='cursor-pointer w-8' src={assets.menu_ico} alt="" />
+                </div>
             </div>
+
             <div className="main-container">
 
                 {!showResult
@@ -123,7 +135,7 @@ const Main = () => {
                 <div className="main-bottom">
                     <div className="search-box">
                         <GrAttachment className='attachment-icon' />
-                        
+
                         <input
                             onChange={(e) => setInput(e.target.value)}
                             value={listening && transcript ? transcript : input}
@@ -135,15 +147,15 @@ const Main = () => {
 
                         {
                             listening ?
-                                <IoMdMicOff 
-                                className='cursor-pointer size-5'
-                                onClick={()=>{
-                                    SpeechRecognition.stopListening();
-                                    resetTranscript();
-                                }} />
+                                <IoMdMicOff
+                                    className='cursor-pointer size-5'
+                                    onClick={() => {
+                                        SpeechRecognition.stopListening();
+                                        resetTranscript();
+                                    }} />
                                 :
                                 <img
-                                onClick={() => SpeechRecognition.startListening({ continuous: true })}
+                                    onClick={() => SpeechRecognition.startListening({ continuous: true })}
                                     src={assets.mic_icon} alt="" />
                         }
 

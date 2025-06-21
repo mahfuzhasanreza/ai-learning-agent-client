@@ -11,13 +11,13 @@
     justify-content: space-between;
     font-size: 22px;
     padding: 20px;
-    color: #585858;
+    /* color: #585858; */
 }
 
-.main .nav img {
+/* .main .nav img {
     width: 40px;
     border-radius: 50%;
-}
+} */
 
 .main-container {
     max-width: 900px;

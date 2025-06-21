@@ -23,6 +23,7 @@ import crown from './crown.png'
 import Vector from './Vector.png'
 import Lightbulb from './Lightbulb.png'
 import CaretDown from './CaretDown.png'
+import menu_ico from './menu_ico.png'
 
 
 export const assets = {
@@ -51,5 +52,6 @@ export const assets = {
     Vector,
     CaretDown
     ,
-    Lightbulb
+    Lightbulb,
+    menu_ico
 }
