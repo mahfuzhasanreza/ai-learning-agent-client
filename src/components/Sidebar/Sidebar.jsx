@@ -5,7 +5,6 @@ import { Context } from '../../context/Context';
 import { FaRocketchat } from "react-icons/fa6";
 
 const Sidebar = () => {
-
     const [extended, setExtended] = useState(false);
     const [details, setDetails] = useState(false);
     const { onSent, newChatPrompts, setRecentPrompt, newChat, setActiveChat } = useContext(Context);
@@ -102,16 +101,16 @@ const Sidebar = () => {
                             <div className='flex justify-between px-5'>
                                 <p className="text-lg font-semibold">Today</p>
                                 <div className='text-lg flex gap-1'>
-                                    <p className='text-gray-500'>~ Total</p>
+                                    <p className='text-gray-500'>{newChatPrompts.length} Total</p>
                                     <img src={assets.CaretDown} alt="" />
                                 </div>
                             </div>
-
+                            
                             {newChatPrompts.map((item, index) => {
                                 return (
                                     <div onClick={() => loadPrompt(item)} className="recent-entry" key={index}>
-                                        <img src={assets.message_icon} alt="" />
-                                        <p>{item.slice(0, 18)} ...</p>
+                                        <img className='w-7' src={assets.message_icon} alt="" />
+                                        <p className='text-lg'>{item.slice(0, 18)} ...</p>
                                     </div>
                                 )
                             })}
