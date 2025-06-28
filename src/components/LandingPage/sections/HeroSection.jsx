@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle, FaPlay, FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import HeroLottie from '../../../lottie/hero-lottie.json'
+import Lottie from 'lottie-react';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -13,10 +15,11 @@ const HeroSection = () => {
       subtitle: "With AI-Powered Personalized Learning",
       description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
       features: ["Topic-wise AI Agents", "Weakness Prediction", "Smart Study Plans"],
-      gradient: "from-blue-600 via-purple-600 to-pink-600",
+      // gradient: "from-blue-600 via-purple-600 to-pink-600",
+      gradient: "from-green-600 via-teal-600 to-cyan-600",
       icon: <FaRobot className="text-5xl" />,
       bgImage: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
-      lottieUrl: "https://lottie.host/embed/8c8c8c8c-8c8c-8c8c-8c8c-8c8c8c8c8c8c/robot-learning.json"
+      lottieUrl: HeroLottie
     },
     {
       title: "Adaptive Learning",
@@ -26,24 +29,24 @@ const HeroSection = () => {
       gradient: "from-green-600 via-teal-600 to-cyan-600",
       icon: <FaChartLine className="text-5xl" />,
       bgImage: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      lottieUrl: "https://lottie.host/embed/9d9d9d9d-9d9d-9d9d-9d9d-9d9d9d9d9d9d/adaptive-learning.json"
+      lottieUrl: HeroLottie
     },
     {
       title: "Collaborative Success",
       subtitle: "Learn Together, Grow Together",
       description: "Join AI-moderated study groups and connect with peers who share your learning goals and challenges",
       features: ["Study Groups", "Peer Support", "Shared Insights"],
-      gradient: "from-orange-600 via-red-600 to-pink-600",
+      gradient: "from-green-600 via-teal-600 to-cyan-600",
       icon: <FaGraduationCap className="text-5xl" />,
       bgImage: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
-      lottieUrl: "https://lottie.host/embed/aeaeaeae-aeae-aeae-aeae-aeaeaeaeaeae/collaboration.json"
+      lottieUrl: HeroLottie
     }
   ];
 
   // Auto-play functionality
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
+
     const interval = setInterval(() => {
       setDirection(1);
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -147,13 +150,13 @@ const HeroSection = () => {
 
   const backgroundVariants = {
     enter: { opacity: 0, scale: 1.1 },
-    center: { 
-      opacity: 0.2, 
+    center: {
+      opacity: 0.2,
       scale: 1,
       transition: { duration: 1, ease: "easeInOut" }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: 0.9,
       transition: { duration: 0.6, ease: "easeInOut" }
     }
@@ -163,7 +166,7 @@ const HeroSection = () => {
     <section className="hero-section relative overflow-hidden min-h-screen w-full">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900" />
-      
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
@@ -186,7 +189,7 @@ const HeroSection = () => {
           >
             {/* Background Image for Current Slide */}
             <AnimatePresence mode="wait">
-              <div 
+              <div
                 key={`bg-${currentSlide}`}
                 variants={backgroundVariants}
                 initial="enter"
@@ -199,30 +202,23 @@ const HeroSection = () => {
                 }}
               />
             </AnimatePresence>
-            
+
             {/* Gradient Overlay */}
             <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30 transition-all duration-1000 ease-in-out`} />
 
             <div className="w-full mx-60 px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-                
+
                 {/* Left Content */}
-                <motion.div 
+                <div
                   className="flex-1 text-center lg:text-left max-w-2xl lg:max-w-none"
                   variants={contentVariants}
                   initial="hidden"
                   animate="visible"
                   key={`content-${currentSlide}`}
                 >
-                  {/* Icon */}
-                  {/* <div className="mb-8 lg:mb-6">
-                    <div className={`w-24 h-24 lg:w-28 lg:h-28 mx-auto lg:mx-0 rounded-2xl bg-gradient-to-r ${slides[currentSlide].gradient} flex items-center justify-center text-white shadow-2xl`}>
-                      {slides[currentSlide].icon}
-                    </div>
-                  </div> */}
-
                   {/* Title */}
-                  <motion.h1 
+                  <h1
                     className="mb-6"
                     variants={textVariants}
                   >
@@ -232,29 +228,29 @@ const HeroSection = () => {
                     <span className="hero-title-sub block text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
                       {slides[currentSlide].subtitle}
                     </span>
-                  </motion.h1>
+                  </h1>
 
                   {/* Description */}
-                  <motion.p 
+                  <p
                     className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed"
                     variants={textVariants}
                   >
                     {slides[currentSlide].description}
-                  </motion.p>
+                  </p>
 
                   {/* Features */}
-                  <motion.div 
+                  <div
                     className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10"
                     variants={textVariants}
                   >
                     {slides[currentSlide].features.map((feature, index) => (
-                      <motion.div
+                      <div
                         key={feature}
                         custom={index}
                         variants={featureVariants}
                         className="hero-feature bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20"
-                        whileHover={{ 
-                          scale: 1.05, 
+                        whileHover={{
+                          scale: 1.05,
                           backgroundColor: "rgba(255,255,255,0.2)",
                           transition: { duration: 0.2 }
                         }}
@@ -262,36 +258,36 @@ const HeroSection = () => {
                         <span className="hero-feature-text text-white font-medium text-sm">
                           {feature}
                         </span>
-                      </motion.div>
+                      </div>
                     ))}
-                  </motion.div>
+                  </div>
 
                   {/* CTA Buttons */}
-                  <motion.div 
+                  <div
                     className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                     variants={textVariants}
                   >
-                    <motion.button
+                    <button
                       className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <FaPlay className="mr-2 group-hover:scale-110 transition-transform duration-300" />
                       Start Learning Now
-                    </motion.button>
-                    <motion.button
+                    </button>
+                    <button
                       className="border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Learn More
                       <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </motion.button>
-                  </motion.div>
-                </motion.div>
+                    </button>
+                  </div>
+                </div>
 
                 {/* Right Visual Element - Lottie Animation */}
-                <motion.div 
+                <div
                   className="flex-1 flex justify-center lg:justify-end"
                   variants={contentVariants}
                   initial="hidden"
@@ -300,26 +296,28 @@ const HeroSection = () => {
                 >
                   <div className="relative">
                     {/* Lottie Animation Container */}
-                    <motion.div 
+                    <div
                       className="w-80 h-80 lg:w-96 lg:h-96 relative"
                       variants={textVariants}
                     >
-                      <iframe
+                      {/* <iframe
                         src={slides[currentSlide].lottieUrl}
                         className="w-full h-full"
                         frameBorder="0"
                         allowFullScreen
                         title={`${slides[currentSlide].title} Animation`}
-                      />
-                    </motion.div>
-                    
+                      /> */}
+
+                      <Lottie animationData={slides[currentSlide].lottieUrl} loop={true} />
+                    </div>
+
                     {/* Fallback Gradient Orb */}
-                    <motion.div 
+                    <div
                       className={`absolute inset-0 w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-r ${slides[currentSlide].gradient} opacity-20 blur-3xl animate-pulse`}
                       variants={textVariants}
                     />
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
@@ -360,11 +358,10 @@ const HeroSection = () => {
           {slides.map((_, index) => (
             <button
               key={index}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'bg-white scale-125' 
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
+                  ? 'bg-white scale-125'
                   : 'bg-white/40 hover:bg-white/60'
-              }`}
+                }`}
               onClick={() => goToSlide(index)}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
