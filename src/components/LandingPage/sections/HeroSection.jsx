@@ -39,7 +39,7 @@ const HeroSection = () => {
     
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, slides.length]);
@@ -127,7 +127,7 @@ const HeroSection = () => {
             }}
             className="w-full h-full flex items-center justify-center"
           >
-            <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full mx-20 px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
                 
                 {/* Left Content */}
@@ -136,11 +136,11 @@ const HeroSection = () => {
                   variants={textVariants}
                 >
                   {/* Icon */}
-                  <div className="mb-8 lg:mb-6">
+                  {/* <div className="mb-8 lg:mb-6">
                     <div className={`w-24 h-24 lg:w-28 lg:h-28 mx-auto lg:mx-0 rounded-2xl bg-gradient-to-r ${slides[currentSlide].gradient} flex items-center justify-center text-white shadow-2xl`}>
                       {slides[currentSlide].icon}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Title */}
                   <h1 className="mb-6">
