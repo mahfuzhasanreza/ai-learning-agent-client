@@ -1,13 +1,17 @@
 import React from 'react';
-import Sidebar from './components/Sidebar/Sidebar';
-import Main from './components/Main/Main';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import ChatPage from './pages/ChatPage';
 
 const App = () => {
   return (
-    <>
-      <Sidebar></Sidebar>
-      <Main></Main>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 };
 
