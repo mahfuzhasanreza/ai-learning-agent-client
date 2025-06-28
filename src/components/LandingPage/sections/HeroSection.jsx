@@ -39,7 +39,7 @@ const HeroSection = () => {
     
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 2000);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, slides.length]);
@@ -127,7 +127,7 @@ const HeroSection = () => {
             }}
             className="w-full h-full flex items-center justify-center"
           >
-            <div className="w-full mx-20 px-4 sm:px-6 lg:px-8">
+            <div className="w-full mx-60 px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
                 
                 {/* Left Content */}
@@ -153,12 +153,12 @@ const HeroSection = () => {
                   </h1>
 
                   {/* Description */}
-                  <p className="hero-description text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed">
+                  <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed">
                     {slides[currentSlide].description}
                   </p>
 
                   {/* Features */}
-                  <div className="hero-features flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10">
+                  <div className=" flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10">
                     {slides[currentSlide].features.map((feature, index) => (
                       <div
                         key={feature}
