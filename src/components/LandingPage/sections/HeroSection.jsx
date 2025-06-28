@@ -48,9 +48,9 @@ const HeroSection = () => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      setDirection(1);
+      setDirection(-1);
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 2500);
+    }, 3500);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, slides.length]);
