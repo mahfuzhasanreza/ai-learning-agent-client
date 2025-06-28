@@ -7,11 +7,15 @@ import { IoMdMicOff } from "react-icons/io";
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
+import { FaCog } from "react-icons/fa";
+import ListenButton from '../ListenButton/ListenButton';
+import TTSSettings from '../TTSSettings/TTSSettings';
 
 const Main = () => {
 
     const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat } = useContext(Context);
     const [extended, setExtended] = useState(false);
+    const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     // console.log(conversation);
     // console.log(activeChat, "activeChat");
 
@@ -46,6 +50,11 @@ const Main = () => {
                 <div className='flex text-2xl gap-4 mr-16'>
                     <MdOutlineLightMode className='cursor-pointer font-bold text-blue-600' />
                     <MdOutlineDarkMode className='cursor-pointer' />
+                    <FaCog 
+                        className='cursor-pointer text-gray-600 hover:text-blue-600 transition-colors'
+                        onClick={() => setTtsSettingsOpen(true)}
+                        title="Text-to-Speech Settings"
+                    />
                 </div>
                 <div onClick={() => setExtended(prev => !prev)} className={extended ? 'relative mr-3 border border-gray-400 rounded-full w-10 h-10 content-center flex justify-center items-center' : 'relative mr-3 border-gray-400 rounded-full w-10 h-10 content-center flex justify-center items-center'}>
                     <img className='cursor-pointer w-8' src={assets.menu_ico} alt="" />
@@ -135,11 +144,25 @@ const Main = () => {
                                     <div key={index}>
                                         <div className="result-title">
                                             <img src={assets.user_icon} alt="" />
-                                            <p>{item.input}</p>
+                                            <div className="message-content">
+                                                <p>{item.input}</p>
+                                                <ListenButton 
+                                                    text={item.input}
+                                                    size="small"
+                                                    className="message-listen-btn"
+                                                />
+                                            </div>
                                         </div>
                                         <div className="result-data">
                                             <img src={assets.logo} alt="" />
-                                            <p>{item.response}</p>
+                                            <div className="message-content">
+                                                <p>{item.response}</p>
+                                                <ListenButton 
+                                                    text={item.response}
+                                                    size="small"
+                                                    className="message-listen-btn"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -149,7 +172,14 @@ const Main = () => {
                             <>
                                 <div className="result-title">
                                     <img src={assets.user_icon} alt="" />
-                                    <p>{input}</p>
+                                    <div className="message-content">
+                                        <p>{input}</p>
+                                        <ListenButton 
+                                            text={input}
+                                            size="small"
+                                            className="message-listen-btn"
+                                        />
+                                    </div>
                                 </div>
                                 <div className="result-data">
                                     <img src={assets.logo} alt="" />
@@ -213,6 +243,12 @@ const Main = () => {
                     <p className="bottom-info">AIDA can make mistakes. Check our Terms & Conditions.</p>
                 </div>
             </div>
+            
+            {/* TTS Settings Modal */}
+            <TTSSettings 
+                isOpen={ttsSettingsOpen}
+                onClose={() => setTtsSettingsOpen(false)}
+            />
         </div>
     );
 };

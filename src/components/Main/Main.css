@@ -500,3 +500,84 @@
     }
     
 }
+
+/* Message Content Layout */
+.message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  position: relative;
+}
+
+.message-content p {
+  flex: 1;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.message-listen-btn {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* Enhanced result title and data layouts */
+.result-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #e2e8f0;
+}
+
+.result-data {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Hover effects for messages */
+.result-title:hover,
+.result-data:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .message-content {
+    gap: 8px;
+  }
+  
+  .result-title,
+  .result-data {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .message-listen-btn {
+    margin-top: 2px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .result-title,
+  .result-data {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .message-content {
+    gap: 6px;
+  }
+}
