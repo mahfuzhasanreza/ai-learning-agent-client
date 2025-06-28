@@ -87,8 +87,10 @@ const Main = () => {
                 {!showResult
                     ? <>
                         <div className="greet">
-                            <p><span>Hello, User.</span></p>
-                            <p>How can I help you today?</p>
+                            <p className="greeting-line-1">
+                                <span className="greeting-highlight">Hello, User.</span>
+                            </p>
+                            <p className="greeting-line-2">How can I help you today?</p>
                         </div>
                         <div className="cards">
                             <div onClick={() => onSent("What is C Programming?")} className="card">
