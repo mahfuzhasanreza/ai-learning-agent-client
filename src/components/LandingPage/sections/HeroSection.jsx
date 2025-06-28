@@ -10,27 +10,27 @@ const HeroSection = () => {
   const [direction, setDirection] = useState(0);
 
   const slides = [
-    {
-      title: "Master Programming",
-      subtitle: "With AI-Powered Personalized Learning",
-      description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
-      features: ["Topic-wise AI Agents", "Weakness Prediction", "Smart Study Plans"],
-      // gradient: "from-blue-600 via-purple-600 to-pink-600",
-      gradient: "from-green-600 via-teal-600 to-cyan-600",
-      icon: <FaRobot className="text-5xl" />,
-      bgImage: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
-      lottieUrl: HeroLottie
-    },
-    {
-      title: "Adaptive Learning",
-      subtitle: "That Grows With You",
-      description: "Our AI continuously adapts to your learning style, pace, and progress to ensure optimal knowledge retention",
-      features: ["Customized Learning Paths", "Real-time Adjustments", "Performance Tracking"],
-      gradient: "from-green-600 via-teal-600 to-cyan-600",
-      icon: <FaChartLine className="text-5xl" />,
-      bgImage: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      lottieUrl: HeroLottie
-    },
+    // {
+    //   title: "Master Programming",
+    //   subtitle: "With AI-Powered Personalized Learning",
+    //   description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
+    //   features: ["Topic-wise AI Agents", "Weakness Prediction", "Smart Study Plans"],
+    //   // gradient: "from-blue-600 via-purple-600 to-pink-600",
+    //   gradient: "from-green-600 via-teal-600 to-cyan-600",
+    //   icon: <FaRobot className="text-5xl" />,
+    //   bgImage: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+    //   lottieUrl: HeroLottie
+    // },
+    // {
+    //   title: "Adaptive Learning",
+    //   subtitle: "That Grows With You",
+    //   description: "Our AI continuously adapts to your learning style, pace, and progress to ensure optimal knowledge retention",
+    //   features: ["Customized Learning Paths", "Real-time Adjustments", "Performance Tracking"],
+    //   gradient: "from-green-600 via-teal-600 to-cyan-600",
+    //   icon: <FaChartLine className="text-5xl" />,
+    //   bgImage: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    //   lottieUrl: HeroLottie
+    // },
     {
       title: "Collaborative Success",
       subtitle: "Learn Together, Grow Together",
@@ -44,16 +44,16 @@ const HeroSection = () => {
   ];
 
   // Auto-play functionality
-  useEffect(() => {
-    if (!isAutoPlaying) return;
+  // useEffect(() => {
+  //   if (!isAutoPlaying) return;
 
-    const interval = setInterval(() => {
-      setDirection(-1);
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 3500);
+  //   const interval = setInterval(() => {
+  //     setDirection(-1);
+  //     setCurrentSlide((prev) => (prev + 1) % slides.length);
+  //   }, 3500);
 
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, slides.length]);
+  //   return () => clearInterval(interval);
+  // }, [isAutoPlaying, slides.length]);
 
   const nextSlide = () => {
     setDirection(1);
