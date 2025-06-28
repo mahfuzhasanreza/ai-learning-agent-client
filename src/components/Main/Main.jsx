@@ -94,20 +94,36 @@ const Main = () => {
                         </div>
                         <div className="cards">
                             <div onClick={() => onSent("What is C Programming?")} className="card">
-                                <p>What is C Programming?</p>
-                                <img src={assets.compass_icon} alt="" />
+                                <div className="card-content">
+                                    <p>What is C Programming?</p>
+                                    <div className="card-icon">
+                                        <img src={assets.compass_icon} alt="" />
+                                    </div>
+                                </div>
                             </div>
                             <div onClick={() => onSent("How can I learn C Programme?")} className="card">
-                                <p>How can I learn C Programme?</p>
-                                <img src={assets.bulb_icon} alt="" />
+                                <div className="card-content">
+                                    <p>How can I learn C Programme?</p>
+                                    <div className="card-icon">
+                                        <img src={assets.bulb_icon} alt="" />
+                                    </div>
+                                </div>
                             </div>
                             <div onClick={() => onSent("Give me the details about C Programming including functions, structures, pointers etc")} className="card">
-                                <p>Give me the details about C Programming including functions, structures, pointers etc</p>
-                                <img src={assets.message_icon} alt="" />
+                                <div className="card-content">
+                                    <p>Give me the details about C Programming including functions, structures, pointers etc</p>
+                                    <div className="card-icon">
+                                        <img src={assets.message_icon} alt="" />
+                                    </div>
+                                </div>
                             </div>
                             <div onClick={() => onSent("As a beginner how can I learn programming? Which language should I learn first?")} className="card">
-                                <p>As a beginner how can I learn programming? Which language should I learn first?</p>
-                                <img src={assets.code_icon} alt="" />
+                                <div className="card-content">
+                                    <p>As a beginner how can I learn programming? Which language should I learn first?</p>
+                                    <div className="card-icon">
+                                        <img src={assets.code_icon} alt="" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </>
