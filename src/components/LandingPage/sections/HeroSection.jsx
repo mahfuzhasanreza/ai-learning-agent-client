@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle, FaPlay, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import HeroLottie from '../../../lottie/hero-lottie.json'
@@ -6,8 +6,44 @@ import Lottie from 'lottie-react';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(0);
+  const [typewriterText, setTypewriterText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const typewriterWords = ['Success', 'Learning'];
+  const typeSpeed = 150;
+  const deleteSpeed = 100;
+  const pauseTime = 2000;
+
+  // Typewriter effect
+  React.useEffect(() => {
+    const currentWord = typewriterWords[currentIndex];
+    
+    if (!isDeleting) {
+      if (typewriterText.length < currentWord.length) {
+        const timeout = setTimeout(() => {
+          setTypewriterText(currentWord.slice(0, typewriterText.length + 1));
+        }, typeSpeed);
+        return () => clearTimeout(timeout);
+      } else {
+        const timeout = setTimeout(() => {
+          setIsDeleting(true);
+        }, pauseTime);
+        return () => clearTimeout(timeout);
+      }
+    } else {
+      if (typewriterText.length > 0) {
+        const timeout = setTimeout(() => {
+          setTypewriterText(typewriterText.slice(0, -1));
+        }, deleteSpeed);
+        return () => clearTimeout(timeout);
+      } else {
+        setIsDeleting(false);
+        setCurrentIndex((prev) => (prev + 1) % typewriterWords.length);
+      }
+    }
+  }, [typewriterText, currentIndex, isDeleting, typewriterWords]);
 
   const slides = [
     // {
@@ -58,19 +94,16 @@ const HeroSection = () => {
   const nextSlide = () => {
     setDirection(1);
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setIsAutoPlaying(false);
   };
 
   const prevSlide = () => {
     setDirection(-1);
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    setIsAutoPlaying(false);
   };
 
   const goToSlide = (index) => {
     setDirection(index > currentSlide ? 1 : -1);
     setCurrentSlide(index);
-    setIsAutoPlaying(false);
   };
 
   const slideVariants = {
@@ -132,20 +165,6 @@ const HeroSection = () => {
         ease: "easeOut"
       }
     }
-  };
-
-  const featureVariants = {
-    hidden: { opacity: 0, x: -20, scale: 0.8 },
-    visible: (i) => ({
-      opacity: 1,
-      x: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    })
   };
 
   const backgroundVariants = {
@@ -223,7 +242,10 @@ const HeroSection = () => {
                     variants={textVariants}
                   >
                     <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
-                      {slides[currentSlide].title}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
+                        {typewriterText}
+                      </span>
+                      <span className="inline-block w-1 h-12 bg-cyan-400 ml-1 animate-pulse"></span>
                     </span>
                     <span className="hero-title-sub block text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
                       {slides[currentSlide].subtitle}
