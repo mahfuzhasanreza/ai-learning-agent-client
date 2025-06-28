@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle, FaPlay, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import HeroLottie from '../../../lottie/hero-lottie.json'
 import Lottie from 'lottie-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -277,16 +278,18 @@ const HeroSection = () => {
                     className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                     variants={textVariants}
                   >
+                    <Link to={'/chat'}>
                     <button
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+                      className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <FaPlay className="mr-2 group-hover:scale-110 transition-transform duration-300" />
                       Start Learning Now
                     </button>
+                    </Link>
                     <button
-                      className="border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
+                      className="cursor-pointer border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
