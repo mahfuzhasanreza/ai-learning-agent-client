@@ -1,28 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 50;
       setScrolled(isScrolled);
+
+      // Detect active section based on scroll position
+      const sections = ['features', 'quick-start', 'stats'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Set active section based on current route
+  useEffect(() => {
+    if (location.pathname === '/chat') {
+      setActiveSection('chat');
+    } else {
+      setActiveSection('');
+    }
+  }, [location.pathname]);
+
   const navItems = [
-    { name: 'Features', href: '#features' },
-    { name: 'Learning Tools', href: '#quick-start' },
-    { name: 'Success Metrics', href: '#stats' },
-    { name: 'AI Chat', href: '/chat' }
+    { name: 'Features', href: '#features', id: 'features' },
+    { name: 'Learning Tools', href: '#quick-start', id: 'quick-start' },
+    { name: 'Success Metrics', href: '#stats', id: 'stats' },
+    { name: 'AI Chat', href: '/chat', id: 'chat' }
   ];
 
   const scrollToSection = (href) => {
@@ -35,6 +61,10 @@ const Navigation = () => {
       navigate(href);
     }
     setIsOpen(false);
+  };
+
+  const isActive = (itemId) => {
+    return activeSection === itemId;
   };
 
   return (
@@ -69,9 +99,13 @@ const Navigation = () => {
               <motion.button
                 key={item.name}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative group cursor-pointer ${
-                  scrolled 
-                    ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                  isActive(item.id)
+                    ? scrolled 
+                      ? 'text-blue-600 bg-blue-50/80 border border-blue-200/50' 
+                      : 'text-white bg-white/20 border border-white/30'
+                    : scrolled 
+                      ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => scrollToSection(item.href)}
                 whileHover={{ y: -1 }}
@@ -80,12 +114,20 @@ const Navigation = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 {item.name}
-                <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 group-hover:w-3/4 ${scrolled ? 'group-hover:bg-blue-600' : 'group-hover:bg-white'}`} />
+                <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 ${
+                  isActive(item.id) 
+                    ? 'w-3/4' 
+                    : 'w-0 group-hover:w-3/4'
+                } ${scrolled ? 'group-hover:bg-blue-600' : 'group-hover:bg-white'}`} />
               </motion.button>
             ))}
             <div className="ml-4 pl-4 border-l border-gray-300/30">
               <motion.button
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-200 flex items-center space-x-2 cursor-pointer"
+                className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
+                  isActive('chat')
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg shadow-blue-500/25'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25'
+                }`}
                 onClick={() => navigate('/chat')}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -104,9 +146,13 @@ const Navigation = () => {
               <motion.button
                 key={item.name}
                 className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 text-sm cursor-pointer ${
-                  scrolled 
-                    ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                  isActive(item.id)
+                    ? scrolled 
+                      ? 'text-blue-600 bg-blue-50/80 border border-blue-200/50' 
+                      : 'text-white bg-white/20 border border-white/30'
+                    : scrolled 
+                      ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => scrollToSection(item.href)}
                 whileHover={{ y: -1 }}
@@ -118,7 +164,11 @@ const Navigation = () => {
               </motion.button>
             ))}
             <motion.button
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full font-medium text-sm hover:shadow-lg transition-all duration-200 cursor-pointer"
+              className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-200 cursor-pointer ${
+                isActive('chat')
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
+                  : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg'
+              }`}
               onClick={() => navigate('/chat')}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
@@ -160,7 +210,11 @@ const Navigation = () => {
             {navItems.map((item, index) => (
               <motion.button
                 key={item.name}
-                className="block w-full text-left px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg font-medium transition-all duration-200 cursor-pointer"
+                className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
+                  isActive(item.id)
+                    ? 'text-blue-600 bg-blue-50 border border-blue-200/50'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                }`}
                 onClick={() => scrollToSection(item.href)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -171,7 +225,11 @@ const Navigation = () => {
             ))}
             <div className="pt-2 border-t border-gray-200/50">
               <motion.button
-                className="block w-full text-left px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium transition-all duration-200 cursor-pointer"
+                className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
+                  isActive('chat')
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                }`}
                 onClick={() => navigate('/chat')}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
