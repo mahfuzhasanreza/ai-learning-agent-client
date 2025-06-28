@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaRocket, FaBrain, FaCode, FaGraduationCap } from "react-icons/fa";
+import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle } from "react-icons/fa";
 
 const HeroSection = () => {
   const [ref, inView] = useInView({
@@ -33,10 +33,12 @@ const HeroSection = () => {
   };
 
   const features = [
-    { icon: <FaBrain />, text: "AI-Powered Learning" },
-    { icon: <FaCode />, text: "Interactive Coding" },
-    { icon: <FaGraduationCap />, text: "Expert Curriculum" },
-    { icon: <FaRocket />, text: "Fast Progress" }
+    { icon: <FaRobot />, text: "Topic-wise AI Agents" },
+    { icon: <FaChartLine />, text: "Weakness Prediction" },
+    { icon: <FaClipboardList />, text: "Smart Study Plans" },
+    { icon: <FaRoute />, text: "Customized Learning Paths" },
+    { icon: <FaGraduationCap />, text: "Course Performance Tracking" },
+    { icon: <FaQuestionCircle />, text: "Interactive Quizzes" }
   ];
 
   return (
@@ -52,15 +54,16 @@ const HeroSection = () => {
             className="hero-title"
             variants={itemVariants}
           >
-            <span className="hero-title-main">Hello, User.</span>
-            <span className="hero-title-sub">How can I help you today?</span>
+            <span className="hero-title-main">Master Programming</span>
+            <span className="hero-title-sub">With AI-Powered Personalized Learning</span>
           </motion.h1>
           
           <motion.p 
             className="hero-description"
             variants={itemVariants}
           >
-            Your AI-powered learning companion for mastering programming
+            Experience the future of education with topic-specific AI agents, intelligent weakness prediction, 
+            personalized study plans, and comprehensive performance tracking
           </motion.p>
 
           <motion.div 

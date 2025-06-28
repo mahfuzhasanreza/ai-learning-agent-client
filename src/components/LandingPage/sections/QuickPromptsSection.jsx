@@ -38,32 +38,46 @@ const QuickPromptsSection = () => {
 
   const quickPrompts = [
     {
-      title: "What is C Programming?",
-      description: "Learn the fundamentals of C programming language",
+      title: "Analyze My Weaknesses",
+      description: "Get a comprehensive analysis of your learning gaps and receive personalized improvement suggestions",
       icon: assets.compass_icon,
-      prompt: "What is C Programming?",
-      category: "Basics"
+      prompt: "Analyze my current programming knowledge and identify my weak areas. Suggest specific topics and resources to improve.",
+      category: "Analysis"
     },
     {
-      title: "How to Learn Programming?",
-      description: "Get started with programming as a beginner",
+      title: "Create Study Plan",
+      description: "Generate a personalized study plan with daily tasks and milestones based on your goals",
       icon: assets.bulb_icon,
-      prompt: "How can I learn C Programme?",
-      category: "Getting Started"
+      prompt: "Create a detailed study plan for learning programming. Include daily tasks, milestones, and recommended resources.",
+      category: "Planning"
     },
     {
-      title: "Advanced C Concepts",
-      description: "Master functions, structures, and pointers",
+      title: "Topic-Specific AI Agent",
+      description: "Get specialized help from AI agents focused on specific programming topics",
       icon: assets.message_icon,
-      prompt: "Give me the details about C Programming including functions, structures, pointers etc",
-      category: "Advanced"
+      prompt: "I need help with data structures and algorithms. Can you act as a specialized AI agent for this topic?",
+      category: "AI Agent"
     },
     {
-      title: "Programming Roadmap",
-      description: "Find the best path to become a programmer",
+      title: "Performance Tracking",
+      description: "Track your course performance and get insights on how to improve your CT and exam scores",
       icon: assets.code_icon,
-      prompt: "As a beginner how can I learn programming? Which language should I learn first?",
-      category: "Career"
+      prompt: "Help me track my programming course performance. How can I improve my CT and exam scores?",
+      category: "Tracking"
+    },
+    {
+      title: "Custom Learning Path",
+      description: "Design a personalized learning journey tailored to your experience and goals",
+      icon: assets.compass_icon,
+      prompt: "Create a customized learning path for becoming a full-stack developer. Consider my current knowledge level.",
+      category: "Path"
+    },
+    {
+      title: "Practice Quiz",
+      description: "Take interactive quizzes to test your knowledge and reinforce learning concepts",
+      icon: assets.bulb_icon,
+      prompt: "Generate a practice quiz on JavaScript fundamentals. Include questions of varying difficulty levels.",
+      category: "Quiz"
     }
   ];
 
@@ -81,9 +95,9 @@ const QuickPromptsSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="quick-prompts-title">Quick Start Prompts</h2>
+          <h2 className="quick-prompts-title">Start Your Learning Journey</h2>
           <p className="quick-prompts-subtitle">
-            Jump right into learning with these popular programming topics
+            Choose from our AI-powered learning tools designed to accelerate your programming skills
           </p>
         </motion.div>
 
@@ -136,7 +150,7 @@ const QuickPromptsSection = () => {
             className="explore-more-btn"
             onClick={() => navigate('/chat')}
           >
-            Explore More Topics
+            Explore All Features
           </button>
         </motion.div>
       </div>

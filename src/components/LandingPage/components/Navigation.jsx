@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaRocket } from 'react-icons/fa';
+import { FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +20,9 @@ const Navigation = () => {
 
   const navItems = [
     { name: 'Features', href: '#features' },
-    { name: 'Quick Start', href: '#quick-start' },
-    { name: 'Stats', href: '#stats' },
-    { name: 'Chat', href: '/chat' }
+    { name: 'Learning Tools', href: '#quick-start' },
+    { name: 'Success Metrics', href: '#stats' },
+    { name: 'AI Chat', href: '/chat' }
   ];
 
   const scrollToSection = (href) => {
@@ -56,10 +56,10 @@ const Navigation = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <FaRocket className="text-white text-sm" />
+              <FaRobot className="text-white text-sm" />
             </div>
             <span className={`font-bold text-xl ${scrolled ? 'text-gray-900' : 'text-white'}`}>
-              AIDA
+              AIDA Learning
             </span>
           </motion.div>
 
@@ -89,7 +89,7 @@ const Navigation = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Get Started
+              Start Learning
             </motion.button>
           </div>
 
@@ -132,7 +132,7 @@ const Navigation = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Get Started
+              Start Learning
             </motion.button>
           </div>
         </motion.div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaChartLine, FaRocket, FaShieldAlt, FaUsers, FaCode, FaGraduationCap } from "react-icons/fa";
+import { FaRobot, FaClipboardList, FaChartLine, FaUsers, FaQuestionCircle, FaGraduationCap } from "react-icons/fa";
 
 const StatsSection = () => {
   const [ref, inView] = useInView({
@@ -10,54 +10,54 @@ const StatsSection = () => {
   });
 
   const [counts, setCounts] = useState({
-    learners: 0,
-    languages: 0,
-    uptime: 0,
-    courses: 0,
-    countries: 0,
-    satisfaction: 0
+    agents: 0,
+    plans: 0,
+    accuracy: 0,
+    students: 0,
+    quizzes: 0,
+    improvement: 0
   });
 
   const stats = [
     {
-      icon: <FaUsers />,
-      number: 10000,
-      label: "Active Learners",
+      icon: <FaRobot />,
+      number: 25,
+      label: "Specialized AI Agents",
       suffix: "+",
       color: "blue"
     },
     {
-      icon: <FaCode />,
-      number: 50,
-      label: "Programming Languages",
+      icon: <FaClipboardList />,
+      number: 5000,
+      label: "Study Plans Created",
       suffix: "+",
       color: "green"
     },
     {
-      icon: <FaShieldAlt />,
-      number: 99.9,
-      label: "Uptime",
+      icon: <FaChartLine />,
+      number: 95,
+      label: "Weakness Prediction Accuracy",
       suffix: "%",
       color: "purple"
     },
     {
-      icon: <FaGraduationCap />,
-      number: 200,
-      label: "Expert Courses",
+      icon: <FaUsers />,
+      number: 15000,
+      label: "Active Students",
       suffix: "+",
       color: "orange"
     },
     {
-      icon: <FaChartLine />,
-      number: 150,
-      label: "Countries",
+      icon: <FaQuestionCircle />,
+      number: 10000,
+      label: "Quizzes Completed",
       suffix: "+",
       color: "red"
     },
     {
-      icon: <FaRocket />,
-      number: 98,
-      label: "Satisfaction Rate",
+      icon: <FaGraduationCap />,
+      number: 87,
+      label: "Average Performance Improvement",
       suffix: "%",
       color: "yellow"
     }
@@ -136,9 +136,9 @@ const StatsSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="stats-title">Our Impact in Numbers</h2>
+          <h2 className="stats-title">Platform Impact & Success Metrics</h2>
           <p className="stats-subtitle">
-            Join thousands of learners who have transformed their careers with AIDA
+            See how our AI-powered learning platform is transforming programming education
           </p>
         </motion.div>
 
@@ -180,7 +180,7 @@ const StatsSection = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           <p className="stats-cta">
-            Ready to join our growing community of learners?
+            Ready to join thousands of successful learners and transform your programming skills?
           </p>
         </motion.div>
       </div>

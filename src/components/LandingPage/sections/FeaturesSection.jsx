@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaBrain, FaCode, FaGraduationCap, FaUsers, FaLightbulb, FaShieldAlt } from "react-icons/fa";
+import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle, FaUsers, FaLightbulb, FaShieldAlt } from "react-icons/fa";
 
 const FeaturesSection = () => {
   const [ref, inView] = useInView({
@@ -34,40 +34,58 @@ const FeaturesSection = () => {
 
   const features = [
     {
-      icon: <FaBrain />,
-      title: "AI-Powered Learning",
-      description: "Advanced machine learning algorithms adapt to your learning style and pace",
+      icon: <FaRobot />,
+      title: "Topic-wise AI Agents",
+      description: "Specialized AI agents for each programming topic - from basic syntax to advanced algorithms, providing targeted assistance and explanations",
       color: "blue"
     },
     {
-      icon: <FaCode />,
-      title: "Interactive Coding",
-      description: "Real-time code execution with instant feedback and debugging assistance",
+      icon: <FaChartLine />,
+      title: "Weakness Prediction",
+      description: "Advanced analytics identify your learning gaps and suggest specific study groups and resources to strengthen your weak areas",
       color: "green"
     },
     {
-      icon: <FaGraduationCap />,
-      title: "Structured Curriculum",
-      description: "Comprehensive learning paths designed by programming experts",
+      icon: <FaClipboardList />,
+      title: "Smart Study Plans",
+      description: "AI-generated personalized study plans with daily tasks, progress tracking, and adaptive scheduling based on your learning pace",
       color: "purple"
     },
     {
-      icon: <FaUsers />,
-      title: "Community Support",
-      description: "Connect with learners worldwide and share knowledge and experiences",
+      icon: <FaRoute />,
+      title: "Customized Learning Paths",
+      description: "Tailored learning journeys designed around your goals, experience level, and preferred learning style for maximum efficiency",
       color: "orange"
     },
     {
-      icon: <FaLightbulb />,
-      title: "Smart Suggestions",
-      description: "Get personalized recommendations based on your progress and interests",
+      icon: <FaGraduationCap />,
+      title: "Course Performance Tracking",
+      description: "Comprehensive tracking of your CT and exam marks for individual courses with detailed analytics and improvement suggestions",
+      color: "red"
+    },
+    {
+      icon: <FaQuestionCircle />,
+      title: "Interactive Quizzes",
+      description: "Dynamic quizzes that adapt to your skill level, providing instant feedback and reinforcing concepts through practice",
       color: "yellow"
     },
     {
+      icon: <FaUsers />,
+      title: "Group Learning",
+      description: "Connect with peers who share similar learning goals and weaknesses for collaborative study sessions and peer support",
+      color: "indigo"
+    },
+    {
+      icon: <FaLightbulb />,
+      title: "Intelligent Recommendations",
+      description: "Get personalized recommendations for study materials, practice problems, and learning resources based on your performance",
+      color: "pink"
+    },
+    {
       icon: <FaShieldAlt />,
-      title: "Secure Learning",
-      description: "Your data and progress are protected with enterprise-grade security",
-      color: "red"
+      title: "Progress Security",
+      description: "Your learning data and progress are securely stored and protected with enterprise-grade security measures",
+      color: "teal"
     }
   ];
 
@@ -77,8 +95,11 @@ const FeaturesSection = () => {
       green: "text-green-500 bg-green-50",
       purple: "text-purple-500 bg-purple-50",
       orange: "text-orange-500 bg-orange-50",
+      red: "text-red-500 bg-red-50",
       yellow: "text-yellow-500 bg-yellow-50",
-      red: "text-red-500 bg-red-50"
+      indigo: "text-indigo-500 bg-indigo-50",
+      pink: "text-pink-500 bg-pink-50",
+      teal: "text-teal-500 bg-teal-50"
     };
     return colorMap[color] || "text-blue-500 bg-blue-50";
   };
@@ -92,9 +113,9 @@ const FeaturesSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="features-title">Why Choose AIDA?</h2>
+          <h2 className="features-title">Revolutionary Learning Features</h2>
           <p className="features-subtitle">
-            Experience the future of programming education with our cutting-edge features
+            Experience a complete learning ecosystem designed to maximize your programming potential
           </p>
         </motion.div>
 
