@@ -11,10 +11,10 @@ const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const typewriterWords = ['Success', 'Learning'];
+  const typewriterWords = ['Intelligently', 'Strategically'];
   const typeSpeed = 150;
   const deleteSpeed = 100;
-  const pauseTime = 2000;
+  const pauseTime = 1000;
 
   // Typewriter effect
   React.useEffect(() => {
@@ -69,7 +69,7 @@ const HeroSection = () => {
     // },
     {
       title: "Collaborative Success",
-      subtitle: "Learn Together, Grow Together",
+      subtitle: "With AI-Powered Personalized Learning",
       description: "Join AI-moderated study groups and connect with peers who share your learning goals and challenges",
       features: ["Study Groups", "Peer Support", "Shared Insights"],
       gradient: "from-green-600 via-teal-600 to-cyan-600",
@@ -242,10 +242,13 @@ const HeroSection = () => {
                     variants={textVariants}
                   >
                     <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
+                      
+                      <span>Learn </span>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
                         {typewriterText}
                       </span>
                       <span className="inline-block w-1 h-12 bg-cyan-400 ml-1 animate-pulse"></span>
+                      {/* <div>With COSMOS-ITS</div> */}
                     </span>
                     <span className="hero-title-sub block text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
                       {slides[currentSlide].subtitle}
@@ -346,7 +349,7 @@ const HeroSection = () => {
         </AnimatePresence>
 
         {/* Navigation Arrows */}
-        <button
+        {/* <button
           className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20 z-20"
           onClick={prevSlide}
           whileHover={{ scale: 1.1 }}
@@ -368,10 +371,10 @@ const HeroSection = () => {
           transition={{ delay: 0.5 }}
         >
           <FaArrowRight />
-        </button>
+        </button> */}
 
         {/* Slide Indicators */}
-        <div
+        {/* <div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -389,7 +392,7 @@ const HeroSection = () => {
               whileTap={{ scale: 0.9 }}
             />
           ))}
-        </div>
+        </div> */}
 
         {/* Scroll Indicator */}
         <div
