@@ -206,7 +206,7 @@ const HeroSection = () => {
             {/* Gradient Overlay */}
             <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30 transition-all duration-1000 ease-in-out`} />
 
-            <div className="w-full mx-60 px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="w-full mx-38 px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
 
                 {/* Left Content */}
@@ -219,7 +219,7 @@ const HeroSection = () => {
                 >
                   {/* Title */}
                   <h1
-                    className="mb-6"
+                    className="mb-6 w-full"
                     variants={textVariants}
                   >
                     <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
@@ -239,7 +239,7 @@ const HeroSection = () => {
                   </p>
 
                   {/* Features */}
-                  <div
+                  {/* <div
                     className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10"
                     variants={textVariants}
                   >
@@ -260,7 +260,7 @@ const HeroSection = () => {
                         </span>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* CTA Buttons */}
                   <div
