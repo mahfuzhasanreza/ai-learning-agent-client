@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FaRobot, FaChartLine, FaClipboardList, FaRoute, FaGraduationCap, FaQuestionCircle, FaPlay, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [direction, setDirection] = useState(0);
 
   const slides = [
     {
@@ -44,6 +45,7 @@ const HeroSection = () => {
     if (!isAutoPlaying) return;
     
     const interval = setInterval(() => {
+      setDirection(1);
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 2500);
 
@@ -51,34 +53,69 @@ const HeroSection = () => {
   }, [isAutoPlaying, slides.length]);
 
   const nextSlide = () => {
+    setDirection(1);
     setCurrentSlide((prev) => (prev + 1) % slides.length);
     setIsAutoPlaying(false);
   };
 
   const prevSlide = () => {
+    setDirection(-1);
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     setIsAutoPlaying(false);
   };
 
   const goToSlide = (index) => {
+    setDirection(index > currentSlide ? 1 : -1);
     setCurrentSlide(index);
     setIsAutoPlaying(false);
   };
 
   const slideVariants = {
-    enter: {
-      x: 1000,
-      opacity: 0
-    },
+    enter: (direction) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+      scale: 0.95,
+      rotateY: direction > 0 ? 15 : -15
+    }),
     center: {
       zIndex: 1,
       x: 0,
-      opacity: 1
+      opacity: 1,
+      scale: 1,
+      rotateY: 0,
+      transition: {
+        x: { type: "spring", stiffness: 200, damping: 25, duration: 0.8 },
+        opacity: { duration: 0.6, delay: 0.2 },
+        scale: { duration: 0.6, delay: 0.1 },
+        rotateY: { duration: 0.6, delay: 0.1 }
+      }
     },
-    exit: {
+    exit: (direction) => ({
       zIndex: 0,
-      x: -1000,
-      opacity: 0
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0,
+      scale: 0.95,
+      rotateY: direction < 0 ? 15 : -15,
+      transition: {
+        x: { type: "spring", stiffness: 200, damping: 25, duration: 0.6 },
+        opacity: { duration: 0.4 },
+        scale: { duration: 0.4 },
+        rotateY: { duration: 0.4 }
+      }
+    })
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.1
+      }
     }
   };
 
@@ -88,22 +125,38 @@ const HeroSection = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         ease: "easeOut"
       }
     }
   };
 
   const featureVariants = {
-    hidden: { opacity: 0, x: -20 },
+    hidden: { opacity: 0, x: -20, scale: 0.8 },
     visible: (i) => ({
       opacity: 1,
       x: 0,
+      scale: 1,
       transition: {
-        delay: i * 0.2,
-        duration: 0.6
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: "easeOut"
       }
     })
+  };
+
+  const backgroundVariants = {
+    enter: { opacity: 0, scale: 1.1 },
+    center: { 
+      opacity: 0.2, 
+      scale: 1,
+      transition: { duration: 1, ease: "easeInOut" }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.9,
+      transition: { duration: 0.6, ease: "easeInOut" }
+    }
   };
 
   return (
@@ -120,38 +173,46 @@ const HeroSection = () => {
 
       {/* Carousel Container - Full Width */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={direction}>
           <div
             key={currentSlide}
+            custom={direction}
             variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 }
-            }}
             className="w-full h-full flex items-center justify-center relative"
+            style={{ perspective: '1000px' }}
           >
             {/* Background Image for Current Slide */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 transition-opacity duration-1000"
-              style={{
-                backgroundImage: `url(${slides[currentSlide].bgImage})`,
-                filter: 'blur(2px) brightness(0.3)'
-              }}
-            />
+            <AnimatePresence mode="wait">
+              <div 
+                key={`bg-${currentSlide}`}
+                variants={backgroundVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `url(${slides[currentSlide].bgImage})`,
+                  filter: 'blur(2px) brightness(0.3)'
+                }}
+              />
+            </AnimatePresence>
             
             {/* Gradient Overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30`} />
+            <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30 transition-all duration-1000 ease-in-out`} />
 
             <div className="w-full mx-60 px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
                 
                 {/* Left Content */}
-                <div 
+                <motion.div 
                   className="flex-1 text-center lg:text-left max-w-2xl lg:max-w-none"
-                  variants={textVariants}
+                  variants={contentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  key={`content-${currentSlide}`}
                 >
                   {/* Icon */}
                   {/* <div className="mb-8 lg:mb-6">
@@ -161,67 +222,88 @@ const HeroSection = () => {
                   </div> */}
 
                   {/* Title */}
-                  <h1 className="mb-6">
+                  <motion.h1 
+                    className="mb-6"
+                    variants={textVariants}
+                  >
                     <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
                       {slides[currentSlide].title}
                     </span>
                     <span className="hero-title-sub block text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
                       {slides[currentSlide].subtitle}
                     </span>
-                  </h1>
+                  </motion.h1>
 
                   {/* Description */}
-                  <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed">
+                  <motion.p 
+                    className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed"
+                    variants={textVariants}
+                  >
                     {slides[currentSlide].description}
-                  </p>
+                  </motion.p>
 
                   {/* Features */}
-                  <div className=" flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10">
+                  <motion.div 
+                    className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10"
+                    variants={textVariants}
+                  >
                     {slides[currentSlide].features.map((feature, index) => (
-                      <div
+                      <motion.div
                         key={feature}
                         custom={index}
                         variants={featureVariants}
                         className="hero-feature bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20"
-                        whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
-                        transition={{ duration: 0.3 }}
+                        whileHover={{ 
+                          scale: 1.05, 
+                          backgroundColor: "rgba(255,255,255,0.2)",
+                          transition: { duration: 0.2 }
+                        }}
                       >
                         <span className="hero-feature-text text-white font-medium text-sm">
                           {feature}
                         </span>
-                      </div>
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
 
                   {/* CTA Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <button
+                  <motion.div 
+                    className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                    variants={textVariants}
+                  >
+                    <motion.button
                       className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <FaPlay className="mr-2 group-hover:scale-110 transition-transform duration-300" />
                       Start Learning Now
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       className="border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Learn More
                       <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </button>
-                  </div>
-                </div>
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
 
                 {/* Right Visual Element - Lottie Animation */}
-                <div 
+                <motion.div 
                   className="flex-1 flex justify-center lg:justify-end"
-                  variants={textVariants}
+                  variants={contentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  key={`visual-${currentSlide}`}
                 >
                   <div className="relative">
                     {/* Lottie Animation Container */}
-                    <div className="w-80 h-80 lg:w-96 lg:h-96 relative">
+                    <motion.div 
+                      className="w-80 h-80 lg:w-96 lg:h-96 relative"
+                      variants={textVariants}
+                    >
                       <iframe
                         src={slides[currentSlide].lottieUrl}
                         className="w-full h-full"
@@ -229,12 +311,15 @@ const HeroSection = () => {
                         allowFullScreen
                         title={`${slides[currentSlide].title} Animation`}
                       />
-                    </div>
+                    </motion.div>
                     
                     {/* Fallback Gradient Orb */}
-                    <div className={`absolute inset-0 w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-r ${slides[currentSlide].gradient} opacity-20 blur-3xl animate-pulse`} />
+                    <motion.div 
+                      className={`absolute inset-0 w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-r ${slides[currentSlide].gradient} opacity-20 blur-3xl animate-pulse`}
+                      variants={textVariants}
+                    />
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
