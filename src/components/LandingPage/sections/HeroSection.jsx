@@ -71,7 +71,7 @@ const HeroSection = () => {
     {
       title: "Collaborative Success",
       subtitle: "With AI-Powered Personalized Learning",
-      description: "Join AI-moderated study groups and connect with peers who share your learning goals and challenges",
+      description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
       features: ["Study Groups", "Peer Support", "Shared Insights"],
       gradient: "from-green-600 via-teal-600 to-cyan-600",
       icon: <FaGraduationCap className="text-5xl" />,

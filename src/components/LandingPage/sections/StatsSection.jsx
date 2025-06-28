@@ -48,13 +48,6 @@ const StatsSection = () => {
       color: "orange"
     },
     {
-      icon: <FaQuestionCircle />,
-      number: 10000,
-      label: "Quizzes Completed",
-      suffix: "+",
-      color: "red"
-    },
-    {
       icon: <FaGraduationCap />,
       number: 87,
       label: "Average Performance Improvement",
