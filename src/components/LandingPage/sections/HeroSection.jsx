@@ -13,7 +13,9 @@ const HeroSection = () => {
       description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
       features: ["Topic-wise AI Agents", "Weakness Prediction", "Smart Study Plans"],
       gradient: "from-blue-600 via-purple-600 to-pink-600",
-      icon: <FaRobot className="text-5xl" />
+      icon: <FaRobot className="text-5xl" />,
+      bgImage: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+      lottieUrl: "https://lottie.host/embed/8c8c8c8c-8c8c-8c8c-8c8c-8c8c8c8c8c8c/robot-learning.json"
     },
     {
       title: "Adaptive Learning",
@@ -21,7 +23,9 @@ const HeroSection = () => {
       description: "Our AI continuously adapts to your learning style, pace, and progress to ensure optimal knowledge retention",
       features: ["Customized Learning Paths", "Real-time Adjustments", "Performance Tracking"],
       gradient: "from-green-600 via-teal-600 to-cyan-600",
-      icon: <FaChartLine className="text-5xl" />
+      icon: <FaChartLine className="text-5xl" />,
+      bgImage: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      lottieUrl: "https://lottie.host/embed/9d9d9d9d-9d9d-9d9d-9d9d-9d9d9d9d9d9d/adaptive-learning.json"
     },
     {
       title: "Collaborative Success",
@@ -29,7 +33,9 @@ const HeroSection = () => {
       description: "Join AI-moderated study groups and connect with peers who share your learning goals and challenges",
       features: ["Study Groups", "Peer Support", "Shared Insights"],
       gradient: "from-orange-600 via-red-600 to-pink-600",
-      icon: <FaGraduationCap className="text-5xl" />
+      icon: <FaGraduationCap className="text-5xl" />,
+      bgImage: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
+      lottieUrl: "https://lottie.host/embed/aeaeaeae-aeae-aeae-aeae-aeaeaeaeaeae/collaboration.json"
     }
   ];
 
@@ -125,9 +131,21 @@ const HeroSection = () => {
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 }
             }}
-            className="w-full h-full flex items-center justify-center"
+            className="w-full h-full flex items-center justify-center relative"
           >
-            <div className="w-full mx-60 px-4 sm:px-6 lg:px-8">
+            {/* Background Image for Current Slide */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 transition-opacity duration-1000"
+              style={{
+                backgroundImage: `url(${slides[currentSlide].bgImage})`,
+                filter: 'blur(2px) brightness(0.3)'
+              }}
+            />
+            
+            {/* Gradient Overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30`} />
+
+            <div className="w-full mx-60 px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
                 
                 {/* Left Content */}
@@ -196,12 +214,26 @@ const HeroSection = () => {
                   </div>
                 </div>
 
-                {/* Right Visual Element */}
+                {/* Right Visual Element - Lottie Animation */}
                 <div 
                   className="flex-1 flex justify-center lg:justify-end"
                   variants={textVariants}
                 >
-                  <div className={`w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-r ${slides[currentSlide].gradient} opacity-20 blur-3xl animate-pulse`} />
+                  <div className="relative">
+                    {/* Lottie Animation Container */}
+                    <div className="w-80 h-80 lg:w-96 lg:h-96 relative">
+                      <iframe
+                        src={slides[currentSlide].lottieUrl}
+                        className="w-full h-full"
+                        frameBorder="0"
+                        allowFullScreen
+                        title={`${slides[currentSlide].title} Animation`}
+                      />
+                    </div>
+                    
+                    {/* Fallback Gradient Orb */}
+                    <div className={`absolute inset-0 w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-r ${slides[currentSlide].gradient} opacity-20 blur-3xl animate-pulse`} />
+                  </div>
                 </div>
               </div>
             </div>
