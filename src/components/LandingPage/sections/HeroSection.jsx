@@ -19,7 +19,7 @@ const HeroSection = () => {
   // Typewriter effect
   React.useEffect(() => {
     const currentWord = typewriterWords[currentIndex];
-    
+
     if (!isDeleting) {
       if (typewriterText.length < currentWord.length) {
         const timeout = setTimeout(() => {
@@ -242,7 +242,7 @@ const HeroSection = () => {
                     variants={textVariants}
                   >
                     <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
-                      
+
                       <span>Learn </span>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
                         {typewriterText}
@@ -395,7 +395,7 @@ const HeroSection = () => {
         </div> */}
 
         {/* Scroll Indicator */}
-        <div
+        {/* <div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -412,7 +412,7 @@ const HeroSection = () => {
               transition={{ duration: 2, repeat: Infinity }}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );
