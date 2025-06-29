@@ -154,14 +154,16 @@ const Main = () => {
                                             </div>
                                         </div>
                                         <div className="result-data">
-                                            <div>
-                                                <p>
-                                                    Agent: {courseData}
-                                                </p>
-                                            </div>
                                             <img src={assets.logo} alt="" />
                                             <div className="message-content">
-                                                <p>{item.response}</p>
+                                                <div className='flex flex-col'>
+                                                    <p className='w-fit px-5 py-1 font-bold bg-blue-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-blue-700'>
+
+                                                        {courseData}
+                                                    </p>
+                                                    <br />
+                                                    <p>{item.response}</p>
+                                                </div>
                                                 <ListenButton
                                                     text={item.response}
                                                     size="small"
