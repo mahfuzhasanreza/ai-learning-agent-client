@@ -279,14 +279,14 @@ const HeroSection = () => {
                     variants={textVariants}
                   >
                     <Link to={'/chat'}>
-                    <button
-                      className="w-full cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <FaPlay className="mr-2 group-hover:scale-110 transition-transform duration-300" />
-                      Start Learning Now
-                    </button>
+                      <button
+                        className="w-full cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FaPlay className="mr-2 group-hover:scale-110 transition-transform duration-300" />
+                        Start Learning Now
+                      </button>
                     </Link>
                     <button
                       className="cursor-pointer border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
@@ -321,7 +321,9 @@ const HeroSection = () => {
                         title={`${slides[currentSlide].title} Animation`}
                       /> */}
 
-                      <Lottie animationData={slides[currentSlide].lottieUrl} loop={true} />
+                      <div className='w-70 justify-center items-center mx-auto'>
+                        <Lottie animationData={slides[currentSlide].lottieUrl} loop={true} />
+                      </div>
                     </div>
 
                     {/* Fallback Gradient Orb */}

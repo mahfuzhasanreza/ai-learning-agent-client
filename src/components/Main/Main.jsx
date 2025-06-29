@@ -219,7 +219,7 @@ const Main = () => {
                             onChange={(e) => setInput(e.target.value)}
                             value={listening && transcript ? transcript : input}
                             type="text"
-                            placeholder="Talk to AIDA..."
+                            placeholder="Talk to COSMOS..."
                         />
 
                         <img src={assets.gallery_icon} alt="" />
@@ -240,7 +240,7 @@ const Main = () => {
 
                         {input || listening ? <img onClick={() => onSent()} className='send-icon' src={assets.send_icon} alt="" /> : null}
                     </div>
-                    <p className="bottom-info">AIDA can make mistakes. Check our Terms & Conditions.</p>
+                    <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
             </div>
             

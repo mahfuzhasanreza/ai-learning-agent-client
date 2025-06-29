@@ -1,4 +1,4 @@
-# AIDA - AI Learning Agent Client
+# COSMOS - AI Learning Agent Client
 
 A modern, professional AI-powered learning platform with advanced animations and interactive features.
 

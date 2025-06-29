@@ -71,7 +71,7 @@ const Sidebar = () => {
 
                         <div className='px-5 flex menu-other-active mb-2'>
                             <img className='icon' src={assets.crown} alt="" />
-                            <p className='text-3xl font-semibold'>AIDA</p>
+                            <p className='text-3xl font-semibold'>COSMOS</p>
                         </div>
                         <div className='border-t-2 mb-8 border-gray-300'></div>
                         <div className='px-5'>
