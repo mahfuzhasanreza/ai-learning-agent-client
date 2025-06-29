@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaRobot } from 'react-icons/fa';
+import logo from '../../../../public/assets/logo.svg';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,11 +86,12 @@ const Navigation = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-6 h-6 lg:w-9 lg:h-9 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg cursor-pointer">
+            {/* <div className="w-6 h-6 lg:w-9 lg:h-9 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg cursor-pointer">
               <FaRobot className="text-white text-sm lg:text-base" />
-            </div>
+            </div> */}
+              <img className='bg-transparent' src={logo} alt="COSMOS" />
             <span className={`ml-3 font-bold text-xl lg:text-3xl tracking-tight cursor-pointer ${scrolled ? 'text-gray-900' : 'text-white'}`}>
-              COSMOS-ITS
+              COSMOS
             </span>
           </motion.div>
 
