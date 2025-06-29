@@ -59,7 +59,9 @@ const ContextProvider = (props) => {
                 setConversation((prev) => [...prev, { chat: activeChat, input: prompt, response: newResponse4 }]);
             }
         } else {
-            response = await runChat(input);
+            data = await runChat(input);
+            response = data.response;
+            setCourseData(data.course);
             setRecentPrompt(input);
 
             if (!loading && !showResult) {
