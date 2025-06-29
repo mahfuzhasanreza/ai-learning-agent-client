@@ -321,7 +321,7 @@ const HeroSection = () => {
                         title={`${slides[currentSlide].title} Animation`}
                       /> */}
 
-                      <div className='w-70 justify-center items-center mx-auto'>
+                      <div className='w-70 md:w-full justify-center items-center mx-auto'>
                         <Lottie animationData={slides[currentSlide].lottieUrl} loop={true} />
                       </div>
                     </div>
