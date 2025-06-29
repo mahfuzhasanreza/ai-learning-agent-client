@@ -211,7 +211,7 @@ const HeroSection = () => {
             {/* Gradient Overlay */}
             <div className={`absolute inset-0 bg-gradient-to-r ${slides[currentSlide].gradient} opacity-30 transition-all duration-1000 ease-in-out`} />
 
-            <div className="w-full mx-38 px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="mt-30 md:mt-0 w-full mx-38 px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
 
                 {/* Left Content */}
@@ -227,23 +227,23 @@ const HeroSection = () => {
                     className="mb-6 w-full"
                     variants={textVariants}
                   >
-                    <span className="hero-title-main block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
+                    <span className="md:hero-title-main block text-3xl md:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
 
                       <span>Learn </span>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
                         {typewriterText}
                       </span>
-                      <span className="inline-block w-1 h-12 bg-cyan-400 ml-1 animate-pulse"></span>
+                      <span className="inline-block w-1 md:h-12 bg-cyan-400 ml-1 animate-pulse"></span>
                       {/* <div>With COSMOS-ITS</div> */}
                     </span>
-                    <span className="hero-title-sub block text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
+                    <span className="md:hero-title-sub block md:text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
                       {slides[currentSlide].subtitle}
                     </span>
                   </h1>
 
                   {/* Description */}
                   <p
-                    className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed"
+                    className="text-sm md:text-base sm:text-lg lg:text-xl text-gray-300 mb-8 lg:mb-10 leading-relaxed"
                     variants={textVariants}
                   >
                     {slides[currentSlide].description}
@@ -280,7 +280,7 @@ const HeroSection = () => {
                   >
                     <Link to={'/chat'}>
                     <button
-                      className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+                      className="w-full cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
