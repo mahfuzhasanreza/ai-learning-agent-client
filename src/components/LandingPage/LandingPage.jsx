@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from './components/Navigation';
 import HeroSection from './sections/HeroSection';
+import KeyFeaturesSection from './sections/KeyFeaturesSection';
 import FeaturesSection from './sections/FeaturesSection';
 import QuickPromptsSection from './sections/QuickPromptsSection';
 import StatsSection from './sections/StatsSection';
@@ -11,6 +12,7 @@ const LandingPage = () => {
     <div className="w-full landing-page">
       <Navigation />
       <HeroSection />
+      <KeyFeaturesSection />
       <div id="features">
         <FeaturesSection />
       </div>
