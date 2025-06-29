@@ -17,6 +17,7 @@ const ContextProvider = (props) => {
     const [resultData, setResultData] = useState("");
     const [conversation, setConversation] = useState([]);
     const [activeChat, setActiveChat] = useState("");
+    const [courseData, setCourseData] = useState("");
 
     // const delayPara = (index, nextWord) => {
     //     setTimeout(function () {
@@ -31,14 +32,20 @@ const ContextProvider = (props) => {
     }
 
     const onSent = async (prompt) => {
+        setCourseData("");
         setResultData("");
         setLoading(true);
         setShowResult(true);
 
+        let data;
         let response;
         if (prompt !== undefined) {
             setInput(prompt);
-            response = await runChat(prompt);
+
+            data = await runChat(prompt);
+            response = data.response;
+            setCourseData(data.course);
+            
             setRecentPrompt(prompt);
 
             if (!loading && !showResult) {
@@ -128,6 +135,7 @@ const ContextProvider = (props) => {
         conversation,
         activeChat,
         setActiveChat,
+        courseData,
     }
 
     return (

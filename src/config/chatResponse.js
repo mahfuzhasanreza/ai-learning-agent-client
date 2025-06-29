@@ -7,7 +7,7 @@ async function runChat(prompt) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ question: prompt }),
+            body: JSON.stringify({ query: prompt }),
         });
 
         if (!response.ok) {
@@ -17,7 +17,7 @@ async function runChat(prompt) {
         const data = await response.json();
         // console.log(data);
 
-        return data.response;
+        return data;
     } catch (error) {
         console.error("Error:", error);
     }

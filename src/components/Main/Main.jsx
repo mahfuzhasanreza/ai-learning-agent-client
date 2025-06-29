@@ -13,7 +13,7 @@ import TTSSettings from '../TTSSettings/TTSSettings';
 
 const Main = () => {
 
-    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat } = useContext(Context);
+    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     // console.log(conversation);
@@ -50,7 +50,7 @@ const Main = () => {
                 <div className='flex text-2xl gap-4 mr-16'>
                     <MdOutlineLightMode className='cursor-pointer font-bold text-blue-600' />
                     <MdOutlineDarkMode className='cursor-pointer' />
-                    <FaCog 
+                    <FaCog
                         className='cursor-pointer text-gray-600 hover:text-blue-600 transition-colors'
                         onClick={() => setTtsSettingsOpen(true)}
                         title="Text-to-Speech Settings"
@@ -146,7 +146,7 @@ const Main = () => {
                                             <img src={assets.user_icon} alt="" />
                                             <div className="message-content">
                                                 <p>{item.input}</p>
-                                                <ListenButton 
+                                                <ListenButton
                                                     text={item.input}
                                                     size="small"
                                                     className="message-listen-btn"
@@ -154,10 +154,15 @@ const Main = () => {
                                             </div>
                                         </div>
                                         <div className="result-data">
+                                            <div>
+                                                <p>
+                                                    Agent: {courseData}
+                                                </p>
+                                            </div>
                                             <img src={assets.logo} alt="" />
                                             <div className="message-content">
                                                 <p>{item.response}</p>
-                                                <ListenButton 
+                                                <ListenButton
                                                     text={item.response}
                                                     size="small"
                                                     className="message-listen-btn"
@@ -174,7 +179,7 @@ const Main = () => {
                                     <img src={assets.user_icon} alt="" />
                                     <div className="message-content">
                                         <p>{input}</p>
-                                        <ListenButton 
+                                        <ListenButton
                                             text={input}
                                             size="small"
                                             className="message-listen-btn"
@@ -243,9 +248,9 @@ const Main = () => {
                     <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
             </div>
-            
+
             {/* TTS Settings Modal */}
-            <TTSSettings 
+            <TTSSettings
                 isOpen={ttsSettingsOpen}
                 onClose={() => setTtsSettingsOpen(false)}
             />
