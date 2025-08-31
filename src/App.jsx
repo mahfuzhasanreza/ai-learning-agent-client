@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import ChatPage from './pages/ChatPage';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/login" element={<Login></Login>} />
         <Route path="/register" element={<Register></Register>} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/dashboard" element={<Dashboard></Dashboard>} />
       </Routes>
     </Router>
   );

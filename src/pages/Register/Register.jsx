@@ -69,7 +69,7 @@ const Register = () => {
       const result = await signUpNewUser(formData.email, formData.password);
 
       if (result.success) {
-        navigate('/about')
+        navigate('/dashboard')
       }
     } catch (error) {
       setError('an error occurred');
