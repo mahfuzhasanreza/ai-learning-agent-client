@@ -278,7 +278,7 @@ const HeroSection = () => {
                     className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                     variants={textVariants}
                   >
-                    <Link to={'/chat'}>
+                    <Link to={'/login'}>
                       <button
                         className="w-full cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                         whileHover={{ scale: 1.05, y: -2 }}

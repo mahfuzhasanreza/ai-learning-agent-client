@@ -110,9 +110,9 @@ const Main = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div onClick={() => onSent("How can I learn C Programme?")} className="card">
+                            <div onClick={() => onSent("Can you provide me any previous trimester question of Structured Programming Language?")} className="card">
                                 <div className="card-content">
-                                    <p>How can I learn C Programme?</p>
+                                    <p>Can you provide me any previous trimester question of Structured Programming Language?</p>
                                     <div className="card-icon">
                                         <img src={assets.bulb_icon} alt="" />
                                     </div>
