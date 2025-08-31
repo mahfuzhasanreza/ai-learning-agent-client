@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, Brain, BookOpen, Zap, Shield, Users, Trophy, CheckCircle } from 'lucide-react';
 import { UserAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const navigate = useNavigate();
   const { session, signUpNewUser } = UserAuth();
+  const [error, setError] = useState('');
   
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -48,13 +49,33 @@ const Register = () => {
     }
   };
 
+  console.log(formData.email, formData.password);
+  console.log("AuthContext session:", session);
+
+  // const handleRegister = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   // Simulate registration process
+  //   await new Promise(resolve => setTimeout(resolve, 2500));
+  //   setIsLoading(false);
+  //   console.log('Registration attempted with:', formData);
+  // };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate registration process
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    setIsLoading(false);
-    console.log('Registration attempted with:', formData);
+    
+    try {
+      const result = await signUpNewUser(formData.email, formData.password);
+
+      if (result.success) {
+        navigate('/about')
+      }
+    } catch (error) {
+      setError('an error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getStrengthColor = () => {
