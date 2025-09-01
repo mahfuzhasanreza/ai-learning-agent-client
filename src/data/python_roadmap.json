@@ -1,0 +1,230 @@
+{
+    "topic": "Learn Python Programming",
+    "introduction": "This roadmap is designed to guide aspiring programmers through a comprehensive journey of learning Python, from foundational concepts to advanced topics and practical application. It emphasizes a hands-on approach, combining theoretical knowledge with practical exercises and projects to build strong programming skills. Each stage builds upon the previous one, ensuring a logical and progressive learning experience.",
+    "stages": [
+        {
+            "title": "Stage 1: Python Fundamentals & Setup",
+            "description": "This stage covers the absolute basics of Python programming, including setting up your development environment, understanding core syntax, variables, data types, and basic control flow. It's the essential foundation for all subsequent learning.",
+            "items": [
+                {
+                    "name": "1.1 Introduction to Python & Environment Setup",
+                    "description": "Learning Outcomes: Understand what Python is used for, install Python, set up a development environment (IDE/text editor), and run your first 'Hello World' program.\nPrerequisites: Basic computer literacy.\nTime Commitment: 4-6 hours\nDifficulty: Easy\nPractical Exercise: Install Python and VS Code (or preferred IDE), write and run 'Hello World'.",
+                    "resources": [
+                        "Python Official Website (python.org) - Downloads & Documentation",
+                        "VS Code Documentation - Getting Started",
+                        "Real Python: How to Install Python"
+                    ]
+                },
+                {
+                    "name": "1.2 Variables, Data Types & Operators",
+                    "description": "Learning Outcomes: Define and use variables, understand fundamental data types (integers, floats, strings, booleans), and apply arithmetic, comparison, and logical operators.\nPrerequisites: Stage 1.1\nTime Commitment: 6-8 hours\nDifficulty: Easy\nPractical Exercise: Write a script that calculates the area of a rectangle given length and width, and prints the result. Experiment with different data types and operators.",
+                    "resources": [
+                        "Python Official Docs: Built-in Types",
+                        "W3Schools Python Variables & Data Types",
+                        "Corey Schafer: Python Tutorial for Beginners - Variables, Strings, and Numbers"
+                    ]
+                },
+                {
+                    "name": "1.3 Basic Input/Output & Type Conversion",
+                    "description": "Learning Outcomes: Take user input using input(), display output using print(), and convert between different data types (e.g., string to int).\nPrerequisites: Stage 1.2\nTime Commitment: 3-4 hours\nDifficulty: Easy\nPractical Exercise: Create a program that asks the user for their name and age, then prints a greeting message including their age in 5 years.",
+                    "resources": [
+                        "Python Official Docs: Input and Output",
+                        "GeeksforGeeks: Python Type Conversion"
+                    ]
+                },
+                {
+                    "name": "1.4 Conditional Statements (if/elif/else)",
+                    "description": "Learning Outcomes: Implement decision-making logic using if, elif, and else statements. Understand indentation and logical flow.\nPrerequisites: Stage 1.3\nTime Commitment: 5-7 hours\nDifficulty: Easy\nProject: Simple Grade Calculator - Ask the user for a score (0-100) and print the corresponding letter grade (A, B, C, D, F).",
+                    "resources": [
+                        "Python Official Docs: If Statements",
+                        "Programiz: Python if...else Statement"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Stage 2: Core Data Structures & Control Flow",
+            "description": "This stage delves into Python's fundamental data structures for organizing data and introduces more advanced control flow mechanisms like loops and functions, which are crucial for writing reusable and efficient code.",
+            "items": [
+                {
+                    "name": "2.1 Lists & Tuples",
+                    "description": "Learning Outcomes: Create, manipulate, and iterate over lists and tuples. Understand their differences and when to use each.\nPrerequisites: Stage 1.4\nTime Commitment: 7-9 hours\nDifficulty: Medium\nPractical Exercise: Create a list of your favorite movies. Add a new movie, remove an old one, and print the list in alphabetical order. Create a tuple of coordinates and access elements.",
+                    "resources": [
+                        "Python Official Docs: Data Structures (Lists)",
+                        "Real Python: Python Lists and Tuples"
+                    ]
+                },
+                {
+                    "name": "2.2 Dictionaries & Sets",
+                    "description": "Learning Outcomes: Create, manipulate, and iterate over dictionaries (key-value pairs) and sets (unique elements). Understand their use cases.\nPrerequisites: Stage 2.1\nTime Commitment: 7-9 hours\nDifficulty: Medium\nPractical Exercise: Create a dictionary representing a person's profile (name, age, city). Add a new key-value pair, update an existing one, and iterate through keys and values. Create a set of numbers and perform set operations (union, intersection).",
+                    "resources": [
+                        "Python Official Docs: Data Structures (Dictionaries)",
+                        "Programiz: Python Dictionary",
+                        "W3Schools Python Sets"
+                    ]
+                },
+                {
+                    "name": "2.3 Loops (for & while)",
+                    "description": "Learning Outcomes: Use for loops to iterate over sequences and while loops for conditional repetition. Understand break and continue statements.\nPrerequisites: Stage 2.2\nTime Commitment: 6-8 hours\nDifficulty: Medium\nPractical Exercise: Write a for loop to print all even numbers from 1 to 20. Write a while loop that asks the user for input until they type 'quit'.",
+                    "resources": [
+                        "Python Official Docs: For Statements",
+                        "Python Official Docs: While Statements"
+                    ]
+                },
+                {
+                    "name": "2.4 Functions",
+                    "description": "Learning Outcomes: Define and call functions, pass arguments, return values, understand scope (local vs. global variables), and use default arguments and keyword arguments.\nPrerequisites: Stage 2.3\nTime Commitment: 8-10 hours\nDifficulty: Medium\nProject: To-Do List Manager - Create functions to add tasks, view tasks, mark tasks as complete, and delete tasks from a list. Use loops and conditionals to build a menu-driven interface.",
+                    "resources": [
+                        "Python Official Docs: Defining Functions",
+                        "Corey Schafer: Python Tutorial for Beginners - Functions"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Stage 3: Modularity, Error Handling & File I/O",
+            "description": "This stage focuses on making your code more organized, robust, and capable of interacting with external data sources. You'll learn how to structure larger projects, handle unexpected issues, and read/write files.",
+            "items": [
+                {
+                    "name": "3.1 Modules & Packages",
+                    "description": "Learning Outcomes: Create and import custom modules, understand how to organize code into packages, and use built-in modules (e.g., math, random).\nPrerequisites: Stage 2.4\nTime Commitment: 5-7 hours\nDifficulty: Medium\nPractical Exercise: Create a module with several mathematical functions (e.g., add, subtract, multiply). Import and use these functions in a separate script. Experiment with from ... import ....",
+                    "resources": [
+                        "Python Official Docs: Modules",
+                        "Real Python: Python Modules and Packages"
+                    ]
+                },
+                {
+                    "name": "3.2 Error and Exception Handling",
+                    "description": "Learning Outcomes: Understand different types of errors, use try, except, else, and finally blocks to handle exceptions gracefully, and raise custom exceptions.\nPrerequisites: Stage 3.1\nTime Commitment: 6-8 hours\nDifficulty: Medium\nPractical Exercise: Write a program that asks for two numbers and performs division. Implement try-except to handle ValueError (non-numeric input) and ZeroDivisionError.",
+                    "resources": [
+                        "Python Official Docs: Errors and Exceptions",
+                        "Programiz: Python try...except"
+                    ]
+                },
+                {
+                    "name": "3.3 File Input/Output (I/O)",
+                    "description": "Learning Outcomes: Open, read from, and write to text files. Understand different file modes ('r', 'w', 'a'). Use with statements for automatic file closing.\nPrerequisites: Stage 3.2\nTime Commitment: 7-9 hours\nDifficulty: Medium\nProject: Simple Contact Book - Create a program that allows users to add new contacts (name, phone, email) to a text file, view all contacts, and search for a contact. Store each contact on a new line in the file.",
+                    "resources": [
+                        "Python Official Docs: Reading and Writing Files",
+                        "Real Python: Reading and Writing Files in Python"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Stage 4: Object-Oriented Programming (OOP)",
+            "description": "This stage introduces the powerful paradigm of Object-Oriented Programming (OOP), which is essential for building complex, maintainable, and scalable applications. You'll learn to model real-world entities using classes and objects.",
+            "items": [
+                {
+                    "name": "4.1 Classes & Objects",
+                    "description": "Learning Outcomes: Define classes, create objects (instances), understand attributes (data) and methods (behavior), and use the __init__ constructor.\nPrerequisites: Stage 3.3\nTime Commitment: 8-10 hours\nDifficulty: Medium\nPractical Exercise: Create a Dog class with attributes like name, breed, age, and methods like bark() and sit(). Create multiple Dog objects and call their methods.",
+                    "resources": [
+                        "Python Official Docs: Classes",
+                        "Corey Schafer: Python Tutorial for Beginners - OOP"
+                    ]
+                },
+                {
+                    "name": "4.2 Inheritance & Polymorphism",
+                    "description": "Learning Outcomes: Understand inheritance for code reuse, create subclasses, override methods, and grasp the concept of polymorphism (different objects responding to the same method call).\nPrerequisites: Stage 4.1\nTime Commitment: 7-9 hours\nDifficulty: Medium\nPractical Exercise: Extend the Dog class to create a GoldenRetriever subclass. Add a specific method for GoldenRetriever. Create a generic Animal class and demonstrate polymorphism with different animal types.",
+                    "resources": [
+                        "Python Official Docs: Inheritance",
+                        "GeeksforGeeks: Python Polymorphism"
+                    ]
+                },
+                {
+                    "name": "4.3 Encapsulation & Abstraction (Properties, Dunder Methods)",
+                    "description": "Learning Outcomes: Understand encapsulation through private/protected attributes (convention), use properties (@property decorator) for controlled access, and explore common 'dunder' (double underscore) methods like __str__, __repr__.\nPrerequisites: Stage 4.2\nTime Commitment: 6-8 hours\nDifficulty: Medium\nProject: Basic RPG Game - Design classes for Player, Enemy, Weapon, Armor. Implement attributes and methods for health, attack, defense. Use inheritance for different enemy types. Demonstrate __str__ for object representation.",
+                    "resources": [
+                        "Real Python: Python @property Decorator",
+                        "Python Official Docs: Data Model (Special Method Names)"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Stage 5: Advanced Topics & Standard Libraries",
+            "description": "This stage introduces more advanced Python features that enable more elegant and efficient code, along with exploring powerful capabilities provided by Python's extensive standard library and popular third-party modules.",
+            "items": [
+                {
+                    "name": "5.1 Generators & Decorators",
+                    "description": "Learning Outcomes: Understand and implement generators for memory-efficient iteration, and use decorators to modify function behavior without changing their source code.\nPrerequisites: Stage 4.3\nTime Commitment: 8-10 hours\nDifficulty: Hard\nPractical Exercise: Create a generator function for an infinite sequence (e.g., Fibonacci numbers). Write a decorator that logs the execution time of any function.",
+                    "resources": [
+                        "Python Official Docs: Iterators and Generators",
+                        "Real Python: Python Decorators"
+                    ]
+                },
+                {
+                    "name": "5.2 Context Managers (with statement)",
+                    "description": "Learning Outcomes: Understand the purpose of context managers for resource management, and implement custom context managers using classes or the contextlib module.\nPrerequisites: Stage 5.1\nTime Commitment: 4-6 hours\nDifficulty: Medium\nPractical Exercise: Create a custom context manager that prints 'Entering context' and 'Exiting context' when used with a with statement.",
+                    "resources": [
+                        "Python Official Docs: With Statement Context Managers",
+                        "Real Python: Python Context Managers"
+                    ]
+                },
+                {
+                    "name": "5.3 Working with Standard Libraries (os, sys, datetime, math, json)",
+                    "description": "Learning Outcomes: Utilize common modules from Python's standard library for tasks like interacting with the operating system (os, sys), handling dates and times (datetime), performing mathematical operations (math), and working with JSON data (json).\nPrerequisites: Stage 5.2\nTime Commitment: 10-12 hours\nDifficulty: Medium\nProject: Directory Organizer - Write a script that scans a specified directory, identifies files by extension, and moves them into organized subdirectories (e.g., 'Images', 'Documents'). Use os module functions.",
+                    "resources": [
+                        "Python Official Docs: os module",
+                        "Python Official Docs: sys module",
+                        "Python Official Docs: datetime module",
+                        "Python Official Docs: json module"
+                    ]
+                },
+                {
+                    "name": "5.4 Introduction to Third-Party Libraries (e.g., requests, pandas, numpy)",
+                    "description": "Learning Outcomes: Understand how to install and use third-party libraries using pip. Get a brief overview of popular libraries like requests (HTTP), pandas (data analysis), numpy (numerical computing), and BeautifulSoup (web scraping).\nPrerequisites: Stage 5.3\nTime Commitment: 8-10 hours\nDifficulty: Medium\nProject: Simple Web Scraper - Use requests to fetch content from a public website (e.g., a news site) and BeautifulSoup to parse the HTML and extract headlines or specific data points. (Focus on a simple, ethical scrape).",
+                    "resources": [
+                        "pip Official Documentation",
+                        "Requests Library Documentation",
+                        "BeautifulSoup Documentation",
+                        "Pandas Documentation (Getting Started)"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Stage 6: Practical Application & Project Development",
+            "description": "This final stage focuses on consolidating knowledge through larger projects, introducing best practices for collaborative development, and exploring pathways into specific domains like web development or data science.",
+            "items": [
+                {
+                    "name": "6.1 Version Control with Git & GitHub",
+                    "description": "Learning Outcomes: Understand the basics of version control, initialize Git repositories, commit changes, branch, merge, and push code to GitHub.\nPrerequisites: Stage 5.4\nTime Commitment: 10-12 hours\nDifficulty: Medium\nPractical Exercise: Create a GitHub account, initialize a local Git repository for one of your previous projects, commit changes, and push it to a new remote repository on GitHub. Practice branching and merging.",
+                    "resources": [
+                        "Git Official Documentation",
+                        "GitHub Guides: Hello World",
+                        "Pro Git Book (online)"
+                    ]
+                },
+                {
+                    "name": "6.2 Virtual Environments",
+                    "description": "Learning Outcomes: Understand why virtual environments are important, create and activate virtual environments, and manage project dependencies using pip and requirements.txt.\nPrerequisites: Stage 6.1\nTime Commitment: 3-5 hours\nDifficulty: Easy\nPractical Exercise: For a new project, create a virtual environment, install a third-party library (e.g., requests), and generate a requirements.txt file.",
+                    "resources": [
+                        "Python Official Docs: venv",
+                        "Real Python: Python Virtual Environments"
+                    ]
+                },
+                {
+                    "name": "6.3 Introduction to a Python Framework/Domain",
+                    "description": "Learning Outcomes: Get an introductory understanding of a specific Python domain. Choose ONE of the following paths:\n    A) Web Development (e.g., Flask/Django): Understand basic web concepts, create a simple 'Hello World' web app.\n    B) Data Science (e.g., Pandas/Numpy): Perform basic data loading, cleaning, and analysis.\n    C) GUI Development (e.g., Tkinter/PyQt): Build a simple desktop application with buttons and text fields.\n    D) Automation/Scripting: Develop a more complex automation script (e.g., email sender, file processor).\nPrerequisites: Stage 6.2\nTime Commitment: 15-20 hours\nDifficulty: Medium to Hard (depending on chosen domain)\nPractical Exercise: Follow a beginner tutorial for your chosen framework/domain to build a small, functional application.",
+                    "resources": [
+                        "Flask Official Documentation (Quickstart)",
+                        "Django Official Documentation (Getting Started)",
+                        "Pandas User Guide",
+                        "NumPy User Guide",
+                        "Tkinter Documentation (Python Docs)"
+                    ]
+                },
+                {
+                    "name": "6.4 Final Capstone Project",
+                    "description": "Learning Outcomes: Apply all learned concepts to build a significant project from scratch. This project should integrate multiple Python features, potentially use external libraries, and demonstrate problem-solving skills.\nPrerequisites: Stage 6.3\nTime Commitment: 20-40 hours (flexible)\nDifficulty: Hard\nProject: Choose a project aligned with your interests and the domain explored in 6.3. Examples: A simple blog web application, a data analysis tool for a public dataset, a desktop calculator, a command-line utility for managing notes, a game with a GUI. Plan, design, implement, and document your project. Use Git for version control.",
+                    "resources": [
+                        "Project-based learning platforms (e.g., freeCodeCamp, Codecademy projects)",
+                        "Stack Overflow (for problem-solving)",
+                        "Python Official Documentation (as a reference)"
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -22,7 +22,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     // sign in
-    const signInUser = async ({ email, password }) => {
+    const signInUser = async ( email, password ) => {
         try {
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
