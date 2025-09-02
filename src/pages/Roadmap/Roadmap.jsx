@@ -3,6 +3,8 @@ import { ChevronRight, Clock, CheckCircle, Circle, BookOpen, Target, Award } fro
 
 import { Star, Zap, Trophy } from 'lucide-react';
 import roadmapData from "../../../src/data/c_roadmap.json";
+import FooterSection from '../../components/LandingPage/sections/FooterSection';
+import Navigation from '../../components/LandingPage/components/Navigation';
 // import roadmapData from "../../../src/data/python_roadmap.json";
 
 
@@ -165,7 +167,10 @@ const Roadmap = () => {
     }
   
     return (
-      <div className="w-full min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 relative overflow-hidden">
+      <>
+      <Navigation></Navigation>
+
+      <div className="w-full min-h-screen bg-gradient-to-br from-indigo-400 via-purple-50 to-pink-100 relative overflow-hidden pt-20">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20 animate-pulse"></div>
@@ -175,56 +180,19 @@ const Roadmap = () => {
   
         {/* Confetti */}
         {showConfetti && <Confetti />}
-  
-        {/* Header */}
-        {/* <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl p-3 shadow-lg">
-                  <BookOpen className="h-8 w-8" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 bg-clip-text text-transparent">
-                    {data.topic} Roadmap
-                  </h1>
-                  <p className="text-gray-600 text-sm mt-1 flex items-center">
-                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                    Track your learning journey
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-3 bg-white/50 rounded-2xl px-4 py-2 shadow-lg backdrop-blur-sm">
-                  <Trophy className="h-6 w-6 text-yellow-500 animate-bounce" />
-                  <div>
-                    <span className="text-2xl font-bold text-gray-900">{getTotalProgress()}%</span>
-                    <p className="text-xs text-gray-600">Complete</p>
-                  </div>
-                </div>
-                <div className="w-40 bg-gray-200/50 rounded-full h-3 shadow-inner">
-                  <div 
-                    className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 ease-out shadow-lg relative"
-                    style={{ width: `${getTotalProgress()}%` }}
-                  >
-                    <div className="absolute inset-0 bg-white/30 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
 
         {/* Roadmap Summary (below global navbar) */}
-<div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="max-w-7xl mx-auto px-6 py-10">
   <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-3xl p-8 border border-white/20">
     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
       
       {/* Title */}
       <div className="flex items-center space-x-4">
-        <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl p-4 shadow-lg">
+        
+        {/* <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl p-4 shadow-lg">
           <BookOpen className="h-10 w-10" />
-        </div>
+        </div> */}
+        
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 bg-clip-text text-transparent">
             {data.topic} Roadmap
@@ -256,14 +224,14 @@ const Roadmap = () => {
       </div>
     </div>
   </div>
-</div>
+        </div>
 
 
   
         <div className="max-w-7xl mx-auto p-6 relative z-10">
           {/* Stage Navigation */}
           <div className="mb-12">
-            <div className="flex items-center justify-center space-x-3 overflow-x-auto pb-4">
+            <div className="flex items-center justify-center space-x-3 pb-4">
               {data.stages.map((stage, index) => (
                 <button
                   key={index}
@@ -564,6 +532,9 @@ const Roadmap = () => {
           </div>
         )}
       </div>
+      {/* <FooterSection></FooterSection> */}
+      
+      </>
     );
   };
   
