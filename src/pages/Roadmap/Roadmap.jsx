@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Clock, CheckCircle, Circle, BookOpen, Target, Award } from 'lucide-react';
-
 import { Star, Zap, Trophy } from 'lucide-react';
 import roadmapData from "../../../src/data/c_roadmap.json";
 import FooterSection from '../../components/LandingPage/sections/FooterSection';
 import Navigation from '../../components/LandingPage/components/Navigation';
-import { div } from 'framer-motion/client';
 // import roadmapData from "../../../src/data/python_roadmap.json";
+import * as Tone from 'tone';
 
 
 const Roadmap = () => {
@@ -16,7 +15,6 @@ const Roadmap = () => {
     const [visibleStages, setVisibleStages] = useState(new Set([0]));
     const [showConfetti, setShowConfetti] = useState(false);
     const timelineRef = useRef(null);
-  
      const data = roadmapData;
   
     const getDifficultyColor = (difficulty) => {
@@ -62,8 +60,7 @@ const Roadmap = () => {
       } else {
         newCompleted.add(itemId);
         // Show confetti animation for completion
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 2000);
+        triggerConfetti();
       }
       setCompletedItems(newCompleted);
     };
@@ -138,23 +135,7 @@ const Roadmap = () => {
       );
     };
   
-    // Confetti component
-    const Confetti = () => (
-      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-yellow-400 rounded-full animate-bounce"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${1 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
-    );
+
   
     if (!data) {
       return (
@@ -166,6 +147,227 @@ const Roadmap = () => {
         </div>
       );
     }
+
+  // Initialize audio context
+  const initAudio = async () => {
+    if (Tone.context.state !== 'running') {
+      await Tone.start();
+    }
+  };
+
+  // Celebration sound effect
+  const playCelebrationSound = async () => {
+    try {
+      await initAudio();
+      
+      // Create a synth for the celebration sound
+      const synth = new Tone.Synth({
+        oscillator: {
+          type: "sine"
+        },
+        envelope: {
+          attack: 0.01,
+          decay: 0.3,
+          sustain: 0.1,
+          release: 0.8
+        }
+      }).toDestination();
+
+      // Play a celebratory chord progression
+      const notes = ["C5", "E5", "G5", "C6"];
+      const times = [0, 0.1, 0.2, 0.3];
+      
+      notes.forEach((note, index) => {
+        synth.triggerAttackRelease(note, "8n", `+${times[index]}`);
+      });
+
+      // Add some sparkle sounds
+      setTimeout(() => {
+        const sparkleNotes = ["E6", "G6", "B6"];
+        sparkleNotes.forEach((note, index) => {
+          synth.triggerAttackRelease(note, "16n", `+${index * 0.05}`);
+        });
+      }, 500);
+
+      // Clean up
+      setTimeout(() => {
+        synth.dispose();
+      }, 2000);
+
+    } catch (error) {
+      console.log('Audio not available:', error);
+    }
+  };
+
+  // Confetti Animation
+  const Confetti = () => {
+    const confettiPieces = Array.from({ length: 50 }, (_, i) => (
+      <div
+        key={i}
+        className="absolute animate-pulse"
+        style={{
+          left: `${Math.random() * 100}%`,
+          backgroundColor: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd'][Math.floor(Math.random() * 6)],
+          width: `${Math.random() * 8 + 4}px`,
+          height: `${Math.random() * 8 + 4}px`,
+          borderRadius: Math.random() > 0.5 ? '50%' : '0',
+          animation: `confettiFall ${Math.random() * 3 + 2}s linear infinite`,
+          animationDelay: `${Math.random() * 2}s`,
+          transform: `rotate(${Math.random() * 360}deg)`,
+        }}
+      />
+    ));
+
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+        {confettiPieces}
+        <style jsx>{`
+          @keyframes confettiFall {
+            to {
+              transform: translateY(100vh) rotate(360deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  };
+
+  // Floating Balloons Animation
+  const FloatingBalloons = () => {
+    const balloons = Array.from({ length: 8 }, (_, i) => (
+      <div
+        key={i}
+        className="absolute"
+        style={{
+          left: `${Math.random() * 90}%`,
+          bottom: '-100px',
+          animation: `balloonFloat ${Math.random() * 4 + 6}s ease-in-out infinite`,
+          animationDelay: `${Math.random() * 3}s`,
+        }}
+      >
+        <div className="relative">
+          {/* Balloon */}
+          <div
+            className="w-12 h-16 rounded-full shadow-lg"
+            style={{
+              backgroundColor: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#ff9ff3', '#54a0ff'][i],
+              background: `linear-gradient(135deg, ${['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#ff9ff3', '#54a0ff'][i]}, ${['#ff5252', '#26d0ce', '#2196f3', '#81c784', '#ffcc02', '#ba68c8', '#e91e63', '#3f51b5'][i]})`,
+            }}
+          />
+          {/* String */}
+          <div
+            className="absolute left-1/2 top-full w-0.5 bg-gray-400"
+            style={{ height: `${Math.random() * 30 + 20}px`, transform: 'translateX(-50%)' }}
+          />
+        </div>
+      </div>
+    ));
+
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+        {balloons}
+        <style jsx>{`
+          @keyframes balloonFloat {
+            0% {
+              transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+              transform: translateY(-20vh) translateX(10px) rotate(2deg);
+            }
+            50% {
+              transform: translateY(-40vh) translateX(-5px) rotate(-1deg);
+            }
+            75% {
+              transform: translateY(-60vh) translateX(15px) rotate(3deg);
+            }
+            100% {
+              transform: translateY(-100vh) translateX(0) rotate(0deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  };
+
+  // Party Balloons (clusters)
+  const PartyBalloons = () => {
+    const balloonClusters = Array.from({ length: 4 }, (_, clusterIndex) => (
+      <div
+        key={clusterIndex}
+        className="absolute"
+        style={{
+          left: `${20 + clusterIndex * 20}%`,
+          bottom: '-150px',
+          animation: `partyBalloonFloat ${Math.random() * 3 + 8}s ease-in-out infinite`,
+          animationDelay: `${clusterIndex * 0.5}s`,
+        }}
+      >
+        {Array.from({ length: 3 }, (_, balloonIndex) => (
+          <div
+            key={balloonIndex}
+            className="absolute"
+            style={{
+              left: `${balloonIndex * 15 - 15}px`,
+              top: `${balloonIndex * 10}px`,
+            }}
+          >
+            {/* Balloon */}
+            <div
+              className="w-10 h-14 rounded-full shadow-xl"
+              style={{
+                backgroundColor: ['#ff6b6b', '#4ecdc4', '#45b7d1'][balloonIndex],
+                background: `radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.3), ${['#ff6b6b', '#4ecdc4', '#45b7d1'][balloonIndex]})`,
+                transform: `rotate(${Math.random() * 10 - 5}deg)`,
+              }}
+            />
+            {/* String */}
+            <div
+              className="absolute left-1/2 top-full w-0.5 bg-gray-500"
+              style={{ 
+                height: `${Math.random() * 40 + 30}px`, 
+                transform: 'translateX(-50%)',
+                opacity: 0.7
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    ));
+
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+        {balloonClusters}
+        <style jsx>{`
+          @keyframes partyBalloonFloat {
+            0% {
+              transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            20% {
+              transform: translateY(-15vh) translateX(5px) rotate(1deg);
+            }
+            40% {
+              transform: translateY(-35vh) translateX(-10px) rotate(-2deg);
+            }
+            60% {
+              transform: translateY(-55vh) translateX(8px) rotate(1deg);
+            }
+            80% {
+              transform: translateY(-75vh) translateX(-3px) rotate(-1deg);
+            }
+            100% {
+              transform: translateY(-110vh) translateX(0) rotate(0deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  };
+
+  const triggerConfetti = async () => {
+    await playCelebrationSound();
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 4000);
+  };
   
     return (
       <>
@@ -180,7 +382,13 @@ const Roadmap = () => {
         </div>
   
         {/* Confetti */}
-        {showConfetti && <Confetti />}
+        {/* {showConfetti && <Confetti />} */}
+        {showConfetti && 
+        <>
+        <Confetti />
+        <FloatingBalloons></FloatingBalloons>
+        {/* <PartyBalloons></PartyBalloons> */}
+        </>}
 
         {/* Roadmap Summary (below global navbar) */}
         <div className="max-w-7xl mx-auto px-6 py-10">
