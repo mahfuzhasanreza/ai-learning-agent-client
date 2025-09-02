@@ -187,54 +187,6 @@
             "timeCommitment": "8-10 hours"
           }
         ]
-      },
-      {
-        "title": "Stage 9: Advanced Topics",
-        "description": "Deep dive into advanced C programming concepts.",
-        "items": [
-          {
-            "name": "9.1 Preprocessors & Macros",
-            "description": "Learning Outcomes: #define, #include, conditional compilation.\nTime Commitment: 5-7 hours\nDifficulty: Hard",
-            "difficulty": "Hard",
-            "timeCommitment": "5-7 hours"
-          },
-          {
-            "name": "9.2 Command-line Arguments",
-            "description": "Learning Outcomes: Use argc and argv in programs.\nTime Commitment: 4-6 hours\nDifficulty: Medium",
-            "difficulty": "Medium",
-            "timeCommitment": "4-6 hours"
-          },
-          {
-            "name": "9.3 Error Handling & Defensive Programming",
-            "description": "Learning Outcomes: Prevent runtime errors, handle edge cases.\nTime Commitment: 6-8 hours\nDifficulty: Hard",
-            "difficulty": "Hard",
-            "timeCommitment": "6-8 hours"
-          }
-        ]
-      },
-      {
-        "title": "Stage 10: Data Structures in C",
-        "description": "Implement and practice common data structures in C.",
-        "items": [
-          {
-            "name": "10.1 Linked Lists",
-            "description": "Learning Outcomes: Singly, doubly, and circular linked lists.\nTime Commitment: 10-12 hours\nDifficulty: Hard",
-            "difficulty": "Hard",
-            "timeCommitment": "10-12 hours"
-          },
-          {
-            "name": "10.2 Stacks & Queues",
-            "description": "Learning Outcomes: Implement stack and queue using arrays and linked lists.\nTime Commitment: 8-10 hours\nDifficulty: Hard",
-            "difficulty": "Hard",
-            "timeCommitment": "8-10 hours"
-          },
-          {
-            "name": "10.3 Trees & Graphs (Intro)",
-            "description": "Learning Outcomes: Binary trees, traversals, and graph basics.\nTime Commitment: 12-15 hours\nDifficulty: Hard",
-            "difficulty": "Hard",
-            "timeCommitment": "12-15 hours"
-          }
-        ]
       }
     ]
   }
