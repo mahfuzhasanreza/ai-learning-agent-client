@@ -3,7 +3,7 @@
     "introduction": "This roadmap is designed to guide learners through a comprehensive journey of learning C programming — starting from basic syntax and environment setup, progressing through core concepts, data structures, memory management, and advanced programming techniques. It is structured into multiple stages with clear milestones and outcomes.",
     "stages": [
       {
-        "title": "Stage 1: Getting Started with C",
+        "title": "Getting Started with C",
         "description": "Set up the development environment and understand the basics of the C language.",
         "items": [
           {
@@ -27,7 +27,7 @@
         ]
       },
       {
-        "title": "Stage 2: C Fundamentals",
+        "title": "C Fundamentals",
         "description": "Learn the building blocks of C programming.",
         "items": [
           {
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "title": "Stage 3: Control Flow",
+        "title": "Control Flow",
         "description": "Understand conditional statements and loops to control program execution.",
         "items": [
           {
@@ -75,7 +75,7 @@
         ]
       },
       {
-        "title": "Stage 4: Functions & Modular Programming",
+        "title": "Functions & Modular Programming",
         "description": "Break down problems into reusable functions.",
         "items": [
           {
@@ -99,7 +99,7 @@
         ]
       },
       {
-        "title": "Stage 5: Arrays & Strings",
+        "title": "Arrays & Strings",
         "description": "Learn to work with collections of data and manipulate strings.",
         "items": [
           {
@@ -123,7 +123,7 @@
         ]
       },
       {
-        "title": "Stage 6: Pointers & Memory Management",
+        "title": "Pointers & Memory Management",
         "description": "Master pointers and dynamic memory allocation.",
         "items": [
           {
@@ -147,7 +147,7 @@
         ]
       },
       {
-        "title": "Stage 7: Structures, Unions & Enums",
+        "title": "Structures, Unions & Enums",
         "description": "Learn how to organize and represent complex data.",
         "items": [
           {
@@ -171,7 +171,7 @@
         ]
       },
       {
-        "title": "Stage 8: File Handling",
+        "title": "File Handling",
         "description": "Learn how to store and retrieve data using files.",
         "items": [
           {

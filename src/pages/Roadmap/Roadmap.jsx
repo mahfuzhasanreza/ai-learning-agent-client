@@ -281,7 +281,7 @@ const Roadmap = () => {
           <div className="relative" ref={timelineRef}>
             {/* Main Timeline Line */}
             <div className="absolute left-1/2 transform -translate-x-px h-full w-1 bg-gradient-to-b from-blue-300 via-purple-300 to-green-300 rounded-full shadow-sm">
-              <div className="absolute inset-0 bg-white/50 rounded-full animate-pulse"></div>
+              <div className="absolute inset-0 bg-white/50 rounded-full "></div>
             </div>
   
             {/* Stages */}
@@ -290,7 +290,7 @@ const Roadmap = () => {
                 <div 
                   key={stageIndex} 
                   id={`stage-${stageIndex}`}
-                  className="relative"
+                  className="mb-10 relative"
                   style={{
                     opacity: visibleStages.has(stageIndex) ? 1 : 0,
                     transform: visibleStages.has(stageIndex) ? 'translateY(0)' : 'translateY(20px)',
@@ -298,7 +298,7 @@ const Roadmap = () => {
                   }}
                 >
                   {/* Stage Header */}
-                  <div className="flex items-center justify-center mb-12">
+                  <div className=" flex items-center justify-center mb-12">
                     <div className="relative">
                       <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur opacity-30"></div>
                       <div className="relative bg-white rounded-3xl shadow-2xl p-8 max-w-3xl text-center border border-white/20">
@@ -310,28 +310,29 @@ const Roadmap = () => {
                             {stage.title}
                           </h2>
                           {getStageProgress(stageIndex) === 100 && (
-                            <div className="ml-4">
+                            <div className="ml-4 mt-2">
                               <Zap className="h-6 w-6 text-yellow-500 animate-bounce" />
                             </div>
                           )}
                         </div>
-                        <p className="text-gray-600 text-base mb-6 leading-relaxed">{stage.description}</p>
-                        <div className="flex items-center justify-center space-x-6 mb-4">
-                          <div className="flex items-center space-x-2 bg-blue-50 rounded-2xl px-4 py-2">
+                        <p className=" text-gray-600 text-base mb-6 leading-relaxed">{stage.description}</p>
+                        <div className="gap-3 flex items-center justify-center space-x-6 mb-4">
+                          <div className="flex items-center space-x-2 bg-blue-50 rounded-2xl px-4 py-2 gap-2">
                             <Target className="h-5 w-5 text-blue-500" />
                             <span className="text-sm font-medium text-blue-700">{stage.items.length} items</span>
                           </div>
-                          <div className="flex items-center space-x-2 bg-green-50 rounded-2xl px-4 py-2">
+                          <div className="flex items-center space-x-2 bg-green-50 rounded-2xl px-4 py-2 gap-2">
                             <CheckCircle className="h-5 w-5 text-green-500" />
                             <span className="text-sm font-medium text-green-700">{getStageProgress(stageIndex)}% complete</span>
                           </div>
                         </div>
                         <div className="w-full bg-gray-100 rounded-full h-3 shadow-inner">
                           <div 
-                            className="bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 h-3 rounded-full transition-all duration-1000 ease-out shadow-md relative"
+                            className="bg-gradient-to-r from-green-400 via-blue-400 to-green-700 h-3 rounded-full transition-all duration-1000 ease-out shadow-md relative"
                             style={{ width: `${getStageProgress(stageIndex)}%` }}
                           >
                             <div className="absolute inset-0 bg-white/40 rounded-full animate-pulse"></div>
+                            
                           </div>
                         </div>
                       </div>
@@ -451,7 +452,7 @@ const Roadmap = () => {
         {selectedItem && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div 
-              className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/20 animate-pulse"
+              className="bg-white/85 backdrop-blur-md rounded-3xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/20 animate-pulse"
               style={{
                 animation: 'modalAppear 0.3s ease-out forwards'
               }}
@@ -515,7 +516,7 @@ const Roadmap = () => {
   
                 {renderAdditionalFields(selectedItem)}
   
-                <div className="mt-6 flex space-x-3">
+                <div className="gap-4 mt-6 flex space-x-3">
                   <button
                     onClick={() => {
                       toggleCompletion(selectedItem.stageIndex, selectedItem.itemIndex);
@@ -533,7 +534,7 @@ const Roadmap = () => {
                   </button>
                   <button
                     onClick={() => setSelectedItem(null)}
-                    className="px-6 py-3 rounded-2xl font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-300 transform hover:scale-105"
+                    className="px-6 py-3 rounded-2xl font-semibold bg-gray-100 text-gray-700 hover:bg-gray-300 transition-all duration-300 transform hover:scale-105"
                   >
                     Close
                   </button>
