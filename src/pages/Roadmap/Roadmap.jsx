@@ -205,9 +205,9 @@ const Roadmap = () => {
       </div>
 
       {/* Progress Summary */}
-      <div className="flex items-center space-x-6 w-full md:w-auto">
-        <div className="flex items-center space-x-3 bg-gradient-to-r from-yellow-100 to-yellow-50 rounded-2xl px-6 py-4 shadow-lg">
-          <Trophy className="h-7 w-7 text-yellow-600 animate-bounce" />
+      <div className="flex  items-center space-x-6 gap-4 w-full md:w-auto">
+        <div className=" flex  items-center space-x-3 bg-gradient-to-r from-yellow-100 to-yellow-50 rounded-2xl px-6 py-4 shadow-lg">
+          <Trophy className="h-7 w-7 mr-4 mt-2 text-yellow-600 animate-bounce" />
           <div>
             <span className="text-2xl font-bold text-gray-900">{getTotalProgress()}%</span>
             <p className="text-xs text-gray-600">Completed</p>
