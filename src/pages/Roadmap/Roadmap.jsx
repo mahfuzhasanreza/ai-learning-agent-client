@@ -5,6 +5,7 @@ import { Star, Zap, Trophy } from 'lucide-react';
 import roadmapData from "../../../src/data/c_roadmap.json";
 import FooterSection from '../../components/LandingPage/sections/FooterSection';
 import Navigation from '../../components/LandingPage/components/Navigation';
+import { div } from 'framer-motion/client';
 // import roadmapData from "../../../src/data/python_roadmap.json";
 
 
@@ -228,27 +229,37 @@ const Roadmap = () => {
 
 
   
-        <div className="max-w-7xl mx-auto p-6 relative z-10">
+        <div className="max-w-7xl gap-7 mx-auto p-6 relative z-10">
           {/* Stage Navigation */}
-          <div className="mb-12">
-            <div className="flex items-center justify-center space-x-3 pb-4">
+          <div className="mb-12 ">
+            <div className="gap-3 flex items-center justify-center space-x-3 pb-4">
               {data.stages.map((stage, index) => (
                 <button
                   key={index}
                   onClick={() => scrollToStage(index)}
-                  className={`group relative flex items-center space-x-3 px-6 py-3 rounded-2xl whitespace-nowrap transition-all duration-300 transform hover:scale-105 ${
+                  className={`border border-blue-300 group relative flex items-center space-x-3 px-6 py-3 rounded-2xl whitespace-nowrap transition-all duration-300 transform hover:scale-105 ${
                     activeStage === index 
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-xl shadow-blue-500/25' 
                       : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white shadow-lg'
                   }`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+                  {/* <div className={`w-8 mr-3  h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                     getStageProgress(index) === 100 
                       ? 'bg-green-500 text-white' 
                       : activeStage === index ? 'bg-white/20' : 'bg-gray-100'
                   }`}>
                     {getStageProgress(index) === 100 ? <CheckCircle className="h-5 w-5" /> : index + 1}
-                  </div>
+                  </div> */}
+
+                  {getStageProgress(index) === 100 ? <div className={`w-8 mr-3  h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+                    getStageProgress(index) === 100 
+                      ? 'bg-green-500 text-white' 
+                      : activeStage === index ? 'bg-white/20' : 'bg-gray-100'
+                  }`}>
+                    <CheckCircle className="h-5 w-5" />
+                  </div> : ""}
+
+                  
                   <div className="text-left">
                     <span className="text-sm font-semibold">Stage {index + 1}</span>
                     <div className="w-12 bg-gray-200 rounded-full h-1 mt-1">
