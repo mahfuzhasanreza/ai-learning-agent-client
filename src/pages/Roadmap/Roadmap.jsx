@@ -341,7 +341,13 @@ const Roadmap = () => {
       .each(function(d) {
         const text = d3.select(this);
         const words = d.data.name.split(/\s+/);
-        const maxWidth = d.data.type === "root" ? 200 : d.data.type === "stage" ? 150 : 120;
+        
+        // const maxWidth = d.data.type === "root" ? 200 : d.data.type === "stage" ? 150 : 120;
+
+        const maxWidth = d.data.type === "root" ? 200 
+               : d.data.type === "stage" ? 150 
+               : "w-fit"; // <-- increase item width from 120 to 180
+
         
         text.text("");
         let line = [];
@@ -372,7 +378,7 @@ const Roadmap = () => {
         const textHeight = lines.length * fontSize * lineHeight;
         
         textDimensions.set(d, {
-          width: textWidth + 16, // Add padding
+          width: textWidth + 20, // Add padding
           height: textHeight + 12, // Add padding
           lines: lines,
           lineHeight: lineHeight,
@@ -387,7 +393,9 @@ const Roadmap = () => {
     nodes.append("rect")
       .attr("class", "text-background")
       .attr("x", d => {
+        
         const dims = textDimensions.get(d);
+
         return -dims.width / 2;
       })
       .attr("y", d => {
@@ -465,7 +473,7 @@ const Roadmap = () => {
   return (
     <div className="w-full h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       {/* Header */}
-      <div className="mb-4 bg-white rounded-lg shadow-md p-4">
+      <div className="mb-4  bg-white rounded-lg shadow-md p-4">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Python Learning Roadmap</h1>
         <div className="flex items-center gap-4">
           <div className="flex-1 bg-gray-200 rounded-full h-3">
@@ -480,7 +488,7 @@ const Roadmap = () => {
         </div>
       </div>
 
-      <div className="flex gap-4 h-full">
+      <div className="flex  gap-4 h-full">
         {/* Tree visualization */}
         <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden">
           <svg ref={svgRef} className="w-full h-full"></svg>
@@ -532,9 +540,9 @@ const Roadmap = () => {
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-4">
+      <div className="border border-red-200 absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-4">
         <h4 className="text-sm font-bold text-gray-800 mb-2">Legend</h4>
-        <div className="flex flex-col gap-2 text-xs">
+        <div className="flex flex-col gap-2  text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-purple-500"></div>
             <span>Root Topic</span>
