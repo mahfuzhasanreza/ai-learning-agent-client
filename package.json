@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-spring/web": "^10.0.1",
     "@supabase/supabase-js": "^2.56.1",
+    "@syncfusion/ej2-data": "^30.2.4",
+    "@syncfusion/ej2-react-diagrams": "^30.2.7",
     "@tailwindcss/vite": "^4.0.17",
     "d3": "^7.9.0",
     "firebase": "^11.9.1",
