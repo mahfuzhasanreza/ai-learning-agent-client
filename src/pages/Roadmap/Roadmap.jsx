@@ -175,7 +175,7 @@ const Roadmap = () => {
             "description": "Learning Outcomes: Apply all learned concepts to build a significant project from scratch.\nTime Commitment: 20-40 hours\nDifficulty: Hard",
             "difficulty": "Hard",
             "timeCommitment": "20-40 hours"
-          }
+          },
         ]
       }
     ]
@@ -235,8 +235,8 @@ const Roadmap = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 1200;
-    const height = 800;
+    const width = 1400;
+    const height = 1800;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
     svg.attr("width", width).attr("height", height);
@@ -253,7 +253,23 @@ const Roadmap = () => {
     svg.call(zoom);
 
     const root = d3.hierarchy(transformDataForTree(roadmapData));
-    const treeLayout = d3.tree().size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
+    // const treeLayout = d3.tree().size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
+
+    const treeLayout = d3.tree().nodeSize([60, 250]); 
+
+  //   const treeLayout = d3.tree()
+  // .nodeSize([40, 250]) // base spacing
+  // .separation((a, b) => {
+  //   // Stage nodes (depth 1) are closer
+  //   if (a.data.type === "stage" && b.data.type === "stage") return 0.1; 
+
+  //   // Items under a stage (depth 2) are spread more
+  //   if (a.data.type === "item" && b.data.type === "item") return 3.5;
+
+  //   // Default spacing
+  //   return 1.5;
+  // });
+
 
     treeLayout(root);
 
@@ -376,20 +392,27 @@ const Roadmap = () => {
       })
       .attr("y", d => {
         const dims = textDimensions.get(d);
-        const yOffset = d.data.type === "root" ? -18 : d.data.type === "stage" ? -14 : -12;
+        const yOffset = d.data.type === "root" ? -25 : d.data.type === "stage" ? -35 : -18;
         return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
       })
-      // .attr("width", d => textDimensions.get(d).width)
-      // .attr("height", d => textDimensions.get(d).height)
-      // .attr("fill", "yellow")
-      // .attr("stroke", "red")
-      // .attr("stroke-width", 2)
-      // .attr("rx", 4) // Border radius
-      // .attr("ry", 4);
+      .attr("width", d => textDimensions.get(d).width)
+      .attr("height", d => textDimensions.get(d).height)
+      .attr("fill", "yellow")
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("rx", 4) // Border radius
+      .attr("ry", 4);
 
     // Add labels
     nodes.append("text")
-      .attr("dy", d => d.data.type === "root" ? -18 : d.data.type === "stage" ? -14 : -12)
+      // .attr("dy", d => d.data.type === "root" ? -18 : d.data.type === "stage" ? -14 : -12)
+      
+      .attr("dy", d => 
+        d.data.type === "root" ? -25 :   // was -18
+        d.data.type === "stage" ? -35 :  // was -14
+        -18                              // was -12
+      )
+      
       .attr("text-anchor", "middle")
       .attr("font-size", d => {
         if (d.data.type === "root") return "14px";
