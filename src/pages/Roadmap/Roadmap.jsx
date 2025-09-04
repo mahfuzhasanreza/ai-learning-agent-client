@@ -274,18 +274,24 @@ const Roadmap = () => {
 
 
     // stage line
-
     const stageNodes = root.descendants().filter(d => d.data.type === "stage");
 
+    // Find top-most and bottom-most stage positions
+    const topStageX = d3.min(stageNodes, d => d.x);
+    const bottomStageX = d3.max(stageNodes, d => d.x);
+    const centerY = d3.mean(stageNodes, d => d.y);
+
+    // Extend line above top stage (e.g., by 100 px)
+    const topLineX = topStageX - 150;
 
     g.append("line")
-      .attr("x1", d3.mean(stageNodes, d => d.y)) // central y-position of stages
-      .attr("y1", d3.min(stageNodes, d => d.x))  // top-most stage
-      .attr("x2", d3.mean(stageNodes, d => d.y)) // same x as x1
-      .attr("y2", d3.max(stageNodes, d => d.x))  // bottom-most stage
-      .attr("stroke", "#94a3b8")                 // line color
+      .attr("x1", centerY)
+      .attr("y1", topLineX)  // start above first stage
+      .attr("x2", centerY)
+      .attr("y2", bottomStageX) // bottom-most stage
+      .attr("stroke", "#94a3b8")
       .attr("stroke-width", 2)
-      .attr("stroke-width", "4 2");         // optional dotted style
+      .attr("stroke-dasharray", "4 2"); // dotted line
 
 
 
