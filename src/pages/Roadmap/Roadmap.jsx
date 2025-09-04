@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
+// import roadmapData from "../../../src/data/c_roadmap.json";
+// import roadmapData from "../../../src/data/python_roadmap.json";
+
 const Roadmap = () => {
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
@@ -181,6 +184,8 @@ const Roadmap = () => {
     ]
   };
 
+  
+
   const transformDataForTree = (data) => {
     const root = {
       name: data.topic,
@@ -309,22 +314,31 @@ const Roadmap = () => {
 
 
     // Add circles for nodes
-    nodes.append("circle")
-      .attr("r", d => {
-        if (d.data.type === "root") return 12;
-        if (d.data.type === "stage") return 8;
-        return 6;
-      })
-      .attr("fill", d => getNodeColor(d))
-      .attr("stroke", d => completedItems.has(d.data.id) ? "#10b981" : "#fff")
-      .attr("stroke-width", d => completedItems.has(d.data.id) ? 3 : 2)
-      .on("click", (event, d) => {
-        event.stopPropagation();
-        setSelectedNode(d.data);
-        if (d.data.type === "item") {
-          toggleCompletion(d.data.id);
-        }
-      });
+    // nodes.append("circle")
+    //   .attr("r", d => {
+    //     if (d.data.type === "root") return 12;
+    //     if (d.data.type === "stage") return 8;
+    //     return 6;
+    //   })
+    //   .attr("fill", d => getNodeColor(d))
+    //   .attr("stroke", d => completedItems.has(d.data.id) ? "#10b981" : "#fff")
+    //   .attr("stroke-width", d => completedItems.has(d.data.id) ? 3 : 2)
+    //   .on("click", (event, d) => {
+    //     event.stopPropagation();
+    //     setSelectedNode(d.data);
+    //     if (d.data.type === "item") {
+    //       toggleCompletion(d.data.id);
+    //     }
+    //   });
+
+    nodes.on("click", (event, d) => {
+      event.stopPropagation();
+      setSelectedNode(d.data);
+      if (d.data.type === "item") {
+        toggleCompletion(d.data.id);
+      }
+    });
+    
 
     // Add completion checkmark for completed items
     nodes
@@ -549,7 +563,7 @@ const Roadmap = () => {
       </div>
 
       {/* Legend */}
-      <div className="border border-red-200 absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-4">
+      {/* <div className="border border-red-200 absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-4">
         <h4 className="text-sm font-bold text-gray-800 mb-2">Legend</h4>
         <div className="flex flex-col gap-2  text-xs">
           <div className="flex items-center gap-2">
@@ -576,7 +590,7 @@ const Roadmap = () => {
         <div className="mt-2 text-xs text-gray-600">
           Click items to mark complete • Zoom and pan to explore
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
