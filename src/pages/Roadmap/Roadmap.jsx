@@ -268,6 +268,21 @@ const Roadmap = () => {
 
 
 
+    // stage line
+
+    const stageNodes = root.descendants().filter(d => d.data.type === "stage");
+
+
+    g.append("line")
+      .attr("x1", d3.mean(stageNodes, d => d.y)) // central y-position of stages
+      .attr("y1", d3.min(stageNodes, d => d.x))  // top-most stage
+      .attr("x2", d3.mean(stageNodes, d => d.y)) // same x as x1
+      .attr("y2", d3.max(stageNodes, d => d.x))  // bottom-most stage
+      .attr("stroke", "#94a3b8")                 // line color
+      .attr("stroke-width", 2)
+      .attr("stroke-width", "4 2");         // optional dotted style
+
+
 
     const links = g.selectAll(".link")
       .data(
