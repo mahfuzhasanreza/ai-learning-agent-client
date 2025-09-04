@@ -416,24 +416,56 @@ const Roadmap = () => {
     tempText.remove();
 
     // Add background rectangles
+    // nodes.append("rect")
+    //   .attr("class", "text-background")
+    //   .attr("x", d => {
+    //     const dims = textDimensions.get(d);
+    //     return -dims.width / 2;
+    //   })
+    //   .attr("y", d => {
+    //     const dims = textDimensions.get(d);
+    //     const yOffset = d.data.type === "root" ? -0 : d.data.type === "stage" ? -0 : -0;
+    //     return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
+    //   })
+    //   .attr("width", d => textDimensions.get(d).width)
+    //   .attr("height", d => textDimensions.get(d).height)
+    //   .attr("fill", d => d.data.type === "stage" ? "yellow" : d.data.type === "item" ? "gold" : "white")
+    //   .attr("stroke", "black")
+    //   .attr("stroke-width", 1)
+    //   .attr("rx", 4) // Border radius
+    //   .attr("ry", 4);
+
+
     nodes.append("rect")
-      .attr("class", "text-background")
-      .attr("x", d => {
-        const dims = textDimensions.get(d);
-        return -dims.width / 2;
-      })
-      .attr("y", d => {
-        const dims = textDimensions.get(d);
-        const yOffset = d.data.type === "root" ? -0 : d.data.type === "stage" ? -0 : -0;
-        return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
-      })
-      .attr("width", d => textDimensions.get(d).width)
-      .attr("height", d => textDimensions.get(d).height)
-      .attr("fill", d => d.data.type === "stage" ? "yellow" : d.data.type === "item" ? "gold" : "white")
-      .attr("stroke", "black")
-      .attr("stroke-width", 1)
-      .attr("rx", 4) // Border radius
-      .attr("ry", 4);
+  .attr("class", "text-background")
+  .attr("x", d => {
+    const dims = textDimensions.get(d);
+    return -dims.width / 2;
+  })
+  .attr("y", d => {
+    const dims = textDimensions.get(d);
+    const yOffset = d.data.type === "root" ? 0 : d.data.type === "stage" ? 0 : 0;
+    return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
+  })
+  .attr("width", d => textDimensions.get(d).width)
+  .attr("height", d => textDimensions.get(d).height)
+  .attr("fill", d => {
+    if (d.data.type === "stage") return "yellow";
+    if (d.data.type === "item") {
+      switch (d.data.difficulty) {
+        case "easy": return "#8BC34A";    // Green
+        case "medium": return "#FFC107";  // Amber
+        case "hard": return "#F44336";    // Red
+        default: return "gold";           // fallback
+      }
+    }
+    return "white"; // for root
+  })
+  .attr("stroke", "black")
+  .attr("stroke-width", 1)
+  .attr("rx", 4) // Border radius
+  .attr("ry", 4);
+
 
 
     // Add labels
