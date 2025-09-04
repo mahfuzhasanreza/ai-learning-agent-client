@@ -254,7 +254,7 @@ const Roadmap = () => {
 
     const root = d3.hierarchy(transformDataForTree(roadmapData));
 
-    const treeLayout = d3.tree().size([width, height]); // width -> x, height -> y
+    const treeLayout = d3.tree().size([width - 200, 500]); // width -> x, height -> y
 
     treeLayout(root);
 
@@ -262,7 +262,7 @@ const Roadmap = () => {
     root.descendants().forEach(d => {
       if (d.data.type === "item") {
         const isEven = d.data.itemIndex % 2 === 0;
-        d.y = d.y + (isEven ? 20 : -1370); // use y instead of x
+        d.y = d.y + (isEven ? 20 : -500); // use y instead of x
       }
     });
 
