@@ -254,32 +254,43 @@ const Roadmap = () => {
 
     const root = d3.hierarchy(transformDataForTree(roadmapData));
 
-    const treeLayout = d3.tree().nodeSize([60, 250]); 
+    const treeLayout = d3.tree().size([width, height]); // width -> x, height -> y
 
     treeLayout(root);
 
+    // Zigzag left/right
+    root.descendants().forEach(d => {
+      if (d.data.type === "item") {
+        const isEven = d.data.itemIndex % 2 === 0;
+        d.y = d.y + (isEven ? 20 : -1370); // use y instead of x
+      }
+    });
+
+
+
+
     const links = g.selectAll(".link")
-  .data(
-    root.links().filter(d => d.source.data.type !== "root") // ⬅️ skip root links
-  )
-  .enter()
-  .append("path")
-  .attr("class", "link")
-  .attr("d", d3.linkHorizontal()
-    .x(d => d.y)
-    .y(d => d.x))
-  .attr("fill", "none")
-  .attr("stroke", "#94a3b8")
-  .attr("stroke-width", 2)
-  .attr("opacity", 0.6);
+      .data(
+        root.links().filter(d => d.source.data.type !== "root") // ⬅️ skip root links
+      )
+      .enter()
+      .append("path")
+      .attr("class", "link")
+      .attr("d", d3.linkHorizontal()
+        .x(d => d.y)
+        .y(d => d.x))
+      .attr("fill", "none")
+      .attr("stroke", "#94a3b8")
+      .attr("stroke-width", 2)
+      .attr("opacity", 0.6);
 
     const nodes = g.selectAll(".node")
-  .data(root.descendants().filter(d => d.data.type !== "root")) // ⬅️ skip root
-  .enter()
-  .append("g")
-  .attr("class", "node")
-  .attr("transform", d => `translate(${d.y},${d.x})`)
-  .style("cursor", "pointer");
+      .data(root.descendants().filter(d => d.data.type !== "root")) // ⬅️ skip root
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", d => `translate(${d.y},${d.x})`)
+      .style("cursor", "pointer");
 
 
     // Add circles for nodes
@@ -324,17 +335,17 @@ const Roadmap = () => {
         return "10px";
       })
       .attr("font-weight", d => d.data.type === "root" ? "bold" : d.data.type === "stage" ? "600" : "normal")
-      .each(function(d) {
+      .each(function (d) {
         const text = d3.select(this);
         const words = d.data.name.split(/\s+/);
-        
+
         // const maxWidth = d.data.type === "root" ? 200 : d.data.type === "stage" ? 150 : 120;
 
-        const maxWidth = d.data.type === "root" ? 200 
-               : d.data.type === "stage" ? 150 
-               : "w-fit"; // <-- increase item width from 120 to 180
+        const maxWidth = d.data.type === "root" ? 200
+          : d.data.type === "stage" ? 150
+            : "w-fit"; // <-- increase item width from 120 to 180
 
-        
+
         text.text("");
         let line = [];
         let lineNumber = 0;
@@ -362,7 +373,7 @@ const Roadmap = () => {
           return text.node().getComputedTextLength();
         }));
         const textHeight = lines.length * fontSize * lineHeight;
-        
+
         textDimensions.set(d, {
           width: textWidth + 20, // Add padding
           height: textHeight + 12, // Add padding
@@ -379,7 +390,7 @@ const Roadmap = () => {
     nodes.append("rect")
       .attr("class", "text-background")
       .attr("x", d => {
-        
+
         const dims = textDimensions.get(d);
 
         return -dims.width / 2;
@@ -399,13 +410,13 @@ const Roadmap = () => {
 
     // Add labels
     nodes.append("text")
-      
-      .attr("dy", d => 
+
+      .attr("dy", d =>
         d.data.type === "root" ? -25 :   // was -18
-        d.data.type === "stage" ? -35 :  // was -14
-        -18                              // was -12
+          d.data.type === "stage" ? -35 :  // was -14
+            -18                              // was -12
       )
-      
+
       .attr("text-anchor", "middle")
       .attr("font-size", d => {
         if (d.data.type === "root") return "14px";
@@ -414,10 +425,10 @@ const Roadmap = () => {
       })
       .attr("font-weight", d => d.data.type === "root" ? "bold" : d.data.type === "stage" ? "600" : "normal")
       .attr("fill", "#1f2937")
-      .each(function(d) {
+      .each(function (d) {
         const text = d3.select(this);
         const dims = textDimensions.get(d);
-        
+
         text.text("");
         dims.lines.forEach((lineText, index) => {
           if (index === 0) {
@@ -438,7 +449,7 @@ const Roadmap = () => {
     const widthScale = fullWidth / bounds.width;
     const heightScale = fullHeight / bounds.height;
     const scale = Math.min(widthScale, heightScale) * 0.8;
-    
+
     svg.call(zoom.transform, d3.zoomIdentity
       .translate(fullWidth / 2 - bounds.width * scale / 2, fullHeight / 2 - bounds.height * scale / 2)
       .scale(scale));
@@ -446,7 +457,7 @@ const Roadmap = () => {
   }, [completedItems]);
 
   const completionPercentage = roadmapData.stages.reduce((total, stage) => {
-    const stageCompleted = stage.items.filter((item, itemIndex) => 
+    const stageCompleted = stage.items.filter((item, itemIndex) =>
       completedItems.has(`${roadmapData.stages.indexOf(stage)}-${itemIndex}`)
     ).length;
     return total + stageCompleted;
@@ -462,7 +473,7 @@ const Roadmap = () => {
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Python Learning Roadmap</h1>
         <div className="flex items-center gap-4">
           <div className="flex-1 bg-gray-200 rounded-full h-3">
-            <div 
+            <div
               className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             ></div>
@@ -483,14 +494,13 @@ const Roadmap = () => {
         {selectedNode && (
           <div className="w-96 bg-white rounded-lg shadow-md p-6 overflow-y-auto">
             <h3 className="text-lg font-bold text-gray-800 mb-3">{selectedNode.name}</h3>
-            
+
             {selectedNode.type === "item" && (
               <div className="mb-4 flex items-center gap-3">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
+                <span className={`px-2 py-1 rounded text-xs font-medium ${selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
                   selectedNode.difficulty === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                  "bg-red-100 text-red-800"
-                }`}>
+                    "bg-red-100 text-red-800"
+                  }`}>
                   {selectedNode.difficulty}
                 </span>
                 <span className="text-sm text-gray-600">{selectedNode.timeCommitment}</span>
@@ -511,11 +521,10 @@ const Roadmap = () => {
             {selectedNode.type === "item" && (
               <button
                 onClick={() => toggleCompletion(selectedNode.id)}
-                className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${
-                  completedItems.has(selectedNode.id)
-                    ? "bg-green-500 text-white hover:bg-green-600"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
-                }`}
+                className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${completedItems.has(selectedNode.id)
+                  ? "bg-green-500 text-white hover:bg-green-600"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
               >
                 {completedItems.has(selectedNode.id) ? "Mark as Incomplete" : "Mark as Complete"}
               </button>
