@@ -281,8 +281,8 @@ const Roadmap = () => {
         .y(d => d.x))
       .attr("fill", "none")
       .attr("stroke", "#94a3b8")
-      .attr("stroke-width", 2)
-      .attr("opacity", 0.6);
+      .attr("stroke-dasharray", 4)
+      .attr("opacity", 0.8);
 
     const nodes = g.selectAll(".node")
       .data(root.descendants().filter(d => d.data.type !== "root")) // ⬅️ skip root
