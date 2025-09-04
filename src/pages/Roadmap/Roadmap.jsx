@@ -184,7 +184,7 @@ const Roadmap = () => {
     ]
   };
 
-  
+
 
   const transformDataForTree = (data) => {
     const root = {
@@ -338,7 +338,7 @@ const Roadmap = () => {
         toggleCompletion(d.data.id);
       }
     });
-    
+
 
     // Add completion checkmark for completed items
     nodes
@@ -419,9 +419,7 @@ const Roadmap = () => {
     nodes.append("rect")
       .attr("class", "text-background")
       .attr("x", d => {
-
         const dims = textDimensions.get(d);
-
         return -dims.width / 2;
       })
       .attr("y", d => {
@@ -431,11 +429,12 @@ const Roadmap = () => {
       })
       .attr("width", d => textDimensions.get(d).width)
       .attr("height", d => textDimensions.get(d).height)
-      .attr("fill", "yellow")
-      .attr("stroke", "red")
-      .attr("stroke-width", 2)
+      .attr("fill", d => d.data.type === "stage" ? "yellow" : d.data.type === "item" ? "gold" : "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
       .attr("rx", 4) // Border radius
       .attr("ry", 4);
+
 
     // Add labels
     nodes.append("text")
@@ -496,22 +495,8 @@ const Roadmap = () => {
   const progressPercent = Math.round((completionPercentage / totalItems) * 100);
 
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+    <div className="w-full h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Header */}
-      <div className="mb-4  bg-white rounded-lg shadow-md p-4">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Python Learning Roadmap</h1>
-        <div className="flex items-center gap-4">
-          <div className="flex-1 bg-gray-200 rounded-full h-3">
-            <div
-              className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            ></div>
-          </div>
-          <span className="text-sm font-medium text-gray-600">
-            {completionPercentage}/{totalItems} completed ({progressPercent}%)
-          </span>
-        </div>
-      </div>
 
       <div className="flex  gap-4 h-full">
         {/* Tree visualization */}
