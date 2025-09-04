@@ -289,9 +289,8 @@ const Roadmap = () => {
       .attr("y1", topLineX)  // start above first stage
       .attr("x2", centerY)
       .attr("y2", bottomStageX) // bottom-most stage
-      .attr("stroke", "#94a3b8")
-      .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "4 2"); // dotted line
+      .attr("stroke", "#7883FF")
+      .attr("stroke-width", 2); // line
 
 
     // Add text on top of the stage line
@@ -318,9 +317,10 @@ const Roadmap = () => {
         .x(d => d.y)
         .y(d => d.x))
       .attr("fill", "none")
-      .attr("stroke", "#94a3b8")
-      .attr("stroke-dasharray", 4)
-      .attr("opacity", 0.8);
+      .attr("stroke", "#7883FF")
+      .attr("stroke-width", 2)
+      .attr("stroke-dasharray", 2)
+      .attr("opacity", 1);
 
     const nodes = g.selectAll(".node")
       .data(root.descendants().filter(d => d.data.type !== "root")) // ⬅️ skip root
