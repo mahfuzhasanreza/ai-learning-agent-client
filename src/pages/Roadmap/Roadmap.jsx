@@ -378,7 +378,7 @@ const Roadmap = () => {
         text.text("");
         let line = [];
         let lineNumber = 0;
-        const lineHeight = 1.1;
+        const lineHeight = 1;
         let lines = [];
 
         words.forEach(word => {
@@ -424,7 +424,7 @@ const Roadmap = () => {
       })
       .attr("y", d => {
         const dims = textDimensions.get(d);
-        const yOffset = d.data.type === "root" ? -25 : d.data.type === "stage" ? -35 : -18;
+        const yOffset = d.data.type === "root" ? -0 : d.data.type === "stage" ? -0 : -0;
         return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
       })
       .attr("width", d => textDimensions.get(d).width)
@@ -440,9 +440,9 @@ const Roadmap = () => {
     nodes.append("text")
 
       .attr("dy", d =>
-        d.data.type === "root" ? -25 :   // was -18
-          d.data.type === "stage" ? -35 :  // was -14
-            -18                              // was -12
+        d.data.type === "root" ? -0 :   // was -18
+          d.data.type === "stage" ? -0 :  // was -14
+            -0                              // was -12
       )
 
       .attr("text-anchor", "middle")
