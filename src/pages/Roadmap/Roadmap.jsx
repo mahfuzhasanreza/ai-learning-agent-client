@@ -294,6 +294,18 @@ const Roadmap = () => {
       .attr("stroke-dasharray", "4 2"); // dotted line
 
 
+    // Add text on top of the stage line
+    g.append("text")
+      .attr("x", centerY)        // horizontal position: same as line
+      .attr("y", topLineX - 10)  // slightly above the top of the line
+      .attr("text-anchor", "middle") // center-align the text horizontally
+      .attr("font-size", "18px")
+      .attr("font-weight", "bold")
+      .attr("fill", "#1e293b")
+      .text(`${roadmapData.topic}`);
+
+
+
 
     const links = g.selectAll(".link")
       .data(
