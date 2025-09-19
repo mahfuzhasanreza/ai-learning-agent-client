@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  User, 
-  Plus, 
-  BookOpen, 
-  Target, 
+import {
+  User,
+  Plus,
+  BookOpen,
+  Target,
   TrendingUp,
   AlertTriangle,
   Trophy,
@@ -96,7 +96,7 @@ const StudentDashboard = () => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
     const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
-    
+
     const colorClasses = {
       blue: "stroke-blue-500",
       green: "stroke-green-500",
@@ -144,7 +144,7 @@ const StudentDashboard = () => {
 
     return (
       <div className="w-full bg-gray-700 rounded-full h-2">
-        <div 
+        <div
           className={`h-2 rounded-full ${colorClasses[color]}`}
           style={{ width: `${percentage}%` }}
         />
@@ -177,25 +177,26 @@ const StudentDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
-          {/* Current Trimester */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Current Trimester</h2>
-            <div className="text-gray-300">
-              <div>{studentData.currentTrimester}</div>
-              <div>{studentData.trimesterCredits} credits</div>
-            </div>
-          </div>
-
           {/* Courses */}
           <div className="bg-gray-800 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Courses</h2>
-              <button className="flex items-center space-x-2 text-blue-400 hover:text-blue-300">
-                <Plus className="w-4 h-4" />
-                <span>Add Course</span>
+            <div className='mb-5'>
+              {/* Current Trimester */}
+
+              <h2 className="text-xl font-semibold mb-4">Current Trimester</h2>
+              <div className="text-gray-300">
+                <div>{studentData.currentTrimester}</div>
+                <div>{studentData.trimesterCredits} credits</div>
+              </div>
+            </div>
+
+
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-7">Courses</h2>
+              <button class="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600">
+                + Add Course
               </button>
             </div>
-            
+
             <div className="space-y-4">
               {studentData.courses.map((course) => (
                 <div key={course.id} className="rounded-lg">
@@ -203,23 +204,22 @@ const StudentDashboard = () => {
                     <div>
                       <div className="font-semibold">{course.code}</div>
                       <div className="text-sm text-gray-400">{course.credits} credits</div>
-                      <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
-                        course.difficulty === 'LOW' 
-                          ? 'bg-green-600 text-green-100' 
-                          : 'bg-yellow-600 text-yellow-100'
-                      }`}>
+                      <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${course.difficulty === 'LOW'
+                        ? 'bg-green-600 text-green-100'
+                        : 'bg-yellow-600 text-yellow-100'
+                        }`}>
                         {course.difficulty}
                       </div>
                     </div>
-                    <CircularProgress 
-                      percentage={course.progress} 
-                      color={course.color} 
+                    <CircularProgress
+                      percentage={course.progress}
+                      color={course.color}
                       size={50}
                     />
                   </div>
-                      <hr className='my-3 text-gray-700'/>
+                  <hr className='my-3 text-gray-700' />
                 </div>
-                
+
               ))}
             </div>
           </div>
@@ -239,12 +239,12 @@ const StudentDashboard = () => {
               {studentData.selectedCourse.instructor}<br />
               {studentData.selectedCourse.credits} credits
             </div>
-            
+
             <div className="flex items-center justify-center">
               <div className="text-center">
                 <div className="text-sm text-gray-400 mb-2">Course progress</div>
-                <CircularProgress 
-                  percentage={studentData.selectedCourse.progress} 
+                <CircularProgress
+                  percentage={studentData.selectedCourse.progress}
                   size={120}
                   strokeWidth={8}
                 />
@@ -274,7 +274,7 @@ const StudentDashboard = () => {
               <div className="text-sm text-gray-400">Course</div>
               <div className="text-sm text-gray-400">Marks</div>
               <div className="text-sm text-gray-400">Best Count</div>
-              
+
               <div>SPL</div>
               <div>{studentData.selectedCourse.ctMethods.spl.marks}</div>
               <div>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
@@ -289,13 +289,13 @@ const StudentDashboard = () => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Topic Mastery</h3>
               <div className="flex items-center">
-                <CircularProgress 
-                  percentage={studentData.selectedCourse.topicMastery} 
+                <CircularProgress
+                  percentage={studentData.selectedCourse.topicMastery}
                   size={40}
                 />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               {studentData.selectedCourse.topics.map((topic, index) => (
                 <div key={index}>
@@ -306,7 +306,7 @@ const StudentDashboard = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="mt-4">
               <div className="flex items-center justify-between p-2 bg-gray-700 rounded">
                 <span className="text-sm">Topic Mastery</span>
@@ -345,15 +345,14 @@ const StudentDashboard = () => {
                 ?
               </div>
             </div>
-            
+
             <div className="space-y-3 mb-4">
               {studentData.selectedCourse.weaknesses.map((weakness, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <span className={`text-sm ${
-                    weakness.severity > 0.5 ? 'text-blue-400' :
+                  <span className={`text-sm ${weakness.severity > 0.5 ? 'text-blue-400' :
                     weakness.severity > 0.2 ? 'text-red-400' :
-                    'text-green-400'
-                  }`}>
+                      'text-green-400'
+                    }`}>
                     {weakness.topic}
                   </span>
                   <span className="text-sm">{weakness.severity}</span>
@@ -377,7 +376,7 @@ const StudentDashboard = () => {
 
             <div className="mt-4 p-3 bg-gray-700 rounded-lg text-sm">
               <div className="mb-2">
-                You have lost <span className="font-semibold">4 marks</span> on CT1 that 
+                You have lost <span className="font-semibold">4 marks</span> on CT1 that
                 consists loops. Max possibilities in CT (avg best) ÷ 3
               </div>
               <button className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm">
