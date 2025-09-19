@@ -5,6 +5,7 @@ import ChatPage from './pages/ChatPage';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Dashboard from './components/Dashboard/Dashboard';
+import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/register" element={<Register></Register>} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/dashboard" element={<Dashboard></Dashboard>} />
+        <Route path="/student-dashboard" element={<StudentDashboard></StudentDashboard>} />
       </Routes>
     </Router>
   );

@@ -5,6 +5,7 @@ import Register from "./pages/Register/Register.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Roadmap from "./pages/Roadmap/Roadmap.jsx";
+import StudentDashboard from "./pages/StudentDashboard/StudentDashboard.jsx";
 
 const RoadmapData = {
     "topic": "Learn C Programming",
@@ -70,4 +71,5 @@ export const router = createBrowserRouter([
     { path: "/dashboard", element: <Dashboard></Dashboard>},
     { path: "/login", element: <Login></Login> },
     { path: "/roadmap", element: <Roadmap></Roadmap> },
+    { path: "/student-dashboard", element: <StudentDashboard></StudentDashboard>}
 ]);
