@@ -198,7 +198,7 @@ const StudentDashboard = () => {
             
             <div className="space-y-4">
               {studentData.courses.map((course) => (
-                <div key={course.id} className="bg-gray-700 rounded-lg p-4">
+                <div key={course.id} className="rounded-lg">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold">{course.code}</div>
@@ -217,7 +217,9 @@ const StudentDashboard = () => {
                       size={50}
                     />
                   </div>
+                      <hr className='my-3 text-gray-700'/>
                 </div>
+                
               ))}
             </div>
           </div>
