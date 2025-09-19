@@ -1,0 +1,50 @@
+{
+    "student": {
+      "name": "Sadik",
+      "batch": "Summer 25",
+      "completedCredits": 110,
+      "cgpa": 3.9,
+      "currentTrimester": "Summer 25",
+      "trimesterCredits": 12,
+      "selfReport": "Doing well, aiming for higher mastery this trimester."
+    },
+    "courses": [
+      {
+        "id": 1,
+        "code": "CSE 1110",
+        "title": "Structured Programming Language",
+        "credits": 3,
+        "difficulty": "LOW",
+        "progress": 68,
+        "topicMastery": 69,
+        "instructor": "Dr. Ada Lovelace",
+        "ctMethod": {
+          "marks": 20,
+          "bestCount": "3 out of 4"
+        },
+        "assessments": [
+          { "type": "CT", "marks": 20, "obtained": 20 },
+          { "type": "Assignment", "marks": 5, "obtained": 5 },
+          { "type": "Attendance", "marks": 5, "obtained": 5 },
+          { "type": "MID", "marks": 30, "obtained": 30 },
+          { "type": "Final", "marks": 40, "obtained": 40 }
+        ],
+        "scores": [
+          { "name": "CT1", "score": 16, "total": 20 },
+          { "name": "CT2", "score": 16, "total": 20 },
+          { "name": "MID", "score": 30, "total": 30 },
+          { "name": "Final", "score": 40, "total": 40 }
+        ],
+        "topics": [
+          { "name": "Variables", "progress": 85 },
+          { "name": "Loops", "progress": 65 },
+          { "name": "Functions", "progress": 90 }
+        ],
+        "weaknesses": [
+          { "topic": "Loops", "severity": 0.15 },
+          { "topic": "Arrays", "severity": 0.25 },
+          { "topic": "Recursion", "severity": 0.6 }
+        ]
+      }
+    ]
+}
