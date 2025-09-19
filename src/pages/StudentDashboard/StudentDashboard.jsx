@@ -129,7 +129,7 @@ const StudentDashboard = () => {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-sm font-semibold text-white">{percentage}</span>
+          <span className="text-2xl font-semibold text-white">{percentage}</span>
         </div>
       </div>
     );
@@ -219,14 +219,13 @@ const StudentDashboard = () => {
                   </div>
                   <hr className='my-3 text-gray-700' />
                 </div>
-
               ))}
             </div>
           </div>
         </div>
 
         {/* Center Column - Course Details */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           {/* Course Header */}
           <div className="bg-gray-800 rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-2">
@@ -241,13 +240,15 @@ const StudentDashboard = () => {
             </div>
 
             <div className="flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-sm text-gray-400 mb-2">Course progress</div>
-                <CircularProgress
-                  percentage={studentData.selectedCourse.progress}
-                  size={120}
-                  strokeWidth={8}
-                />
+              <div className="flex items-center justify-between w-full text-center">
+                <div className="text-sm font-semibold mb-2">Course progress</div>
+                <div>
+                  <CircularProgress
+                    percentage={studentData.selectedCourse.progress}
+                    size={120}
+                    strokeWidth={8}
+                  />
+                </div>
               </div>
             </div>
           </div>
