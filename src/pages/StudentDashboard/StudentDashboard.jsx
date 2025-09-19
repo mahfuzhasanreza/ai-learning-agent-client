@@ -162,12 +162,12 @@ const StudentDashboard = () => {
           </div>
           <h1 className="text-2xl font-bold ml-2">{studentData.name}</h1>
         </div>
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 gap-7">
           <div className="text-center flex justify-center items-center gap-4">
             <div className="text-sm text-gray-400">Completed Credits</div>
             <div className="text-xl font-bold">{studentData.completedCredits}</div>
           </div>
-          <div className="text-center">
+          <div className="text-center flex justify-center items-center gap-4">
             <div className="text-sm text-gray-400 ">CGPA</div>
             <div className="text-xl font-bold">{studentData.cgpa}</div>
           </div>
