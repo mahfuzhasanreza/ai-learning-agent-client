@@ -227,7 +227,7 @@ const StudentDashboard = () => {
         {/* Center Column - Course Details */}
         <div className="space-y-6">
           {/* Course Header */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-t-lg p-6">
             <h2 className="text-2xl font-semibold mb-2">
               {studentData.selectedCourse.title}
             </h2>
@@ -254,11 +254,11 @@ const StudentDashboard = () => {
           </div>
 
           {/* Scores */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 p-6">
             <h3 className="text-xl font-semibold mb-4">Scores</h3>
             <div className="space-y-3">
               {studentData.selectedCourse.scores.map((score, index) => (
-                <div key={index} className="flex justify-between items-center">
+                <div key={index} className="flex mb-1 justify-between items-center">
                   <span className="font-medium">{score.name}</span>
                   <span className="text-gray-300">
                     {score.score} out of {score.total}
@@ -269,16 +269,16 @@ const StudentDashboard = () => {
           </div>
 
           {/* CT Methods */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-b-lg p-6">
             <h3 className="text-xl font-semibold mb-4">CT Methods</h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="text-sm text-gray-400">Course</div>
-              <div className="text-sm text-gray-400">Marks</div>
-              <div className="text-sm text-gray-400">Best Count</div>
+            <div className="w-full grid grid-cols-3 gap-3 gap-x-18">
+              <div>Course</div>
+              <div>Marks</div>
+              <div>Best Count</div>
 
-              <div>SPL</div>
-              <div>{studentData.selectedCourse.ctMethods.spl.marks}</div>
-              <div>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
+              <div className='text-sm text-gray-400'>SPL</div>
+              <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.marks}</div>
+              <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
             </div>
           </div>
         </div>
