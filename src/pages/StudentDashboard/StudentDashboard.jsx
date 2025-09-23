@@ -441,19 +441,19 @@ const StudentDashboard = () => {
 
 
           {/* Course Assessment */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-t-lg p-6">
             <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
             <div className="space-y-2">
-              <div className="grid grid-cols-3 gap-4 text-sm text-gray-400 border-b border-gray-600 pb-2">
+              <div className="grid grid-cols-3 gap-4 text-md font-semibold text-center border-b border-gray-600 pb-2">
                 <span>Assessment</span>
                 <span>Marks</span>
                 <span>Obtained</span>
               </div>
               {studentData.selectedCourse.assessments.map((assessment, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4 text-sm">
+                <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
                   <span>{assessment.type}</span>
-                  <span>{assessment.marks}</span>
-                  <span>{assessment.obtained}</span>
+                  <span className='text-gray-400'>{assessment.marks}</span>
+                  <span className='text-gray-400'>{assessment.obtained}</span>
                 </div>
               ))}
             </div>
