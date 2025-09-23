@@ -460,25 +460,26 @@ const StudentDashboard = () => {
           </div>
 
           {/* Detected Weakness */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-b-lg p-6">
 
 
 
-
-
-            <div className="mt-4 p-3 bg-gray-700 rounded-lg text-sm">
-              <div className="mb-2">
-                You have lost <span className="font-semibold">4 marks</span> on CT1 that
+            <div className="  rounded-lg text-sm">
+              <div className="mb-7 text-lg font-semibold">
+                You have lost 4 marks on CT1 that
                 consists loops. Max possibilities in CT (avg best) ÷ 3
               </div>
               <button className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm">
                 Ask SPL Agent for tailored plan
               </button>
-              <div className="mt-2 text-center">
+              <button className="mt-3 w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm">
+              Click here to get course resources
+              </button>
+              {/* <div className="mt-2 text-center">
                 <a href="#" className="text-blue-400 text-xs hover:underline">
                   Click here to get course resources
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
