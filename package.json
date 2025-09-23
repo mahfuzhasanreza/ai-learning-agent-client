@@ -15,6 +15,7 @@
     "@syncfusion/ej2-data": "^30.2.4",
     "@syncfusion/ej2-react-diagrams": "^30.2.7",
     "@tailwindcss/vite": "^4.0.17",
+    "chart.js": "^4.5.0",
     "d3": "^7.9.0",
     "firebase": "^11.9.1",
     "framer-motion": "^12.19.2",

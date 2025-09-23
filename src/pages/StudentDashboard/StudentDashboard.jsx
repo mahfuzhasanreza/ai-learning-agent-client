@@ -104,6 +104,10 @@ const StudentDashboard = () => {
       red: "stroke-red-500"
     };
 
+
+
+    
+
     return (
       <div className="relative inline-flex items-center justify-center">
         <svg width={size} height={size} className="transform -rotate-90">
@@ -329,7 +333,7 @@ const StudentDashboard = () => {
               </div>
             </div>
 
-            <div className="space-y-3 mb-4">
+            <div className="space-y-3 mb-5">
               {studentData.selectedCourse.weaknesses.map((weakness, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <span className={`text-sm ${weakness.severity > 0.5 ? 'text-blue-400' :
@@ -343,14 +347,13 @@ const StudentDashboard = () => {
               ))}
             </div>
 
-            <button className="w-full bg-gray-700 text-sm py-2 rounded-lg mb-3 flex items-center justify-center">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Weakness
-            </button>
+            <button class="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600">
+                + Add Weakness
+              </button>
 
             <div className="space-y-2">
               {['Loops', 'Arrays', 'Recursion'].map((topic, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-700 p-2 rounded">
+                <div key={index} className="flex items-center justify-between  p-2 rounded">
                   <span className="text-sm">{topic}</span>
                   <X className="w-4 h-4 text-red-400 cursor-pointer" />
                 </div>
