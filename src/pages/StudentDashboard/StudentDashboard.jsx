@@ -283,7 +283,6 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Right Column */}
         <div className="space-y-6">
           {/* Topic Mastery */}
           <div className="bg-gray-800 rounded-lg p-6">
@@ -319,24 +318,7 @@ const StudentDashboard = () => {
             </div>
           </div>
 
-          {/* Course Assessment */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
-            <div className="space-y-2">
-              <div className="grid grid-cols-3 gap-4 text-sm text-gray-400 border-b border-gray-600 pb-2">
-                <span>Assessment</span>
-                <span>Marks</span>
-                <span>Obtained</span>
-              </div>
-              {studentData.selectedCourse.assessments.map((assessment, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4 text-sm">
-                  <span>{assessment.type}</span>
-                  <span>{assessment.marks}</span>
-                  <span>{assessment.obtained}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+
 
           {/* Detected Weakness */}
           <div className="bg-gray-800 rounded-lg p-6">
@@ -374,6 +356,39 @@ const StudentDashboard = () => {
                 </div>
               ))}
             </div>
+
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-6">
+          
+
+          {/* Course Assessment */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
+            <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-4 text-sm text-gray-400 border-b border-gray-600 pb-2">
+                <span>Assessment</span>
+                <span>Marks</span>
+                <span>Obtained</span>
+              </div>
+              {studentData.selectedCourse.assessments.map((assessment, index) => (
+                <div key={index} className="grid grid-cols-3 gap-4 text-sm">
+                  <span>{assessment.type}</span>
+                  <span>{assessment.marks}</span>
+                  <span>{assessment.obtained}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Detected Weakness */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            
+
+            
+
 
             <div className="mt-4 p-3 bg-gray-700 rounded-lg text-sm">
               <div className="mb-2">
