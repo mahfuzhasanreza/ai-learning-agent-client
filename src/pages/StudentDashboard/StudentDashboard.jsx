@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as Chart from 'chart.js';
 import {
   User,
   Plus,
@@ -15,6 +16,9 @@ import {
 } from 'lucide-react';
 
 const StudentDashboard = () => {
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
+
   const [studentData, setStudentData] = useState({
     name: "Sadik",
     completedCredits: 110,
@@ -92,6 +96,70 @@ const StudentDashboard = () => {
     }
   });
 
+  const data = {
+    labels: [
+      'Loops',
+      'Array',
+      'Recursion'
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: [0.15, 0.25, 0.6],
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)'
+      ],
+      hoverOffset: 4
+    }]
+  };
+
+  useEffect(() => {
+    // Register Chart.js components
+    Chart.Chart.register(
+      Chart.ArcElement,
+      Chart.Tooltip,
+      Chart.Legend,
+      Chart.PieController
+    );
+
+    if (chartRef.current) {
+      // Destroy existing chart if it exists
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+
+      // Create new chart
+      const ctx = chartRef.current.getContext('2d');
+      chartInstanceRef.current = new Chart.Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: 'white',
+                font: {
+                  size: 12
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Cleanup function
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+    };
+  }, []);
+
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "blue" }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
@@ -103,10 +171,6 @@ const StudentDashboard = () => {
       yellow: "stroke-yellow-500",
       red: "stroke-red-500"
     };
-
-
-
-    
 
     return (
       <div className="relative inline-flex items-center justify-center">
@@ -178,6 +242,8 @@ const StudentDashboard = () => {
         </div>
       </div>
 
+
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
@@ -196,7 +262,7 @@ const StudentDashboard = () => {
 
             <div className="mb-4">
               <h2 className="text-xl font-semibold mb-7">Courses</h2>
-              <button class="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600">
+              <button className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600">
                 + Add Course
               </button>
             </div>
@@ -326,6 +392,9 @@ const StudentDashboard = () => {
 
           {/* Detected Weakness */}
           <div className="bg-gray-800 rounded-b-lg p-6">
+
+            
+
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Detected Weakness In</h3>
               <div className="bg-red-500 rounded-full w-6 h-6 flex items-center justify-center text-sm">
@@ -333,13 +402,17 @@ const StudentDashboard = () => {
               </div>
             </div>
 
+            {/* Chart Section */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <div className="h-36 w-full">
+                <canvas ref={chartRef} />
+              </div>
+            </div>
+
             <div className="space-y-3 mb-5">
               {studentData.selectedCourse.weaknesses.map((weakness, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <span className={`text-sm ${weakness.severity > 0.5 ? 'text-blue-400' :
-                    weakness.severity > 0.2 ? 'text-red-400' :
-                      'text-green-400'
-                    }`}>
+                  <span className={`text-sm`}>
                     {weakness.topic}
                   </span>
                   <span className="text-sm">{weakness.severity}</span>
@@ -347,15 +420,15 @@ const StudentDashboard = () => {
               ))}
             </div>
 
-            <button class="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600">
-                + Add Weakness
-              </button>
+            <button className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600 mb-7">
+              + Add Weakness
+            </button>
 
             <div className="space-y-2">
               {['Loops', 'Arrays', 'Recursion'].map((topic, index) => (
                 <div key={index} className="flex items-center justify-between  p-2 rounded">
                   <span className="text-sm">{topic}</span>
-                  <X className="w-4 h-4 text-red-400 cursor-pointer" />
+                  <X className="w-6 h-6 px-1 text-white bg-red-600 rounded-full cursor-pointer" />
                 </div>
               ))}
             </div>
@@ -365,7 +438,7 @@ const StudentDashboard = () => {
 
         {/* Right Column */}
         <div className="space-y-6">
-          
+
 
           {/* Course Assessment */}
           <div className="bg-gray-800 rounded-lg p-6">
@@ -388,9 +461,9 @@ const StudentDashboard = () => {
 
           {/* Detected Weakness */}
           <div className="bg-gray-800 rounded-lg p-6">
-            
 
-            
+
+
 
 
             <div className="mt-4 p-3 bg-gray-700 rounded-lg text-sm">
