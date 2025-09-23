@@ -285,7 +285,7 @@ const StudentDashboard = () => {
 
         <div className="space-y-6">
           {/* Topic Mastery */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-t-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Topic Mastery</h3>
               <div className="flex items-center">
@@ -298,8 +298,8 @@ const StudentDashboard = () => {
 
             <div className="space-y-4">
               {studentData.selectedCourse.topics.map((topic, index) => (
-                <div key={index}>
-                  <div className="flex justify-between text-sm mb-1">
+                <div key={index} className='mb-3'>
+                  <div className="flex justify-between text-sm mb-2">
                     <span>{topic.name}</span>
                   </div>
                   <ProgressBar percentage={topic.progress} />
@@ -307,10 +307,10 @@ const StudentDashboard = () => {
               ))}
             </div>
 
-            <div className="mt-4">
-              <div className="flex items-center justify-between p-2 bg-gray-700 rounded">
-                <span className="text-sm">Topic Mastery</span>
-                <button className="flex items-center space-x-1 text-blue-400">
+            <div className="mt-7">
+              <div className="flex items-center justify-between p-2">
+                <span className="text-gray-400 text-sm">Topic Mastery</span>
+                <button className="flex px-7 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg gap-1 items-center">
                   <span className="text-sm">Quiz</span>
                   <Edit className="w-3 h-3" />
                 </button>
@@ -321,7 +321,7 @@ const StudentDashboard = () => {
 
 
           {/* Detected Weakness */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-b-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Detected Weakness In</h3>
               <div className="bg-red-500 rounded-full w-6 h-6 flex items-center justify-center text-sm">
