@@ -105,7 +105,7 @@ const Login = () => {
         </div>
 
         {/* Enhanced Content */}
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 text-center">
+        <div className="relative z-10 flex flex-col justify-center mx-auto items-center text-white p-12 text-center ">
           {/* Enhanced Logo/Brand Area */}
           <div className="mb-12 transform hover:scale-105 transition-all duration-500 group">
             <div className="flex items-center justify-center mb-6 relative">
@@ -135,7 +135,7 @@ const Login = () => {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-6 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-300"
+                className="flex items-center space-x-6 mb-10 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-300"
                 style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
               >
                 <div className="relative">
@@ -144,7 +144,7 @@ const Login = () => {
                     <feature.icon className="w-8 h-8 text-white" />
                   </div>
                 </div>
-                <div className="text-left">
+                <div className="ml-5 text-left">
                   <h3 className="font-bold text-xl text-white mb-1">{feature.title}</h3>
                   <p className="text-purple-100 text-sm leading-relaxed">{feature.desc}</p>
                 </div>
