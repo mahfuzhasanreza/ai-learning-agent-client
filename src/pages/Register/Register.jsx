@@ -95,7 +95,7 @@ const Register = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex xl:p-8">
       {/* Left Side - Animated Content */}
-      <div className="hidden lg:flex lg:w-3/5 xl:w-2/3 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 relative overflow-hidden xl:rounded-2xl shadow-2xl">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 relative overflow-hidden xl:rounded-2xl shadow-2xl">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 w-48 h-48 xl:w-64 xl:h-64 bg-white/10 rounded-full blur-xl animate-pulse"></div>
@@ -108,7 +108,7 @@ const Register = () => {
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 xl:p-16 2xl:p-20 text-center max-w-2xl mx-auto">
           {/* Logo/Brand Area */}
-          <div className="mb-12 xl:mb-16 transform hover:scale-105 transition-transform duration-300">
+          <div className="mb-12 transform hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
                 <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-white animate-pulse" />
@@ -124,32 +124,32 @@ const Register = () => {
           </div>
 
           {/* Registration Benefits */}
-          <div className="space-y-8 xl:space-y-10 max-w-lg xl:max-w-xl">
-            <div className="flex items-center space-x-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+          <div className=" space-y-8 xl:space-y-10 max-w-lg xl:max-w-xl">
+            <div className="mb-2 flex items-center space-x-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
               <div className="w-16 h-16 xl:w-20 xl:h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <Users className="w-8 h-8 xl:w-10 xl:h-10 text-white" />
               </div>
-              <div className="text-left">
+              <div className="ml-5 text-left">
                 <h3 className="font-semibold text-xl xl:text-2xl">Join 10,000+ Learners</h3>
                 <p className="text-teal-100 text-base xl:text-lg">Connect with a global learning community</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '1s', animationFillMode: 'forwards' }}>
+            <div className="mb-2 flex items-center space-x-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '1s', animationFillMode: 'forwards' }}>
               <div className="w-16 h-16 xl:w-20 xl:h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <Trophy className="w-8 h-8 xl:w-10 xl:h-10 text-white" />
               </div>
-              <div className="text-left">
+              <div className="ml-5 text-left">
                 <h3 className="font-semibold text-xl xl:text-2xl">Earn Certificates</h3>
                 <p className="text-teal-100 text-base xl:text-lg">Get verified certificates for your achievements</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}>
-              <div className="w-16 h-16 xl:w-20 xl:h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <div className=" w-16 h-16 xl:w-20 xl:h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <Shield className="w-8 h-8 xl:w-10 xl:h-10 text-white" />
               </div>
-              <div className="text-left">
+              <div className="ml-5 text-left">
                 <h3 className="font-semibold text-xl xl:text-2xl">Free Forever</h3>
                 <p className="text-teal-100 text-base xl:text-lg">Start learning with our free tier, upgrade anytime</p>
               </div>
@@ -170,8 +170,8 @@ const Register = () => {
       </div>
 
       {/* Right Side - Registration Form */}
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-12 xl:p-16 2xl:p-20 bg-white xl:bg-transparent">
-        <div className="w-full max-w-md xl:max-w-lg 2xl:max-w-xl space-y-8 xl:space-y-10 xl:bg-white xl:p-12 xl:rounded-2xl xl:shadow-2xl xl:border xl:border-gray-100">
+      <div className="flex-1 flex items-center justify-center bg-white xl:bg-transparent ">
+        <div className="w-full space-y-8 xl:space-y-10 xl:bg-white xl:px-16 xl:pt-2 xl:rounded-2xl xl:shadow-2xl xl:border xl:border-gray-100">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="flex items-center justify-center mb-4">
@@ -215,7 +215,7 @@ const Register = () => {
             </div>
 
             {/* Name Fields */}
-            <div className="grid grid-cols-2 gap-4 xl:gap-6">
+            <div className="grid grid-cols-2 mt-4 gap-4 xl:gap-6">
               <div className="relative">
                 <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
                   First Name
@@ -266,7 +266,7 @@ const Register = () => {
             </div>
 
             {/* Email Field */}
-            <div className="relative">
+            <div className="relative mt-4">
               <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
                 Email Address
               </label>
@@ -291,7 +291,7 @@ const Register = () => {
             </div>
 
             {/* Password Field */}
-            <div className="relative">
+            <div className="relative mt-4">
               <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
                 Password
               </label>
@@ -343,7 +343,7 @@ const Register = () => {
             </div>
 
             {/* Confirm Password Field */}
-            <div className="relative">
+            <div className="mt-4 relative">
               <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
                 Confirm Password
               </label>
@@ -385,7 +385,7 @@ const Register = () => {
             </div>
 
             {/* Terms and Newsletter */}
-            <div className="space-y-4">
+            <div className="space-y-4 mt-4">
               <label className="flex items-start">
                 <input
                   type="checkbox"
@@ -407,7 +407,7 @@ const Register = () => {
                 </span>
               </label>
 
-              <label className="flex items-start">
+              {/* <label className="flex items-start">
                 <input
                   type="checkbox"
                   name="agreeNewsletter"
@@ -418,7 +418,7 @@ const Register = () => {
                 <span className="ml-3 text-base xl:text-lg text-gray-600">
                   Send me updates about new courses and features
                 </span>
-              </label>
+              </label> */}
             </div>
 
             {/* Register Button */}
@@ -426,7 +426,7 @@ const Register = () => {
               type="submit"
               disabled={isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword}
               onClick={handleRegister}
-              className={`w-full py-4 xl:py-5 px-6 rounded-xl xl:rounded-2xl text-lg xl:text-xl font-medium transition-all duration-200 transform ${isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword
+              className={`mt-4 w-full py-4 xl:py-5 px-6 rounded-xl xl:rounded-2xl text-lg xl:text-xl font-medium transition-all duration-200 transform ${isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0'
                 } text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
@@ -443,7 +443,7 @@ const Register = () => {
           </div>
 
           {/* Sign In Link */}
-          <div className="text-center">
+          <div className="text-center mt-4">
             <p className="text-gray-600 text-base xl:text-lg">
               Already have an account?{' '}
               <a href="#" className="text-emerald-600 hover:text-emerald-800 font-medium transition-colors duration-200">
@@ -453,7 +453,7 @@ const Register = () => {
           </div>
 
           {/* Divider */}
-          <div className="relative">
+          <div className="relative mt-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
@@ -463,7 +463,7 @@ const Register = () => {
           </div>
 
           {/* Social Registration Buttons */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="mt-4 mb-4 grid grid-cols-2 gap-6">
             <button className="flex items-center justify-center px-6 py-4 xl:py-5 border border-gray-300 rounded-xl xl:rounded-2xl hover:border-gray-400 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-base xl:text-lg font-medium">
               <svg className="w-6 h-6 xl:w-7 xl:h-7 mr-3" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
