@@ -550,178 +550,187 @@ const StudyPlan = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Sidebar */}
-        <div className="space-y-4">
-          {/* This Month Stats */}
-          <div className="bg-white rounded-lg p-4 border">
-            <h3 className="font-medium text-gray-900 mb-3">This Month</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
-                  {monthStats.total} items
-                </span>
-                <span className="text-sm text-gray-600">{monthStats.pending} pending</span>
-              </div>
+      {/* Stats and Filter Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {/* This Month Stats */}
+        <div className="bg-white rounded-lg p-4 border">
+          <h3 className="font-medium text-gray-900 mb-3">This Month</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
+                {monthStats.total} items
+              </span>
+              <span className="text-sm text-gray-600">{monthStats.pending} pending</span>
             </div>
-          </div>
-
-          {/* All Stats */}
-          <div className="bg-white rounded-lg p-4 border">
-            <h3 className="font-medium text-gray-900 mb-3">All</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
-                  {allStats.total} total
-                </span>
-                <span className="text-sm text-gray-600">{allStats.pending} pending</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Filter Type */}
-          <div className="bg-white rounded-lg p-4 border">
-            <h3 className="font-medium text-gray-900 mb-3">Filter Type</h3>
-            <div className="space-y-2">
-              {['All', 'Task', 'Assignment', 'CT'].map(type => (
-                <button
-                  key={type}
-                  onClick={() => setFilterType(type)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${
-                    filterType === type
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {type === 'Task' && <BookOpen className="w-4 h-4" />}
-                  {type === 'Assignment' && <PenTool className="w-4 h-4" />}
-                  {type === 'CT' && <GraduationCap className="w-4 h-4" />}
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Calendar */}
-          <div className="bg-white rounded-lg p-4 border">
-            <div className="text-center text-sm text-gray-600 mb-4">Click a date to filter</div>
-            {renderCalendar()}
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <div className="bg-white rounded-lg border">
-            <div className="p-4 border-b">
-              <div className="flex items-center justify-between">
-                <h2 className="font-medium text-gray-900">
-                  {selectedDate ? `Items for ${formatDate(selectedDate)}` : 'Pending Items'}
-                </h2>
-                {selectedDate && (
-                  <button
-                    onClick={() => setSelectedDate(null)}
-                    className="text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    Clear Date Filter
-                  </button>
-                )}
-              </div>
-            </div>
-            
-            <div className="p-4 space-y-4">
-              {filteredTasks.map(task => (
-                <div key={task.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="flex items-center gap-2">
-                          {task.type === 'Task' && <BookOpen className="w-4 h-4 text-gray-600" />}
-                          {task.type === 'Assignment' && <PenTool className="w-4 h-4 text-gray-600" />}
-                          {task.type === 'CT' && <GraduationCap className="w-4 h-4 text-gray-600" />}
-                          <span className="font-medium text-gray-900">{task.title}</span>
-                        </div>
-                        
-                        <div className="flex gap-1">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadge(task.deadline).class}`}>
-                            {getStatusBadge(task.deadline).text}
-                          </span>
-                          <span className="bg-gray-600 text-white px-2 py-1 rounded text-xs font-medium">
-                            Pending
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {formatDate(task.deadline)}
-                        </div>
-                        {task.time && (
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {task.time}
-                          </div>
-                        )}
-                      </div>
-
-                      {task.description && (
-                        <p className="text-gray-600 text-sm mb-2">{task.description}</p>
-                      )}
-
-                      {task.syllabus && (
-                        <p className="text-gray-600 text-sm mb-2">
-                          <span className="font-medium">Syllabus:</span> {task.syllabus}
-                        </p>
-                      )}
-
-                      {task.links && (
-                        <a href={task.links} target="_blank" rel="noopener noreferrer" 
-                           className="text-blue-600 text-sm hover:underline block mb-2">
-                          {task.links}
-                        </a>
-                      )}
-
-                      {task.files && task.files.length > 0 && (
-                        <div className="mb-2">
-                          <span className="text-sm font-medium text-gray-700">Files: </span>
-                          <span className="text-sm text-gray-600">{task.files.join(', ')}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 ml-4">
-                      <button
-                        onClick={() => toggleComplete(task.id)}
-                        className="flex items-center gap-1 px-3 py-1 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        Mark as Done
-                      </button>
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="p-1 text-gray-400 hover:text-red-500"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {filteredTasks.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 text-lg">
-                    {selectedDate 
-                      ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
-                      : activeView === 'Completed' 
-                        ? 'No completed tasks yet' 
-                        : 'No items match your search criteria'
-                    }
-                  </div>
-                </div>
-              )}
+        {/* All Stats */}
+        <div className="bg-white rounded-lg p-4 border">
+          <h3 className="font-medium text-gray-900 mb-3">All</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
+                {allStats.total} total
+              </span>
+              <span className="text-sm text-gray-600">{allStats.pending} pending</span>
             </div>
           </div>
+        </div>
+
+        {/* Filter Type */}
+        <div className="bg-white rounded-lg p-4 border">
+          <h3 className="font-medium text-gray-900 mb-3">Filter Type</h3>
+          <div className="flex flex-wrap gap-2">
+            {['All', 'Task', 'Assignment', 'CT'].map(type => (
+              <button
+                key={type}
+                onClick={() => setFilterType(type)}
+                className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${
+                  filterType === type
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-600 hover:bg-gray-50 border'
+                }`}
+              >
+                {type === 'Task' && <BookOpen className="w-4 h-4" />}
+                {type === 'Assignment' && <PenTool className="w-4 h-4" />}
+                {type === 'CT' && <GraduationCap className="w-4 h-4" />}
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Calendar Sidebar */}
+        <div className="bg-white rounded-lg p-4 border">
+          <div className="text-center text-sm text-gray-600 mb-4">Click a date to filter</div>
+          {renderCalendar()}
+        </div>
+
+        {/* Main Content - Card Layout */}
+        <div className="lg:col-span-3 space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-gray-900">
+              {selectedDate ? `Items for ${formatDate(selectedDate)}` : `${activeView} Items`}
+            </h2>
+            {selectedDate && (
+              <button
+                onClick={() => setSelectedDate(null)}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Clear Date Filter
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredTasks.map(task => (
+              <div key={task.id} className="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {task.type === 'Task' && <BookOpen className="w-5 h-5 text-blue-600" />}
+                    {task.type === 'Assignment' && <PenTool className="w-5 h-5 text-green-600" />}
+                    {task.type === 'CT' && <GraduationCap className="w-5 h-5 text-purple-600" />}
+                    <span className="text-sm font-medium text-gray-500 capitalize">
+                      {task.type === 'CT' ? 'Class Test' : task.type}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="p-1 text-gray-400 hover:text-red-500"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <h3 className="font-semibold text-gray-900 mb-2 text-lg leading-tight">{task.title}</h3>
+                
+                <div className="flex items-center gap-2 mb-3">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(task.deadline).class}`}>
+                    {getStatusBadge(task.deadline).text}
+                  </span>
+                  {!task.completed && (
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                      Pending
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {formatDate(task.deadline)}
+                  </div>
+                  {task.time && (
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      {task.time}
+                    </div>
+                  )}
+                </div>
+
+                {task.description && (
+                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{task.description}</p>
+                )}
+
+                {task.syllabus && (
+                  <p className="text-gray-600 text-sm mb-3">
+                    <span className="font-medium">Syllabus:</span> {task.syllabus}
+                  </p>
+                )}
+
+                {task.links && (
+                  <a href={task.links} target="_blank" rel="noopener noreferrer" 
+                     className="text-blue-600 text-sm hover:underline block mb-3 truncate">
+                    {task.links}
+                  </a>
+                )}
+
+                {task.files && task.files.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-700 mb-1">Files:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {task.files.slice(0, 2).map((file, index) => (
+                        <span key={index} className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                          {file}
+                        </span>
+                      ))}
+                      {task.files.length > 2 && (
+                        <span className="text-xs text-gray-500">+{task.files.length - 2} more</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => toggleComplete(task.id)}
+                  className={`w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-colors ${
+                    task.completed
+                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                      : 'bg-gray-900 text-white hover:bg-gray-800'
+                  }`}
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  {task.completed ? 'Completed' : 'Mark as Done'}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {filteredTasks.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-lg">
+                {selectedDate 
+                  ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
+                  : activeView === 'Completed' 
+                    ? 'No completed tasks yet' 
+                    : 'No items match your search criteria'
+                }
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
