@@ -466,7 +466,7 @@ const StudyPlan = () => {
   const allStats = getAllStats();
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+    <div className="mx-auto p-64 pt-14 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div>
