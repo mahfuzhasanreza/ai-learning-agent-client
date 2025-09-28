@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap } from 'lucide-react';
+import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 
 const StudyPlan = () => {
-  const [activeView, setActiveView] = useState('overview'); // overview, completed
+  const [activeView, setActiveView] = useState('Active'); // Active, Completed
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState(''); // task, assignment, ct
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
+  const [filterType, setFilterType] = useState('All');
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   
   // Form states
   const [taskForm, setTaskForm] = useState({
@@ -37,33 +38,34 @@ const StudyPlan = () => {
   const [tasks, setTasks] = useState([
     {
       id: 1,
-      type: 'task',
-      title: 'Complete React Assignment',
-      deadline: '2024-11-15',
-      description: 'Build a responsive web application',
-      links: 'https://github.com/example',
+      type: 'Task',
+      title: 'Read Chapter 3',
+      deadline: '2025-09-09',
+      description: 'Focus on dynamic programming intro.',
+      links: 'https://example.com/ch3',
       completed: false,
-      files: ['notes.pdf']
+      files: []
     },
     {
       id: 2,
-      type: 'assignment',
-      title: 'Database Design Project',
-      deadline: '2024-11-20',
-      questions: 'Design a normalized database for an e-commerce system',
+      type: 'Assignment',
+      title: 'DSA Assignment 1',
+      deadline: '2025-09-17',
+      description: 'Implement stack & queue.',
       completed: false,
-      files: ['requirements.pdf', 'slides.pptx']
+      files: ['Slides Week 2.pdf']
     },
     {
       id: 3,
-      type: 'ct',
-      title: 'Data Structures CT-2',
-      courseName: 'Data Structures',
+      type: 'CT',
+      title: 'CSE 2201 - CT-2',
+      courseName: 'CSE 2201',
       ctNumber: 'CT-2',
-      deadline: '2024-11-18',
-      time: '10:00 AM',
-      syllabus: 'Trees, Graphs, Sorting Algorithms',
-      completed: false
+      deadline: '2025-09-21',
+      time: '10:30',
+      syllabus: 'Ch 1-3, recursion basics',
+      completed: false,
+      files: []
     }
   ]);
 
@@ -80,7 +82,7 @@ const StudyPlan = () => {
     if (addType === 'task') {
       newItem = {
         id: newId,
-        type: 'task',
+        type: 'Task',
         title: taskForm.title,
         deadline: taskForm.deadline,
         description: taskForm.description,
@@ -91,7 +93,7 @@ const StudyPlan = () => {
     } else if (addType === 'assignment') {
       newItem = {
         id: newId,
-        type: 'assignment',
+        type: 'Assignment',
         title: assignmentForm.title,
         deadline: assignmentForm.deadline,
         questions: assignmentForm.questions,
@@ -101,14 +103,15 @@ const StudyPlan = () => {
     } else if (addType === 'ct') {
       newItem = {
         id: newId,
-        type: 'ct',
-        title: `${ctForm.courseName} ${ctForm.ctNumber}`,
+        type: 'CT',
+        title: `${ctForm.courseName} - ${ctForm.ctNumber}`,
         courseName: ctForm.courseName,
         ctNumber: ctForm.ctNumber,
         deadline: ctForm.date,
         time: ctForm.time,
         syllabus: ctForm.syllabus,
-        completed: false
+        completed: false,
+        files: []
       };
     }
     
@@ -123,36 +126,149 @@ const StudyPlan = () => {
     ));
   };
 
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
                          (task.courseName && task.courseName.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    const matchesFilter = filterType === 'all' || task.type === filterType;
-    const matchesView = activeView === 'overview' ? !task.completed : task.completed;
+    const matchesFilter = filterType === 'All' || task.type === filterType;
+    const matchesView = activeView === 'Active' ? !task.completed : task.completed;
     
     return matchesSearch && matchesFilter && matchesView;
   });
 
-  const getDeadlineColor = (deadline) => {
+  const getStatusBadge = (deadline) => {
     const today = new Date();
     const deadlineDate = new Date(deadline);
     const diffTime = deadlineDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays < 0) return 'text-red-600 bg-red-50';
-    if (diffDays <= 2) return 'text-orange-600 bg-orange-50';
-    if (diffDays <= 7) return 'text-yellow-600 bg-yellow-50';
-    return 'text-green-600 bg-green-50';
+    if (diffDays < 0) return { text: 'Overdue', class: 'bg-red-500 text-white' };
+    if (diffDays <= 2) return { text: 'Pending', class: 'bg-yellow-600 text-white' };
+    return { text: 'Pending', class: 'bg-gray-600 text-white' };
   };
 
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'task': return <BookOpen className="w-5 h-5" />;
-      case 'assignment': return <PenTool className="w-5 h-5" />;
-      case 'ct': return <GraduationCap className="w-5 h-5" />;
-      default: return <FileText className="w-5 h-5" />;
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
+  };
+
+  const getMonthStats = () => {
+    const currentMonthTasks = tasks.filter(task => {
+      const taskDate = new Date(task.deadline);
+      return taskDate.getMonth() === currentMonth.getMonth() && 
+             taskDate.getFullYear() === currentMonth.getFullYear();
+    });
+    
+    return {
+      total: currentMonthTasks.length,
+      pending: currentMonthTasks.filter(task => !task.completed).length
+    };
+  };
+
+  const getAllStats = () => {
+    return {
+      total: tasks.length,
+      pending: tasks.filter(task => !task.completed).length
+    };
+  };
+
+  const renderCalendar = () => {
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
+    const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const calendar = [];
+
+    // Add month navigation
+    calendar.push(
+      <div key="nav" className="flex items-center justify-between mb-4">
+        <button 
+          onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
+          className="p-1 hover:bg-gray-100 rounded"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <h3 className="font-medium">{monthName}</h3>
+        <button 
+          onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
+          className="p-1 hover:bg-gray-100 rounded"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    );
+
+    // Add day headers
+    calendar.push(
+      <div key="headers" className="grid grid-cols-7 mb-2">
+        {days.map(day => (
+          <div key={day} className="text-center text-xs text-gray-500 font-medium p-1">
+            {day}
+          </div>
+        ))}
+      </div>
+    );
+
+    // Add calendar days
+    const calendarDays = [];
+    
+    // Empty cells for days before month starts
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+      calendarDays.push(<div key={`empty-${i}`} className="h-16"></div>);
     }
+
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateString = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dayTasks = tasks.filter(task => task.deadline === dateString);
+      const isToday = new Date().toDateString() === new Date(dateString).toDateString();
+      
+      calendarDays.push(
+        <div key={day} className={`h-16 border border-gray-100 p-1 text-xs ${isToday ? 'bg-blue-50' : ''}`}>
+          <div className={`font-medium ${isToday ? 'bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-gray-900'}`}>
+            {day}
+          </div>
+          {dayTasks.slice(0, 2).map((task, index) => (
+            <div key={index} className="text-xs mt-1 p-1 bg-gray-100 rounded truncate">
+              {task.type === 'CT' ? task.ctNumber : task.title.split(' ').slice(0, 2).join(' ')}
+            </div>
+          ))}
+          {dayTasks.length > 2 && (
+            <div className="text-xs text-gray-500 mt-1">+{dayTasks.length - 2} more</div>
+          )}
+        </div>
+      );
+    }
+
+    // Group days into weeks
+    const weeks = [];
+    for (let i = 0; i < calendarDays.length; i += 7) {
+      weeks.push(
+        <div key={`week-${i}`} className="grid grid-cols-7 gap-1">
+          {calendarDays.slice(i, i + 7)}
+        </div>
+      );
+    }
+
+    calendar.push(...weeks);
+    return calendar;
   };
 
   const handleFileUpload = (e, formType) => {
@@ -333,21 +449,63 @@ const StudyPlan = () => {
     );
   };
 
+  const monthStats = getMonthStats();
+  const allStats = getAllStats();
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen">
+    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">Study Plan</h1>
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Calendar className="w-6 h-6" />
+            Study Plan
+          </h1>
+          <p className="text-gray-600 text-sm">Track Tasks • Assignments • CTs</p>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search by title, course, date (YYYY-MM-DD)"
+              className="pl-10 pr-4 py-2 border rounded-lg w-80"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           
-          {/* Add Options Dropdown */}
+          <div className="flex items-center bg-white rounded-lg border overflow-hidden">
+            <button
+              onClick={() => setActiveView('Active')}
+              className={`px-4 py-2 text-sm font-medium ${
+                activeView === 'Active'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              Active
+            </button>
+            <button
+              onClick={() => setActiveView('Completed')}
+              className={`px-4 py-2 text-sm font-medium ${
+                activeView === 'Completed'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              Completed
+            </button>
+          </div>
+          
           <div className="relative">
             <button
               onClick={() => setShowAddDropdown(!showAddDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
             >
-              <Plus className="w-5 h-5" />
-              Add New
+              <Plus className="w-4 h-4" />
+              Add
             </button>
             
             {showAddDropdown && (
@@ -377,156 +535,165 @@ const StudyPlan = () => {
             )}
           </div>
         </div>
-
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search tasks, assignments, or CTs..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          
-          <div className="flex gap-2">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 border rounded-lg"
-            >
-              <option value="all">All Types</option>
-              <option value="task">Tasks</option>
-              <option value="assignment">Assignments</option>
-              <option value="ct">CTs</option>
-            </select>
-            
-            <button
-              onClick={() => setActiveView(activeView === 'overview' ? 'completed' : 'overview')}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                activeView === 'completed'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
-            >
-              <CheckCircle className="w-4 h-4" />
-              {activeView === 'completed' ? 'Show Pending' : 'Completed Tasks'}
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* Calendar Visual (Simplified) */}
-      {activeView === 'overview' && (
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5" />
-            Upcoming Deadlines
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
-            {Array.from({ length: 7 }, (_, i) => {
-              const date = new Date();
-              date.setDate(date.getDate() + i);
-              const dateStr = date.toISOString().split('T')[0];
-              const dayTasks = tasks.filter(task => 
-                task.deadline === dateStr && !task.completed
-              );
-              
-              return (
-                <div key={i} className="border rounded p-2 h-24">
-                  <div className="text-sm font-medium text-gray-600 mb-1">
-                    {date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
-                  </div>
-                  {dayTasks.map(task => (
-                    <div key={task.id} className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded mb-1 truncate">
-                      {task.title}
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Tasks Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTasks.map(task => (
-          <div key={task.id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Sidebar */}
+        <div className="space-y-4">
+          {/* This Month Stats */}
+          <div className="bg-white rounded-lg p-4 border">
+            <h3 className="font-medium text-gray-900 mb-3">This Month</h3>
+            <div className="space-y-2">
               <div className="flex items-center gap-2">
-                {getTypeIcon(task.type)}
-                <span className="text-sm font-medium text-gray-500 capitalize">
-                  {task.type === 'ct' ? 'Class Test' : task.type}
+                <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
+                  {monthStats.total} items
                 </span>
+                <span className="text-sm text-gray-600">{monthStats.pending} pending</span>
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDeadlineColor(task.deadline)}`}>
-                {new Date(task.deadline).toLocaleDateString()}
-              </span>
             </div>
-
-            <h3 className="font-semibold text-gray-900 mb-2">{task.title}</h3>
-            
-            {task.type === 'task' && (
-              <>
-                <p className="text-gray-600 text-sm mb-2">{task.description}</p>
-                {task.links && (
-                  <a href={task.links} target="_blank" rel="noopener noreferrer" 
-                     className="text-blue-600 text-sm hover:underline block mb-2">
-                    View Links
-                  </a>
-                )}
-              </>
-            )}
-            
-            {task.type === 'assignment' && (
-              <p className="text-gray-600 text-sm mb-2">{task.questions}</p>
-            )}
-            
-            {task.type === 'ct' && (
-              <div className="text-sm space-y-1 mb-3">
-                <p><span className="font-medium">Course:</span> {task.courseName}</p>
-                <p><span className="font-medium">CT Number:</span> {task.ctNumber}</p>
-                <p><span className="font-medium">Time:</span> {task.time}</p>
-                <p><span className="font-medium">Syllabus:</span> {task.syllabus}</p>
-              </div>
-            )}
-
-            {task.files && task.files.length > 0 && (
-              <div className="mb-3">
-                <p className="text-sm font-medium text-gray-700 mb-1">Files:</p>
-                {task.files.map((file, index) => (
-                  <span key={index} className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs mr-1 mb-1">
-                    {file}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <button
-              onClick={() => toggleComplete(task.id)}
-              className={`w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors ${
-                task.completed
-                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-              }`}
-            >
-              <CheckCircle className="w-4 h-4" />
-              {task.completed ? 'Completed' : 'Mark as Done'}
-            </button>
           </div>
-        ))}
-      </div>
 
-      {filteredTasks.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-gray-400 text-lg">
-            {activeView === 'completed' ? 'No completed tasks yet' : 'No items match your search criteria'}
+          {/* All Stats */}
+          <div className="bg-white rounded-lg p-4 border">
+            <h3 className="font-medium text-gray-900 mb-3">All</h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs font-medium">
+                  {allStats.total} total
+                </span>
+                <span className="text-sm text-gray-600">{allStats.pending} pending</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Type */}
+          <div className="bg-white rounded-lg p-4 border">
+            <h3 className="font-medium text-gray-900 mb-3">Filter Type</h3>
+            <div className="space-y-2">
+              {['All', 'Task', 'Assignment', 'CT'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => setFilterType(type)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${
+                    filterType === type
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {type === 'Task' && <BookOpen className="w-4 h-4" />}
+                  {type === 'Assignment' && <PenTool className="w-4 h-4" />}
+                  {type === 'CT' && <GraduationCap className="w-4 h-4" />}
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Calendar */}
+          <div className="bg-white rounded-lg p-4 border">
+            <div className="text-center text-sm text-gray-600 mb-4">Click a date to filter</div>
+            {renderCalendar()}
           </div>
         </div>
-      )}
+
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-lg border">
+            <div className="p-4 border-b">
+              <h2 className="font-medium text-gray-900">Pending Items</h2>
+            </div>
+            
+            <div className="p-4 space-y-4">
+              {filteredTasks.map(task => (
+                <div key={task.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="flex items-center gap-2">
+                          {task.type === 'Task' && <BookOpen className="w-4 h-4 text-gray-600" />}
+                          {task.type === 'Assignment' && <PenTool className="w-4 h-4 text-gray-600" />}
+                          {task.type === 'CT' && <GraduationCap className="w-4 h-4 text-gray-600" />}
+                          <span className="font-medium text-gray-900">{task.title}</span>
+                        </div>
+                        
+                        <div className="flex gap-1">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadge(task.deadline).class}`}>
+                            {getStatusBadge(task.deadline).text}
+                          </span>
+                          <span className="bg-gray-600 text-white px-2 py-1 rounded text-xs font-medium">
+                            Pending
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {formatDate(task.deadline)}
+                        </div>
+                        {task.time && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {task.time}
+                          </div>
+                        )}
+                      </div>
+
+                      {task.description && (
+                        <p className="text-gray-600 text-sm mb-2">{task.description}</p>
+                      )}
+
+                      {task.syllabus && (
+                        <p className="text-gray-600 text-sm mb-2">
+                          <span className="font-medium">Syllabus:</span> {task.syllabus}
+                        </p>
+                      )}
+
+                      {task.links && (
+                        <a href={task.links} target="_blank" rel="noopener noreferrer" 
+                           className="text-blue-600 text-sm hover:underline block mb-2">
+                          {task.links}
+                        </a>
+                      )}
+
+                      {task.files && task.files.length > 0 && (
+                        <div className="mb-2">
+                          <span className="text-sm font-medium text-gray-700">Files: </span>
+                          <span className="text-sm text-gray-600">{task.files.join(', ')}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 ml-4">
+                      <button
+                        onClick={() => toggleComplete(task.id)}
+                        className="flex items-center gap-1 px-3 py-1 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        Mark as Done
+                      </button>
+                      <button
+                        onClick={() => deleteTask(task.id)}
+                        className="p-1 text-gray-400 hover:text-red-500"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {filteredTasks.length === 0 && (
+                <div className="text-center py-12">
+                  <div className="text-gray-400 text-lg">
+                    {activeView === 'Completed' ? 'No completed tasks yet' : 'No items match your search criteria'}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {renderAddModal()}
     </div>
