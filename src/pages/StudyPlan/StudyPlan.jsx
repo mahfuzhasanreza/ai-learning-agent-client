@@ -9,6 +9,7 @@ const StudyPlan = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('All');
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null); // For date filtering
   
   // Form states
   const [taskForm, setTaskForm] = useState({
@@ -137,8 +138,9 @@ const StudyPlan = () => {
     
     const matchesFilter = filterType === 'All' || task.type === filterType;
     const matchesView = activeView === 'Active' ? !task.completed : task.completed;
+    const matchesDate = !selectedDate || task.deadline === selectedDate;
     
-    return matchesSearch && matchesFilter && matchesView;
+    return matchesSearch && matchesFilter && matchesView && matchesDate;
   });
 
   const getStatusBadge = (deadline) => {
@@ -158,6 +160,11 @@ const StudyPlan = () => {
 
   const getFirstDayOfMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const handleDateClick = (day) => {
+    const dateString = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    setSelectedDate(selectedDate === dateString ? null : dateString);
   };
 
   const formatDate = (dateString) => {
@@ -241,7 +248,13 @@ const StudyPlan = () => {
       const isToday = new Date().toDateString() === new Date(dateString).toDateString();
       
       calendarDays.push(
-        <div key={day} className={`h-16 border border-gray-100 p-1 text-xs ${isToday ? 'bg-blue-50' : ''}`}>
+        <div 
+          key={day} 
+          className={`h-16 border border-gray-100 p-1 text-xs cursor-pointer transition-colors hover:bg-blue-50 ${
+            isToday ? 'bg-blue-50' : ''
+          } ${selectedDate === dateString ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
+          onClick={() => handleDateClick(day)}
+        >
           <div className={`font-medium ${isToday ? 'bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-gray-900'}`}>
             {day}
           </div>
@@ -600,7 +613,19 @@ const StudyPlan = () => {
         <div className="lg:col-span-3">
           <div className="bg-white rounded-lg border">
             <div className="p-4 border-b">
-              <h2 className="font-medium text-gray-900">Pending Items</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="font-medium text-gray-900">
+                  {selectedDate ? `Items for ${formatDate(selectedDate)}` : 'Pending Items'}
+                </h2>
+                {selectedDate && (
+                  <button
+                    onClick={() => setSelectedDate(null)}
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Clear Date Filter
+                  </button>
+                )}
+              </div>
             </div>
             
             <div className="p-4 space-y-4">
@@ -686,7 +711,12 @@ const StudyPlan = () => {
               {filteredTasks.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-gray-400 text-lg">
-                    {activeView === 'Completed' ? 'No completed tasks yet' : 'No items match your search criteria'}
+                    {selectedDate 
+                      ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
+                      : activeView === 'Completed' 
+                        ? 'No completed tasks yet' 
+                        : 'No items match your search criteria'
+                    }
                   </div>
                 </div>
               )}
