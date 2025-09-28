@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import ChatBotPanel from './ChatBotPanel';
 
 import roadmapData from "../../../src/data/c_roadmap.json";
 // import roadmapData from "../../../src/data/python_roadmap.json";
@@ -9,6 +10,13 @@ const Roadmap = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [completedItems, setCompletedItems] = useState(new Set());
 
+  const [activeTab, setActiveTab] = useState("details"); // "details" or "chatbot"
+
+  const sendMessageToAI = (topic) => {
+    // Example: you can replace this with real API call
+    console.log(`Sending message to AI Chatbot about: ${topic}`);
+    alert(`Message sent to AI Chatbot about: ${topic}`);
+  };
 
 
   const transformDataForTree = (data) => {
@@ -362,46 +370,74 @@ const Roadmap = () => {
         </div>
 
         {/* Side panel */}
-        {selectedNode && (
-          <div className="w-96 bg-white rounded-lg shadow-md p-6 overflow-y-auto">
-            <h3 className="text-lg font-bold text-gray-800 mb-3">{selectedNode.name}</h3>
+{/* Side panel */}
+{selectedNode && (
+  <div className="w-96 bg-white rounded-lg shadow-md p-6 overflow-y-auto flex flex-col">
+    {/* Tabs */}
+    <div className="flex border-b mb-4">
+      <button
+        className={`flex-1 py-2 text-center font-medium ${activeTab === "details" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+        onClick={() => setActiveTab("details")}
+      >
+        Details
+      </button>
+      <button
+        className={`flex-1 py-2 text-center font-medium ${activeTab === "chatbot" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+        onClick={() => setActiveTab("chatbot")}
+      >
+        AI Chatbot Insights
+      </button>
+    </div>
 
-            {selectedNode.type === "item" && (
-              <div className="mb-4 flex items-center gap-3">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
-                  selectedNode.difficulty === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                    "bg-red-100 text-red-800"
-                  }`}>
-                  {selectedNode.difficulty}
-                </span>
-                <span className="text-sm text-gray-600">{selectedNode.timeCommitment}</span>
-                {completedItems.has(selectedNode.id) && (
-                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                    ✓ Completed
-                  </span>
-                )}
-              </div>
-            )}
+    {/* Tab content */}
+    {activeTab === "details" && (
+      <div className="flex-1">
+        <h3 className="text-lg font-bold text-gray-800 mb-3">{selectedNode.name}</h3>
 
-            <div className="text-gray-700 text-sm leading-relaxed">
-              {selectedNode.description.split('\n').map((line, index) => (
-                <p key={index} className="mb-2">{line}</p>
-              ))}
-            </div>
-
-            {selectedNode.type === "item" && (
-              <button
-                onClick={() => toggleCompletion(selectedNode.id)}
-                className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${completedItems.has(selectedNode.id)
-                  ? "bg-green-500 text-white hover:bg-green-600"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
-              >
-                {completedItems.has(selectedNode.id) ? "Mark as Incomplete" : "Mark as Complete"}
-              </button>
+        {selectedNode.type === "item" && (
+          <div className="mb-4 flex items-center gap-3">
+            <span className={`px-2 py-1 rounded text-xs font-medium ${selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
+              selectedNode.difficulty === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                "bg-red-100 text-red-800"
+              }`}>
+              {selectedNode.difficulty}
+            </span>
+            <span className="text-sm text-gray-600">{selectedNode.timeCommitment}</span>
+            {completedItems.has(selectedNode.id) && (
+              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
+                ✓ Completed
+              </span>
             )}
           </div>
         )}
+
+        <div className="text-gray-700 text-sm leading-relaxed">
+          {selectedNode.description.split('\n').map((line, index) => (
+            <p key={index} className="mb-2">{line}</p>
+          ))}
+        </div>
+
+        {selectedNode.type === "item" && (
+          <button
+            onClick={() => toggleCompletion(selectedNode.id)}
+            className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${completedItems.has(selectedNode.id)
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
+          >
+            {completedItems.has(selectedNode.id) ? "Mark as Incomplete" : "Mark as Complete"}
+          </button>
+        )}
+      </div>
+    )}
+
+    {activeTab === "chatbot" && (
+      <ChatBotPanel topic={selectedNode.name} />
+    )}
+  </div>
+)}
+
+
       </div>
     </div>
   );
