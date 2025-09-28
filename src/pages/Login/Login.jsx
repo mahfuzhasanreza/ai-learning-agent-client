@@ -195,7 +195,7 @@ const Login = () => {
           </div>
 
           {/* Enhanced Login Form */}
-          <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-8 border border-white/20 shadow-2xl">
+          <div className=" backdrop-blur-xl bg-white/10 rounded-3xl p-8 border border-white/20 shadow-2xl">
             <form onSubmit={handleLogin} className="space-y-6">
               {/* Enhanced Email Field */}
               <div className="relative group">
@@ -228,7 +228,7 @@ const Login = () => {
               </div>
 
               {/* Enhanced Password Field */}
-              <div className="relative group">
+              <div className="mt-4 relative group">
                 <label className="block text-sm font-semibold text-gray-200 mb-3">
                   Password
                 </label>
@@ -265,7 +265,7 @@ const Login = () => {
               </div>
 
               {/* Enhanced Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
+              <div className="mt-3 flex items-center justify-between">
                 <label className="flex items-center group cursor-pointer">
                   <input
                     type="checkbox"
@@ -282,7 +282,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`relative w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 transform overflow-hidden group ${isLoading
+                className={`mt-5 relative w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 transform overflow-hidden group ${isLoading
                   ? 'bg-gray-600 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 hover:from-purple-500 hover:via-violet-500 hover:to-purple-600 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 active:translate-y-0 focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-transparent'
                   } text-white`}
@@ -318,9 +318,7 @@ const Login = () => {
 
             {/* Enhanced Divider */}
             <div className="relative mt-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/20"></div>
-              </div>
+              
               <div className="relative flex justify-center text-sm">
                 <span className="px-4 bg-white/10 backdrop-blur-sm rounded-full text-gray-300 border border-white/20">
                   Or continue with
