@@ -1,757 +1,536 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Plus,
-  Calendar as CalendarIcon,
-  CheckCircle2,
-  ListTodo,
-  ClipboardList,
-  BookOpenText,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Link as LinkIcon,
-  Upload,
-  Trash2,
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap } from 'lucide-react';
 
-// shadcn/ui
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-/**
- * STUDY PLAN — Single-file demo UI
- *
- * Matches the user's spec:
- * - Topbar with dropdown: Add Task, Add Assignment, Add CT's Date
- * - Calendar-style visualization of deadlines + pending items
- * - Search/filter across Tasks, Assignments, CTs
- * - Cards list with mark-as-done
- * - "Completed" view (another page) accessible via button/tabs
- * - File uploads captured locally and displayed by filename
- *
- * Data is kept in component state and also mirrored to localStorage for demo persistence.
- */
-
-const seedNow = new Date();
-const yyyyMmDd = (d) => d.toISOString().slice(0, 10);
-
-const sampleData = {
-  tasks: [
-    {
-      id: crypto.randomUUID(),
-      title: "Read Chapter 3",
-      description: "Focus on dynamic programming intro.",
-      deadline: yyyyMmDd(new Date(seedNow.getFullYear(), seedNow.getMonth(), Math.min(10, 28))),
-      links: ["https://example.com/ch3"],
-      files: [],
-      done: false,
-      type: "task",
-      createdAt: Date.now(),
-    },
-    {
-      id: crypto.randomUUID(),
-      title: "Group meeting",
-      description: "Plan assignment outline.",
-      deadline: yyyyMmDd(new Date(seedNow.getFullYear(), seedNow.getMonth(), Math.min(15, 28))),
-      links: [],
-      files: [],
-      done: false,
-      type: "task",
-      createdAt: Date.now(),
-    },
-  ],
-  assignments: [
-    {
-      id: crypto.randomUUID(),
-      title: "DSA Assignment 1",
-      description: "Implement stack & queue.",
-      deadline: yyyyMmDd(new Date(seedNow.getFullYear(), seedNow.getMonth(), Math.min(18, 28))),
-      question: "Implement Stack & Queue using arrays.",
-      files: ["Slides Week 2.pdf"],
-      done: false,
-      type: "assignment",
-      createdAt: Date.now(),
-    },
-  ],
-  cts: [
-    {
-      id: crypto.randomUUID(),
-      courseName: "CSE 2201",
-      ctNo: "CT-2",
-      syllabus: "Ch 1–3, recursion basics",
-      date: yyyyMmDd(new Date(seedNow.getFullYear(), seedNow.getMonth(), Math.min(22, 28))),
-      time: "10:30",
-      done: false,
-      type: "ct",
-      createdAt: Date.now(),
-    },
-  ],
-};
-
-function useLocalState(key, initial) {
-  const [state, setState] = useState(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : initial;
-    } catch {
-      return initial;
-    }
+const StudyPlan = () => {
+  const [activeView, setActiveView] = useState('overview'); // overview, completed
+  const [showAddDropdown, setShowAddDropdown] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addType, setAddType] = useState(''); // task, assignment, ct
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  
+  // Form states
+  const [taskForm, setTaskForm] = useState({
+    title: '',
+    deadline: '',
+    links: '',
+    description: '',
+    files: []
   });
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(state));
-    } catch {}
-  }, [key, state]);
-  return [state, setState];
-}
+  
+  const [assignmentForm, setAssignmentForm] = useState({
+    title: '',
+    deadline: '',
+    questions: '',
+    files: []
+  });
+  
+  const [ctForm, setCTForm] = useState({
+    courseName: '',
+    ctNumber: '',
+    date: '',
+    time: '',
+    syllabus: ''
+  });
 
-function dayKey(d) {
-  return yyyyMmDd(d);
-}
-
-function withinMonth(dateStr, year, month) {
-  const d = new Date(dateStr);
-  return d.getFullYear() === year && d.getMonth() === month;
-}
-
-function groupByDate(items) {
-  return items.reduce((acc, item) => {
-    const dateStr = item.type === "ct" ? item.date : item.deadline;
-    if (!dateStr) return acc;
-    acc[dateStr] = acc[dateStr] || [];
-    acc[dateStr].push(item);
-    return acc;
-  }, {});
-}
-
-function CalendarGrid({ year, month, itemsByDate, onPickDate }) {
-  const firstDay = new Date(year, month, 1);
-  const startDay = new Date(year, month, 1 - ((firstDay.getDay() + 6) % 7)); // start Monday
-  const weeks = [];
-  let current = new Date(startDay);
-  for (let w = 0; w < 6; w++) {
-    const days = [];
-    for (let d = 0; d < 7; d++) {
-      const key = dayKey(current);
-      const inMonth = current.getMonth() === month;
-      const items = itemsByDate[key] || [];
-      const hasPending = items.some((i) => !i.done);
-      days.push(
-        <button
-          key={key}
-          onClick={() => onPickDate(key)}
-          className={`group relative flex h-24 w-full flex-col items-start justify-start rounded-2xl border ${
-            inMonth ? "bg-white" : "bg-muted/40"
-          } p-2 text-left shadow-sm transition hover:shadow-md`}
-        >
-          <div className="flex w-full items-center justify-between">
-            <span className={`text-sm ${inMonth ? "" : "text-muted-foreground"}`}>
-              {current.getDate()}
-            </span>
-            {items.length > 0 && (
-              <Badge className="rounded-full px-2 py-0 text-[10px]" variant={hasPending ? "default" : "secondary"}>
-                {items.length}
-              </Badge>
-            )}
-          </div>
-          <div className="mt-2 flex w-full flex-wrap gap-1">
-            {items.slice(0, 3).map((i) => (
-              <span
-                key={i.id}
-                className={`inline-flex items-center gap-1 rounded-full border px-2 text-[10px] ${
-                  i.type === "task"
-                    ? ""
-                    : i.type === "assignment"
-                    ? ""
-                    : ""
-                }`}
-              >
-                {i.type === "task" && <ListTodo className="h-3 w-3" />}
-                {i.type === "assignment" && <ClipboardList className="h-3 w-3" />}
-                {i.type === "ct" && <BookOpenText className="h-3 w-3" />}
-                {i.type === "ct" ? i.ctNo : i.title?.slice(0, 10) || "Item"}
-              </span>
-            ))}
-          </div>
-        </button>
-      );
-      current.setDate(current.getDate() + 1);
+  // Data states
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      type: 'task',
+      title: 'Complete React Assignment',
+      deadline: '2024-11-15',
+      description: 'Build a responsive web application',
+      links: 'https://github.com/example',
+      completed: false,
+      files: ['notes.pdf']
+    },
+    {
+      id: 2,
+      type: 'assignment',
+      title: 'Database Design Project',
+      deadline: '2024-11-20',
+      questions: 'Design a normalized database for an e-commerce system',
+      completed: false,
+      files: ['requirements.pdf', 'slides.pptx']
+    },
+    {
+      id: 3,
+      type: 'ct',
+      title: 'Data Structures CT-2',
+      courseName: 'Data Structures',
+      ctNumber: 'CT-2',
+      deadline: '2024-11-18',
+      time: '10:00 AM',
+      syllabus: 'Trees, Graphs, Sorting Algorithms',
+      completed: false
     }
-    weeks.push(
-      <div key={w} className="grid grid-cols-7 gap-2">
-        {days}
+  ]);
+
+  const resetForms = () => {
+    setTaskForm({ title: '', deadline: '', links: '', description: '', files: [] });
+    setAssignmentForm({ title: '', deadline: '', questions: '', files: [] });
+    setCTForm({ courseName: '', ctNumber: '', date: '', time: '', syllabus: '' });
+  };
+
+  const handleAddItem = () => {
+    let newItem;
+    const newId = tasks.length + 1;
+    
+    if (addType === 'task') {
+      newItem = {
+        id: newId,
+        type: 'task',
+        title: taskForm.title,
+        deadline: taskForm.deadline,
+        description: taskForm.description,
+        links: taskForm.links,
+        files: taskForm.files,
+        completed: false
+      };
+    } else if (addType === 'assignment') {
+      newItem = {
+        id: newId,
+        type: 'assignment',
+        title: assignmentForm.title,
+        deadline: assignmentForm.deadline,
+        questions: assignmentForm.questions,
+        files: assignmentForm.files,
+        completed: false
+      };
+    } else if (addType === 'ct') {
+      newItem = {
+        id: newId,
+        type: 'ct',
+        title: `${ctForm.courseName} ${ctForm.ctNumber}`,
+        courseName: ctForm.courseName,
+        ctNumber: ctForm.ctNumber,
+        deadline: ctForm.date,
+        time: ctForm.time,
+        syllabus: ctForm.syllabus,
+        completed: false
+      };
+    }
+    
+    setTasks([...tasks, newItem]);
+    setShowAddModal(false);
+    resetForms();
+  };
+
+  const toggleComplete = (id) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (task.courseName && task.courseName.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesFilter = filterType === 'all' || task.type === filterType;
+    const matchesView = activeView === 'overview' ? !task.completed : task.completed;
+    
+    return matchesSearch && matchesFilter && matchesView;
+  });
+
+  const getDeadlineColor = (deadline) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    const diffTime = deadlineDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return 'text-red-600 bg-red-50';
+    if (diffDays <= 2) return 'text-orange-600 bg-orange-50';
+    if (diffDays <= 7) return 'text-yellow-600 bg-yellow-50';
+    return 'text-green-600 bg-green-50';
+  };
+
+  const getTypeIcon = (type) => {
+    switch (type) {
+      case 'task': return <BookOpen className="w-5 h-5" />;
+      case 'assignment': return <PenTool className="w-5 h-5" />;
+      case 'ct': return <GraduationCap className="w-5 h-5" />;
+      default: return <FileText className="w-5 h-5" />;
+    }
+  };
+
+  const handleFileUpload = (e, formType) => {
+    const files = Array.from(e.target.files).map(file => file.name);
+    if (formType === 'task') {
+      setTaskForm({ ...taskForm, files: [...taskForm.files, ...files] });
+    } else if (formType === 'assignment') {
+      setAssignmentForm({ ...assignmentForm, files: [...assignmentForm.files, ...files] });
+    }
+  };
+
+  const removeFile = (fileName, formType) => {
+    if (formType === 'task') {
+      setTaskForm({ ...taskForm, files: taskForm.files.filter(f => f !== fileName) });
+    } else if (formType === 'assignment') {
+      setAssignmentForm({ ...assignmentForm, files: assignmentForm.files.filter(f => f !== fileName) });
+    }
+  };
+
+  const renderAddModal = () => {
+    if (!showAddModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold capitalize">
+              Add {addType} {addType === 'ct' ? 'Date' : ''}
+            </h3>
+            <button onClick={() => setShowAddModal(false)}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {addType === 'task' && (
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Task title"
+                className="w-full p-3 border rounded-lg"
+                value={taskForm.title}
+                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+              />
+              <input
+                type="date"
+                className="w-full p-3 border rounded-lg"
+                value={taskForm.deadline}
+                onChange={(e) => setTaskForm({ ...taskForm, deadline: e.target.value })}
+              />
+              <input
+                type="url"
+                placeholder="Necessary links"
+                className="w-full p-3 border rounded-lg"
+                value={taskForm.links}
+                onChange={(e) => setTaskForm({ ...taskForm, links: e.target.value })}
+              />
+              <textarea
+                placeholder="Short description"
+                className="w-full p-3 border rounded-lg h-24"
+                value={taskForm.description}
+                onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+              />
+              <div>
+                <label className="block text-sm font-medium mb-2">Upload Files</label>
+                <input
+                  type="file"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) => handleFileUpload(e, 'task')}
+                  className="w-full p-2 border rounded-lg"
+                />
+                {taskForm.files.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-50 p-2 mt-1 rounded">
+                    <span className="text-sm">{file}</span>
+                    <button onClick={() => removeFile(file, 'task')}>
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {addType === 'assignment' && (
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Assignment title"
+                className="w-full p-3 border rounded-lg"
+                value={assignmentForm.title}
+                onChange={(e) => setAssignmentForm({ ...assignmentForm, title: e.target.value })}
+              />
+              <input
+                type="date"
+                className="w-full p-3 border rounded-lg"
+                value={assignmentForm.deadline}
+                onChange={(e) => setAssignmentForm({ ...assignmentForm, deadline: e.target.value })}
+              />
+              <textarea
+                placeholder="Assignment questions"
+                className="w-full p-3 border rounded-lg h-24"
+                value={assignmentForm.questions}
+                onChange={(e) => setAssignmentForm({ ...assignmentForm, questions: e.target.value })}
+              />
+              <div>
+                <label className="block text-sm font-medium mb-2">Add Multiple Files (Class notes, Slides)</label>
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => handleFileUpload(e, 'assignment')}
+                  className="w-full p-2 border rounded-lg"
+                />
+                {assignmentForm.files.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-50 p-2 mt-1 rounded">
+                    <span className="text-sm">{file}</span>
+                    <button onClick={() => removeFile(file, 'assignment')}>
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {addType === 'ct' && (
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Course name"
+                className="w-full p-3 border rounded-lg"
+                value={ctForm.courseName}
+                onChange={(e) => setCTForm({ ...ctForm, courseName: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="CT Number (e.g., CT-2)"
+                className="w-full p-3 border rounded-lg"
+                value={ctForm.ctNumber}
+                onChange={(e) => setCTForm({ ...ctForm, ctNumber: e.target.value })}
+              />
+              <input
+                type="date"
+                className="w-full p-3 border rounded-lg"
+                value={ctForm.date}
+                onChange={(e) => setCTForm({ ...ctForm, date: e.target.value })}
+              />
+              <input
+                type="time"
+                className="w-full p-3 border rounded-lg"
+                value={ctForm.time}
+                onChange={(e) => setCTForm({ ...ctForm, time: e.target.value })}
+              />
+              <textarea
+                placeholder="CT Syllabus"
+                className="w-full p-3 border rounded-lg h-24"
+                value={ctForm.syllabus}
+                onChange={(e) => setCTForm({ ...ctForm, syllabus: e.target.value })}
+              />
+            </div>
+          )}
+
+          <div className="flex gap-2 mt-6">
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAddItem}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Add {addType}
+            </button>
+          </div>
+        </div>
       </div>
     );
-  }
-
-  return (
-    <div className="rounded-2xl border bg-white p-4 shadow-sm">
-      <div className="mb-3 grid grid-cols-7 text-center text-xs font-medium text-muted-foreground">
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-          <div key={d}>{d}</div>
-        ))}
-      </div>
-      <div className="flex flex-col gap-2">{weeks}</div>
-    </div>
-  );
-}
-
-function AddTaskDialog({ open, setOpen, onAdd }) {
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [links, setLinks] = useState("");
-  const [desc, setDesc] = useState("");
-  const [files, setFiles] = useState([]);
-
-  const submit = () => {
-    if (!title || !deadline) return;
-    onAdd({
-      id: crypto.randomUUID(),
-      title,
-      description: desc,
-      deadline,
-      links: links
-        .split(/\s|,|;\s*/)
-        .map((s) => s.trim())
-        .filter(Boolean),
-      files: Array.from(files).map((f) => f.name),
-      done: false,
-      type: "task",
-      createdAt: Date.now(),
-    });
-    setOpen(false);
-    setTitle("");
-    setDeadline("");
-    setLinks("");
-    setDesc("");
-    setFiles([]);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-lg rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Add Task</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label>Task title</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., Revise lecture 5" />
-          </div>
-          <div className="grid gap-2">
-            <Label>Deadline</Label>
-            <Input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
-          </div>
-          <div className="grid gap-2">
-            <Label>Necessary links</Label>
-            <div className="flex items-center gap-2">
-              <LinkIcon className="h-4 w-4" />
-              <Input value={links} onChange={(e) => setLinks(e.target.value)} placeholder="Paste links, separated by space or comma" />
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label>Short description</Label>
-            <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Optional context" />
-          </div>
-          <div className="grid gap-2">
-            <Label className="flex items-center gap-2"><Upload className="h-4 w-4" /> Upload file (pdf, picture)</Label>
-            <Input type="file" multiple onChange={(e) => setFiles(e.target.files)} />
-            {files && files.length > 0 && (
-              <div className="text-xs text-muted-foreground">{Array.from(files).map((f) => f.name).join(", ")}</div>
+    <div className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl font-bold text-gray-900">Study Plan</h1>
+          
+          {/* Add Options Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowAddDropdown(!showAddDropdown)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              <Plus className="w-5 h-5" />
+              Add New
+            </button>
+            
+            {showAddDropdown && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10">
+                <button
+                  onClick={() => { setAddType('task'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Add Task
+                </button>
+                <button
+                  onClick={() => { setAddType('assignment'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <PenTool className="w-4 h-4" />
+                  Add Assignment
+                </button>
+                <button
+                  onClick={() => { setAddType('ct'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <GraduationCap className="w-4 h-4" />
+                  Add CT's Date
+                </button>
+              </div>
             )}
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={submit}>Save</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
-function AddAssignmentDialog({ open, setOpen, onAdd }) {
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [question, setQuestion] = useState("");
-  const [files, setFiles] = useState([]);
-
-  const submit = () => {
-    if (!title || !deadline) return;
-    onAdd({
-      id: crypto.randomUUID(),
-      title,
-      description: "",
-      deadline,
-      question,
-      files: Array.from(files).map((f) => f.name),
-      done: false,
-      type: "assignment",
-      createdAt: Date.now(),
-    });
-    setOpen(false);
-    setTitle("");
-    setDeadline("");
-    setQuestion("");
-    setFiles([]);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-lg rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Add Assignment</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label>Title</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., OOP Assignment 2" />
-          </div>
-          <div className="grid gap-2">
-            <Label>Deadline</Label>
-            <Input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
-          </div>
-          <div className="grid gap-2">
-            <Label>Assignment question</Label>
-            <Textarea value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Paste or write the question" />
-          </div>
-          <div className="grid gap-2">
-            <Label className="flex items-center gap-2"><Upload className="h-4 w-4" /> Add multiple files (Class notes, Slides)</Label>
-            <Input type="file" multiple onChange={(e) => setFiles(e.target.files)} />
-            {files && files.length > 0 && (
-              <div className="text-xs text-muted-foreground">{Array.from(files).map((f) => f.name).join(", ")}</div>
-            )}
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={submit}>Save</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function AddCTDialog({ open, setOpen, onAdd }) {
-  const [course, setCourse] = useState("");
-  const [ctNo, setCtNo] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [syllabus, setSyllabus] = useState("");
-
-  const submit = () => {
-    if (!course || !ctNo || !date) return;
-    onAdd({
-      id: crypto.randomUUID(),
-      courseName: course,
-      ctNo,
-      date,
-      time,
-      syllabus,
-      done: false,
-      type: "ct",
-      createdAt: Date.now(),
-    });
-    setOpen(false);
-    setCourse("");
-    setCtNo("");
-    setDate("");
-    setTime("");
-    setSyllabus("");
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-lg rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Add CT's Date</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label>Course name</Label>
-            <Input value={course} onChange={(e) => setCourse(e.target.value)} placeholder="e.g., CSE 2201" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label>CT No</Label>
-              <Input value={ctNo} onChange={(e) => setCtNo(e.target.value)} placeholder="CT 2/3" />
-            </div>
-            <div className="grid gap-2">
-              <Label>CT date</Label>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label>Time</Label>
-            <Input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-          </div>
-          <div className="grid gap-2">
-            <Label>Syllabus</Label>
-            <Textarea value={syllabus} onChange={(e) => setSyllabus(e.target.value)} placeholder="Topics to study" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={submit}>Save</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function ItemCard({ item, onToggleDone, onDelete }) {
-  const isCT = item.type === "ct";
-  const deadline = isCT ? item.date : item.deadline;
-  const overdue = !item.done && deadline && new Date(deadline) < new Date(new Date().toDateString());
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2 }}
-    >
-      <Card className="rounded-2xl shadow-sm">
-        <CardHeader className="pb-2">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              {item.type === "task" && <ListTodo className="h-5 w-5" />}
-              {item.type === "assignment" && <ClipboardList className="h-5 w-5" />}
-              {item.type === "ct" && <BookOpenText className="h-5 w-5" />}            
-              <CardTitle className="text-lg">
-                {isCT ? `${item.courseName} • ${item.ctNo}` : item.title}
-              </CardTitle>
-            </div>
-            <div className="flex items-center gap-2">
-              {overdue && <Badge variant="destructive">Overdue</Badge>}
-              {item.done ? (
-                <Badge variant="secondary" className="gap-1"><CheckCircle2 className="h-3 w-3" /> Done</Badge>
-              ) : (
-                <Badge variant="default">Pending</Badge>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3 pt-0">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <div className="inline-flex items-center gap-1"><CalendarIcon className="h-4 w-4" /> {deadline || "—"}</div>
-            {isCT && item.time && <div className="inline-flex items-center gap-1"><Clock className="h-4 w-4" /> {item.time}</div>}
-          </div>
-          {isCT ? (
-            <p className="text-sm">Syllabus: {item.syllabus || "—"}</p>
-          ) : (
-            <p className="text-sm">{item.description || ""}</p>
-          )}
-          {item.links && item.links.length > 0 && (
-            <div className="flex flex-wrap gap-2 text-xs">
-              {item.links.map((l, idx) => (
-                <a key={idx} href={l} target="_blank" rel="noreferrer" className="rounded-full border px-2 py-1 underline">
-                  {l}
-                </a>
-              ))}
-            </div>
-          )}
-          {item.files && item.files.length > 0 && (
-            <div className="text-xs text-muted-foreground">Files: {item.files.join(", ")}</div>
-          )}
-
-          <div className="flex items-center justify-between pt-2">
-            <Button size="sm" variant={item.done ? "secondary" : "default"} onClick={() => onToggleDone(item)} className="rounded-xl">
-              <CheckCircle2 className="mr-2 h-4 w-4" /> {item.done ? "Mark as Undone" : "Mark as Done"}
-            </Button>
-            <Button size="icon" variant="ghost" onClick={() => onDelete(item)}>
-              <Trash2 className="h-5 w-5" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
-
-export default function StudyPlanUI() {
-  const [data, setData] = useLocalState("study-plan-data", sampleData);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all"); // all | task | assignment | ct
-  const [view, setView] = useState("active"); // active | completed
-  const today = new Date();
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth());
-
-  const [openTask, setOpenTask] = useState(false);
-  const [openAssignment, setOpenAssignment] = useState(false);
-  const [openCT, setOpenCT] = useState(false);
-
-  const allItems = useMemo(() => {
-    const t = data.tasks.map((t) => ({ ...t, type: "task" }));
-    const a = data.assignments.map((a) => ({ ...a, type: "assignment" }));
-    const c = data.cts.map((c) => ({ ...c, type: "ct" }));
-    return [...t, ...a, ...c].sort((x, y) => (x.createdAt || 0) - (y.createdAt || 0));
-  }, [data]);
-
-  const itemsByDate = useMemo(() => groupByDate(allItems), [allItems]);
-
-  const pendingCount = allItems.filter((i) => !i.done).length;
-
-  const filtered = useMemo(() => {
-    return allItems
-      .filter((i) => (view === "active" ? !i.done : i.done))
-      .filter((i) => (typeFilter === "all" ? true : i.type === typeFilter))
-      .filter((i) => {
-        const q = search.trim().toLowerCase();
-        if (!q) return true;
-        if (i.type === "ct") {
-          return (
-            i.courseName?.toLowerCase().includes(q) ||
-            i.ctNo?.toLowerCase().includes(q) ||
-            i.syllabus?.toLowerCase().includes(q)
-          );
-        }
-        return (
-          i.title?.toLowerCase().includes(q) ||
-          i.description?.toLowerCase().includes(q) ||
-          (Array.isArray(i.links) && i.links.some((l) => l.toLowerCase().includes(q)))
-        );
-      })
-      .sort((a, b) => {
-        const da = a.type === "ct" ? a.date : a.deadline;
-        const db = b.type === "ct" ? b.date : b.deadline;
-        return (da || "") > (db || "") ? 1 : -1;
-      });
-  }, [allItems, view, typeFilter, search]);
-
-  const monthItems = useMemo(() => allItems.filter((i) => {
-    const d = i.type === "ct" ? i.date : i.deadline;
-    return d && withinMonth(d, year, month);
-  }), [allItems, year, month]);
-
-  const monthPending = monthItems.filter((i) => !i.done).length;
-
-  function addTask(newTask) {
-    setData((prev) => ({ ...prev, tasks: [newTask, ...prev.tasks] }));
-  }
-  function addAssignment(newAssignment) {
-    setData((prev) => ({ ...prev, assignments: [newAssignment, ...prev.assignments] }));
-  }
-  function addCT(newCT) {
-    setData((prev) => ({ ...prev, cts: [newCT, ...prev.cts] }));
-  }
-
-  function toggleDone(item) {
-    setData((prev) => {
-      const clone = JSON.parse(JSON.stringify(prev));
-      const listKey = item.type === "task" ? "tasks" : item.type === "assignment" ? "assignments" : "cts";
-      clone[listKey] = clone[listKey].map((x) => (x.id === item.id ? { ...x, done: !x.done } : x));
-      return clone;
-    });
-  }
-
-  function deleteItem(item) {
-    setData((prev) => {
-      const clone = JSON.parse(JSON.stringify(prev));
-      const listKey = item.type === "task" ? "tasks" : item.type === "assignment" ? "assignments" : "cts";
-      clone[listKey] = clone[listKey].filter((x) => x.id !== item.id);
-      return clone;
-    });
-  }
-
-  function gotoPrevMonth() {
-    const d = new Date(year, month - 1, 1);
-    setYear(d.getFullYear());
-    setMonth(d.getMonth());
-  }
-  function gotoNextMonth() {
-    const d = new Date(year, month + 1, 1);
-    setYear(d.getFullYear());
-    setMonth(d.getMonth());
-  }
-
-  function handlePickDate(dateStr) {
-    setSearch(dateStr); // quick filter by date
-  }
-
-  const headerTitle = new Date(year, month, 1).toLocaleString(undefined, { month: "long", year: "numeric" });
-
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-slate-100 p-6">
-      {/* Topbar */}
-      <div className="mx-auto mb-6 flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="grid place-items-center rounded-2xl bg-white p-3 shadow-sm">
-            <CalendarIcon className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-semibold leading-none">Study Plan</h1>
-            <p className="text-sm text-muted-foreground">Track Tasks • Assignments • CTs</p>
-          </div>
-        </div>
-
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-          <div className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-sm">
-            <Search className="ml-1 h-4 w-4" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, course, date (YYYY-MM-DD), link…"
-              className="border-0 shadow-none focus-visible:ring-0"
+        {/* Search and Filter */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search tasks, assignments, or CTs..."
+              className="w-full pl-10 pr-4 py-2 border rounded-lg"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
+          
           <div className="flex gap-2">
-            <div className="rounded-2xl bg-white p-1 shadow-sm">
-              <Tabs value={view} onValueChange={setView} className="w-full">
-                <TabsList className="grid grid-cols-2 rounded-2xl">
-                  <TabsTrigger value="active">Active</TabsTrigger>
-                  <TabsTrigger value="completed">Completed</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="rounded-2xl shadow-sm" size="lg">
-                  <Plus className="mr-2 h-5 w-5" /> Add
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-2xl">
-                <DropdownMenuLabel>Add new</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setOpenTask(true)} className="gap-2">
-                  <ListTodo className="h-4 w-4" /> Add Task
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenAssignment(true)} className="gap-2">
-                  <ClipboardList className="h-4 w-4" /> Add Assignment
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenCT(true)} className="gap-2">
-                  <BookOpenText className="h-4 w-4" /> Add CT's Date
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="px-4 py-2 border rounded-lg"
+            >
+              <option value="all">All Types</option>
+              <option value="task">Tasks</option>
+              <option value="assignment">Assignments</option>
+              <option value="ct">CTs</option>
+            </select>
+            
+            <button
+              onClick={() => setActiveView(activeView === 'overview' ? 'completed' : 'overview')}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                activeView === 'completed'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              <CheckCircle className="w-4 h-4" />
+              {activeView === 'completed' ? 'Show Pending' : 'Completed Tasks'}
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Counts & filters */}
-      <div className="mx-auto mb-6 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">This Month</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-3 pt-0">
-            <Badge className="rounded-xl">{monthItems.length} items</Badge>
-            <Badge variant="secondary" className="rounded-xl">{monthPending} pending</Badge>
-          </CardContent>
-        </Card>
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">All</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-3 pt-0">
-            <Badge className="rounded-xl">{allItems.length} total</Badge>
-            <Badge variant="secondary" className="rounded-xl">{pendingCount} pending</Badge>
-          </CardContent>
-        </Card>
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Filter Type</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-2 pt-0">
-            <Button variant={typeFilter === "all" ? "default" : "secondary"} className="rounded-xl" size="sm" onClick={() => setTypeFilter("all")}>All</Button>
-            <Button variant={typeFilter === "task" ? "default" : "secondary"} className="rounded-xl" size="sm" onClick={() => setTypeFilter("task")}><ListTodo className="mr-1 h-4 w-4" /> Task</Button>
-            <Button variant={typeFilter === "assignment" ? "default" : "secondary"} className="rounded-xl" size="sm" onClick={() => setTypeFilter("assignment")}><ClipboardList className="mr-1 h-4 w-4" /> Assignment</Button>
-            <Button variant={typeFilter === "ct" ? "default" : "secondary"} className="rounded-xl" size="sm" onClick={() => setTypeFilter("ct")}><BookOpenText className="mr-1 h-4 w-4" /> CT</Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Calendar + List */}
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-2">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={gotoPrevMonth} className="rounded-xl"><ChevronLeft className="h-5 w-5" /></Button>
-              <h2 className="text-lg font-medium">{headerTitle}</h2>
-              <Button variant="ghost" size="icon" onClick={gotoNextMonth} className="rounded-xl"><ChevronRight className="h-5 w-5" /></Button>
-            </div>
-            <div className="text-sm text-muted-foreground">Click a date to filter</div>
-          </div>
-          <CalendarGrid
-            year={year}
-            month={month}
-            itemsByDate={itemsByDate}
-            onPickDate={handlePickDate}
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <Card className="rounded-2xl shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between gap-4 pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-lg">{view === "active" ? "Pending Items" : "Completed Items"}</CardTitle>
-                {search && (
-                  <Badge variant="secondary" className="rounded-xl">Filtered by: {search}</Badge>
-                )}
-              </div>
-              {search && (
-                <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => setSearch("")}>Clear filter</Button>
-              )}
-            </CardHeader>
-            <Separator />
-            <CardContent className="p-0">
-              <ScrollArea className="h-[560px] p-4">
-                <AnimatePresence mode="popLayout">
-                  {filtered.length === 0 && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="grid place-items-center py-20 text-center text-sm text-muted-foreground"
-                    >
-                      No items match your filters. Try adding something from the <strong className="mx-1">Add</strong> menu.
-                    </motion.div>
-                  )}
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {filtered.map((item) => (
-                      <ItemCard key={item.id} item={item} onToggleDone={toggleDone} onDelete={deleteItem} />
-                    ))}
+      {/* Calendar Visual (Simplified) */}
+      {activeView === 'overview' && (
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Calendar className="w-5 h-5" />
+            Upcoming Deadlines
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
+            {Array.from({ length: 7 }, (_, i) => {
+              const date = new Date();
+              date.setDate(date.getDate() + i);
+              const dateStr = date.toISOString().split('T')[0];
+              const dayTasks = tasks.filter(task => 
+                task.deadline === dateStr && !task.completed
+              );
+              
+              return (
+                <div key={i} className="border rounded p-2 h-24">
+                  <div className="text-sm font-medium text-gray-600 mb-1">
+                    {date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
                   </div>
-                </AnimatePresence>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+                  {dayTasks.map(task => (
+                    <div key={task.id} className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded mb-1 truncate">
+                      {task.title}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </div>
+      )}
+
+      {/* Tasks Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredTasks.map(task => (
+          <div key={task.id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-2">
+                {getTypeIcon(task.type)}
+                <span className="text-sm font-medium text-gray-500 capitalize">
+                  {task.type === 'ct' ? 'Class Test' : task.type}
+                </span>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDeadlineColor(task.deadline)}`}>
+                {new Date(task.deadline).toLocaleDateString()}
+              </span>
+            </div>
+
+            <h3 className="font-semibold text-gray-900 mb-2">{task.title}</h3>
+            
+            {task.type === 'task' && (
+              <>
+                <p className="text-gray-600 text-sm mb-2">{task.description}</p>
+                {task.links && (
+                  <a href={task.links} target="_blank" rel="noopener noreferrer" 
+                     className="text-blue-600 text-sm hover:underline block mb-2">
+                    View Links
+                  </a>
+                )}
+              </>
+            )}
+            
+            {task.type === 'assignment' && (
+              <p className="text-gray-600 text-sm mb-2">{task.questions}</p>
+            )}
+            
+            {task.type === 'ct' && (
+              <div className="text-sm space-y-1 mb-3">
+                <p><span className="font-medium">Course:</span> {task.courseName}</p>
+                <p><span className="font-medium">CT Number:</span> {task.ctNumber}</p>
+                <p><span className="font-medium">Time:</span> {task.time}</p>
+                <p><span className="font-medium">Syllabus:</span> {task.syllabus}</p>
+              </div>
+            )}
+
+            {task.files && task.files.length > 0 && (
+              <div className="mb-3">
+                <p className="text-sm font-medium text-gray-700 mb-1">Files:</p>
+                {task.files.map((file, index) => (
+                  <span key={index} className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs mr-1 mb-1">
+                    {file}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <button
+              onClick={() => toggleComplete(task.id)}
+              className={`w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                task.completed
+                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              }`}
+            >
+              <CheckCircle className="w-4 h-4" />
+              {task.completed ? 'Completed' : 'Mark as Done'}
+            </button>
+          </div>
+        ))}
       </div>
 
-      {/* Dialogs */}
-      <AddTaskDialog open={openTask} setOpen={setOpenTask} onAdd={addTask} />
-      <AddAssignmentDialog open={openAssignment} setOpen={setOpenAssignment} onAdd={addAssignment} />
-      <AddCTDialog open={openCT} setOpen={setOpenCT} onAdd={addCT} />
+      {filteredTasks.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-400 text-lg">
+            {activeView === 'completed' ? 'No completed tasks yet' : 'No items match your search criteria'}
+          </div>
+        </div>
+      )}
 
-      <div className="mx-auto mt-8 max-w-6xl text-center text-xs text-muted-foreground">
-        Tip: Use the search box to filter by <em>YYYY-MM-DD</em> date, course name, title, link, or syllabus keywords.
-      </div>
+      {renderAddModal()}
     </div>
   );
-}
+};
+
+export default StudyPlan;
