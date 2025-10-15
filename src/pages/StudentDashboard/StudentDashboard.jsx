@@ -24,6 +24,7 @@ import {
   WifiOff,
   RefreshCw
 } from 'lucide-react';
+import Sidebar from '../Shared/Sidebar/Sidebar';
 
 const StudentDashboard = () => {
   const chartRef = useRef(null);
