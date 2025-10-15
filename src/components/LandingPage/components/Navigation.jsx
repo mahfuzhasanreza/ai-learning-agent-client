@@ -86,7 +86,7 @@ const Navigation = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* <div className="w-6 h-6 lg:w-9 lg:h-9 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg cursor-pointer">
+            {/* <div className="w-6 h-6 lg:w-9 lg:h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center shadow-lg cursor-pointer">
               <FaRobot className="text-white text-sm lg:text-base" />
             </div> */}
               <img className='bg-transparent' src={logo} alt="COSMOS" />
@@ -103,10 +103,10 @@ const Navigation = () => {
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative group cursor-pointer ${
                   isActive(item.id)
                     ? scrolled 
-                      ? 'text-blue-600 bg-blue-50/80 border border-blue-200/50' 
+                      ? 'text-yellow-600 bg-yellow-50/80 border border-yellow-200/50' 
                       : 'text-white bg-white/20 border border-white/30'
                     : scrolled 
-                      ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
+                      ? 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80' 
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => scrollToSection(item.href)}
@@ -116,19 +116,19 @@ const Navigation = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 {item.name}
-                <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 ${
+                <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-yellow-500 to-yellow-600 transition-all duration-300 ${
                   isActive(item.id) 
                     ? 'w-3/4' 
                     : 'w-0 group-hover:w-3/4'
-                } ${scrolled ? 'group-hover:bg-blue-600' : 'group-hover:bg-white'}`} />
+                } ${scrolled ? 'group-hover:bg-yellow-600' : 'group-hover:bg-white'}`} />
               </motion.button>
             ))}
             <div className="ml-4 pl-4 border-l border-gray-300/30">
               <motion.button
                 className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
                   isActive('chat')
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25'
+                    ? 'bg-primary  text-white shadow-lg shadow-yellow-500/25'
+                    : 'bg-primary text-white hover:shadow-lg hover:shadow-yellow-500/25'
                 }`}
                 onClick={() => navigate('/student-dashboard')}
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -150,10 +150,10 @@ const Navigation = () => {
                 className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 text-sm cursor-pointer ${
                   isActive(item.id)
                     ? scrolled 
-                      ? 'text-blue-600 bg-blue-50/80 border border-blue-200/50' 
+                      ? 'text-yellow-600 bg-yellow-50/80 border border-yellow-200/50' 
                       : 'text-white bg-white/20 border border-white/30'
                     : scrolled 
-                      ? 'text-gray-700 hover:text-blue-600 hover:bg-gray-100/80' 
+                      ? 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80' 
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => scrollToSection(item.href)}
@@ -168,8 +168,8 @@ const Navigation = () => {
             <motion.button
               className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-200 cursor-pointer ${
                 isActive('chat')
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg'
+                  ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 text-white shadow-lg'
+                  : 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:shadow-lg'
               }`}
               onClick={() => navigate('/chat')}
               whileHover={{ scale: 1.05, y: -2 }}
@@ -214,8 +214,8 @@ const Navigation = () => {
                 key={item.name}
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isActive(item.id)
-                    ? 'text-blue-600 bg-blue-50 border border-blue-200/50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-yellow-600 bg-yellow-50 border border-yellow-200/50'
+                    : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-50'
                 }`}
                 onClick={() => scrollToSection(item.href)}
                 initial={{ opacity: 0, x: -20 }}
@@ -229,8 +229,8 @@ const Navigation = () => {
               <motion.button
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isActive('chat')
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                    ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 text-white shadow-lg'
+                    : 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
                 }`}
                 onClick={() => navigate('/chat')}
                 initial={{ opacity: 0, x: -20 }}
