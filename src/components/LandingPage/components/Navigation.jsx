@@ -74,7 +74,7 @@ const Navigation = () => {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? `${isDark ? 'bg-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
+        scrolled ? `${isDark ? 'bg-nav-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -130,8 +130,8 @@ const Navigation = () => {
               <motion.button
                 className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
                   isActive('chat')
-                    ? 'bg-primary  text-white shadow-lg shadow-yellow-500/25'
-                    : 'bg-primary text-white hover:shadow-lg hover:shadow-yellow-500/25'
+                    ? 'btn-bg-primary  text-white shadow-lg shadow-yellow-500/25'
+                    : 'btn-bg-primary text-white hover:shadow-lg hover:shadow-yellow-500/25'
                 }`}
                 onClick={() => navigate('/student-dashboard')}
                 whileHover={{ scale: 1.05, y: -2 }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
@@ -16,8 +16,12 @@ import {
   FaTrophy
 } from 'react-icons/fa';
 import Title from '../../shared/Title';
+import { Context } from '../../../context/Context';
 
 const KeyFeaturesSection = () => {
+
+  const {isDark} = useContext(Context);
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -134,7 +138,7 @@ const KeyFeaturesSection = () => {
   ];
 
   return (
-    <section className="key-features-section" ref={ref}>
+    <section className={`${isDark ? 'bg-dark':'bg-white'}  key-features-section`} ref={ref}>
       <div className="key-features-container">
         <motion.div
           className="key-features-header"

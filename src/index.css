@@ -35,11 +35,20 @@
   color: #a200ff;
 }
 
-.bg-primary {
+.btn-bg-primary {
   /* background-image: linear-gradient(to right, #FF4B00, #aa3a0a); */
   background-color: #FF4B00;
 }
 
-.bg-dark{
-  background-color: black;
+.bg-white {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
+
+.bg-dark {
+  background: #1d0b0b;
+}
+
+.bg-nav-dark {
+  background: rgba(70, 41, 41, 0.548);
+}
+

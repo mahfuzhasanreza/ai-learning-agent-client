@@ -281,7 +281,7 @@ const HeroSection = () => {
                   >
                     <Link to={'/login'}>
                       <button
-                        className="w-full cursor-pointer bg-primary text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+                        className="w-full cursor-pointer btn-bg-primary text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                       >
