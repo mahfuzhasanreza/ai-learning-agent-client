@@ -73,7 +73,8 @@ const HeroSection = () => {
       subtitle: "With AI-Powered Personalized Learning",
       description: "Experience the future of education with topic-specific AI agents, intelligent weakness prediction, and personalized study plans",
       features: ["Study Groups", "Peer Support", "Shared Insights"],
-      gradient: "from-green-600 via-teal-600 to-cyan-600",
+      // gradient: "from-green-600 via-teal-600 to-cyan-600",
+      gradient: "from-amber-600 via-yellow-700 to-orange-800",
       icon: <FaGraduationCap className="text-5xl" />,
       bgImage: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
       lottieUrl: HeroLottie
@@ -280,7 +281,7 @@ const HeroSection = () => {
                   >
                     <Link to={'/login'}>
                       <button
-                        className="w-full cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+                        className="w-full cursor-pointer bg-primary text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                       >
