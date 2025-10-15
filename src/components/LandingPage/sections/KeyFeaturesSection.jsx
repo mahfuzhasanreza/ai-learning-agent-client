@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { 
-  FaRobot, 
-  FaBrain, 
-  FaChartLine, 
-  FaUsers, 
-  FaShieldAlt, 
+import {
+  FaRobot,
+  FaBrain,
+  FaChartLine,
+  FaUsers,
+  FaShieldAlt,
   FaMobile,
   FaLightbulb,
   FaGraduationCap,
@@ -15,6 +15,7 @@ import {
   FaClock,
   FaTrophy
 } from 'react-icons/fa';
+import Title from '../../shared/Title';
 
 const KeyFeaturesSection = () => {
   const [ref, inView] = useInView({
@@ -141,7 +142,12 @@ const KeyFeaturesSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="key-features-title">Key Features</h2>
+          {/* <h2 className="key-features-title">Key Features</h2> */}
+          <Title
+            text="Key Features"
+            gradient="primary"
+            className="text-center mb-6"
+          />
           <p className="key-features-subtitle">
             Discover the powerful tools and capabilities that make our AI learning platform the ultimate choice for programming education
           </p>

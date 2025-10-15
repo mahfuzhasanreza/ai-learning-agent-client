@@ -39,3 +39,7 @@
   /* background-image: linear-gradient(to right, #FF4B00, #aa3a0a); */
   background-color: #FF4B00;
 }
+
+.bg-dark{
+  background-color: black;
+}

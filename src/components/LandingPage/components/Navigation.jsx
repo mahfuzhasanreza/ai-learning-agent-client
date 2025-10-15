@@ -74,7 +74,7 @@ const Navigation = () => {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? `${isDark ? 'bg-black/95' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
+        scrolled ? `${isDark ? 'bg-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -106,8 +106,8 @@ const Navigation = () => {
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative group cursor-pointer ${
                   isActive(item.id)
                     ? scrolled 
-                      ? 'text-yellow-600 bg-yellow-50/80 border border-yellow-200/50' 
-                      : 'text-white bg-white/20 border border-white/30'
+                      ? 'text-amber-600 border-b-amber-600' 
+                      : 'text-white border-b-amber-600'
                     : scrolled 
                       ? `${isDark? 'text-gray-100' : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80'}`
                       : 'text-white/90 hover:text-white hover:bg-white/10'
@@ -218,8 +218,8 @@ const Navigation = () => {
                 key={item.name}
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isActive(item.id)
-                    ? 'text-yellow-600 bg-yellow-50 border border-yellow-200/50'
-                    : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-50'
+                    ? 'text-amber-600 bg-yellow-50'
+                    : 'text-gray-700 hover:text-yellow-600'
                 }`}
                 onClick={() => scrollToSection(item.href)}
                 initial={{ opacity: 0, x: -20 }}
