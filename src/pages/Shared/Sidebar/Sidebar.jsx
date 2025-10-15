@@ -269,7 +269,7 @@ const Sidebar = () => {
       {/* Menu Items */}
       <nav style={{ flex: 1 }}>
         {/* Toggle Button */}
-        <button
+        {/* <button
           onClick={() => setCollapsed(!collapsed)}
           style={{
             width: '100%',
@@ -303,7 +303,7 @@ const Sidebar = () => {
               <span>Collapse</span>
             </>
           )}
-        </button>
+        </button> */}
         <MenuItem icon={Home} label="Dashboard" path="/" />
         <MenuItem icon={BookOpen} label="Courses" path="/courses" />
         <MenuItem icon={GraduationCap} label="Learning Path" path="/learning-path" />
