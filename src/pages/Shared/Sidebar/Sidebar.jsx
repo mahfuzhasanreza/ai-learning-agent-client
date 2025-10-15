@@ -139,7 +139,19 @@ const Sidebar = () => {
             e.currentTarget.style.color = '#94a3b8';
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+  position: 'sticky',
+  top: 0,
+  zIndex: 10,
+  backgroundColor: '#1a1f2e',
+  padding: collapsed ? '24px 10px' : '24px 20px',
+  borderBottom: '1px solid #2d3548',
+  marginBottom: '8px',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: collapsed ? 'center' : 'flex-start',
+}}>
+
             <Icon size={18} />
             <span>{label}</span>
           </div>
