@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../../context/Context';
+import { MdModeNight, MdLightMode } from "react-icons/md";
 
 const DarkModeToggle = () => {
     const { isDark, toggleDarkMode } = useContext(Context);
@@ -23,7 +24,7 @@ const DarkModeToggle = () => {
                 e.currentTarget.style.backgroundColor = isDark ? '#374151' : '#e5e7eb';
             }}
         >
-            {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+            {isDark ? <MdModeNight /> : <MdLightMode />}
         </button>
     );
 };
