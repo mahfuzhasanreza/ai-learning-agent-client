@@ -130,7 +130,7 @@ const Navigation = () => {
                     ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/25'
                 }`}
-                onClick={() => navigate('/chat')}
+                onClick={() => navigate('/student-dashboard')}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: -20 }}
