@@ -93,7 +93,7 @@ const Navigation = () => {
               <FaRobot className="text-white text-sm lg:text-base" />
             </div> */}
               <img className='bg-transparent' src={logo} alt="COSMOS" />
-            <span className={`ml-3 font-bold text-xl lg:text-3xl tracking-tight cursor-pointer ${scrolled ? 'text-gray-900' : 'text-white'}`}>
+            <span className={`ml-3 font-bold text-xl lg:text-3xl tracking-tight cursor-pointer ${scrolled ? `${isDark? 'text-white' : 'text-gray-900'}` : 'text-white'}`}>
               COSMOS
             </span>
           </motion.div>
@@ -109,7 +109,7 @@ const Navigation = () => {
                       ? 'text-yellow-600 bg-yellow-50/80 border border-yellow-200/50' 
                       : 'text-white bg-white/20 border border-white/30'
                     : scrolled 
-                      ? 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80' 
+                      ? `${isDark? 'text-gray-100' : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80'}`
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => scrollToSection(item.href)}
