@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import runChat from "../config/chatResponse";
 import Markdown from "react-markdown";
 // import remarkGfm from 'remark-gfm';
@@ -18,6 +18,32 @@ const ContextProvider = (props) => {
     const [conversation, setConversation] = useState([]);
     const [activeChat, setActiveChat] = useState("");
     const [courseData, setCourseData] = useState("");
+    
+    // Dark Mode State
+    const [isDark, setIsDark] = useState(() => {
+        const saved = localStorage.getItem('darkMode');
+        return saved === 'true';
+    });
+
+    // Dark Mode Effect
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
+        
+        if (isDark) {
+            html.classList.add("dark");
+            body.classList.add("dark");
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            html.classList.remove("dark");
+            body.classList.remove("dark");
+            localStorage.setItem('darkMode', 'false');
+        }
+    }, [isDark]);
+
+    const toggleDarkMode = () => {
+        setIsDark(prev => !prev);
+    };
 
     // const delayPara = (index, nextWord) => {
     //     setTimeout(function () {
@@ -138,6 +164,10 @@ const ContextProvider = (props) => {
         activeChat,
         setActiveChat,
         courseData,
+        // Dark Mode values
+        isDark,
+        setIsDark,
+        toggleDarkMode
     }
 
     return (

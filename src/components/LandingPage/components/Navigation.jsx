@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 import logo from '../../../../public/assets/logo.svg';
+import { Context } from '../../../context/Context';
+import DarkModeToggle from '../../DarkModeToggle/DarkModeToggle';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +12,7 @@ const Navigation = () => {
   const [activeSection, setActiveSection] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const {isDark} = useContext(Context);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,7 +74,7 @@ const Navigation = () => {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/20' : 'bg-transparent'
+        scrolled ? `${isDark ? 'bg-black/95' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -140,6 +143,7 @@ const Navigation = () => {
                 <span>Start Learning</span>
               </motion.button>
             </div>
+            <DarkModeToggle></DarkModeToggle>
           </div>
 
           {/* Tablet Navigation */}
