@@ -234,11 +234,13 @@ const Sidebar = () => {
         )}
         
         {/* Toggle Button */}
-        <button
+        {
+            !collapsed &&
+            <button
           onClick={() => setCollapsed(!collapsed)}
           style={{
             position: 'absolute',
-            right: '-12px',
+            right: '10px',
             top: '50%',
             transform: 'translateY(-50%)',
             width: '28px',
@@ -269,6 +271,46 @@ const Sidebar = () => {
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronRight size={16} style={{ transform: 'rotate(180deg)' }} />}
         </button>
+        }
+
+{
+            collapsed &&
+            <button
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            position: 'absolute',
+            right: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            border: '2px solid #3b82f6',
+            background: '#1a1f2e',
+            color: '#3b82f6',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s',
+            zIndex: 9999,
+            boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.color = '#ffffff';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.5)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#1a1f2e';
+            e.currentTarget.style.color = '#3b82f6';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+          }}
+          title={collapsed ? 'Expand' : 'Collapse'}
+        >
+          {collapsed ? <ChevronRight size={16} /> : <ChevronRight size={16} style={{ transform: 'rotate(180deg)' }} />}
+        </button>
+        }
       </div>
 
       {/* Menu Items */}
