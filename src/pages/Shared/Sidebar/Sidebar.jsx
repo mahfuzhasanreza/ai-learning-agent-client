@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, 
   Brain, 
@@ -17,6 +18,9 @@ import {
 } from 'lucide-react';
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
   const [activeItem, setActiveItem] = useState('/');
   const [expandedMenus, setExpandedMenus] = useState({});
   const [collapsed, setCollapsed] = useState(false);
@@ -31,6 +35,7 @@ const Sidebar = () => {
   const MenuItem = ({ icon: Icon, label, path, onClick }) => (
     <button
       onClick={() => {
+        navigate(path);
         setActiveItem(path);
         onClick?.();
       }}
@@ -304,11 +309,11 @@ const Sidebar = () => {
             </>
           )}
         </button> */}
-        <MenuItem icon={Home} label="Dashboard" path="/" />
-        <MenuItem icon={BookOpen} label="Courses" path="/courses" />
-        <MenuItem icon={GraduationCap} label="Learning Path" path="/learning-path" />
+        <MenuItem icon={Home} label="Dashboard" path="/student-dashboard" />
+        <MenuItem icon={BookOpen} label="Roadmap" path="/roadmap" />
+        <MenuItem icon={GraduationCap} label="Study Plan" path="/study-plan" />
         
-        <SubMenuItem 
+        {/* <SubMenuItem 
           icon={Brain} 
           label="AI Tutor" 
           menuKey="ai-tutor"
@@ -332,7 +337,7 @@ const Sidebar = () => {
             { label: 'Forums', path: '/community/forums' },
             { label: 'Study Groups', path: '/community/study-groups' }
           ]}
-        />
+        /> */}
 
         <div style={{ 
           borderTop: '1px solid #2d3548', 
