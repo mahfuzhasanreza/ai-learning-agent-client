@@ -135,7 +135,12 @@ const StudentDashboard = () => {
       topics: [
         { name: "Variables", progress: 85 },
         { name: "Loops", progress: 65 },
-        { name: "Functions", progress: 90 }
+        { name: "Functions", progress: 90 },
+        { name: "Arrays", progress: 78 },
+        { name: "Pointers", progress: 82 },
+        { name: "Structures", progress: 88 },
+        { name: "Recursion", progress: 70 },
+        { name: "File Handling", progress: 75 }
       ],
       weaknesses: [
         { topic: "Loops", severity: 0.15 },
@@ -333,6 +338,9 @@ const StudentDashboard = () => {
     addedCTs: [],
     addedAssignments: []
   });
+
+  // Topic Mastery state
+  const [showAllTopics, setShowAllTopics] = useState(false);
 
   console.log(editingCourses +"EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -834,7 +842,7 @@ const StudentDashboard = () => {
             </div>
 
             <div className="space-y-4">
-              {studentData.selectedCourse.topics.map((topic, index) => (
+              {(showAllTopics ? studentData.selectedCourse.topics : studentData.selectedCourse.topics.slice(0, 2)).map((topic, index) => (
                 <div key={index} className='mb-3'>
                   <div className="flex justify-between text-sm mb-2">
                     <span>{topic.name}</span>
@@ -848,8 +856,11 @@ const StudentDashboard = () => {
             <div className="mt-7">
               <div className="flex items-center justify-between p-2">
                 
-                <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
-                  <span className="text-sm">See All</span>
+                <button 
+                  onClick={() => setShowAllTopics(!showAllTopics)}
+                  className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                >
+                  <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
                 </button>
 
                 <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
@@ -901,7 +912,7 @@ const StudentDashboard = () => {
             </div>
           </div> */}
 
-           <div className="bg-gray-800 rounded-b-lg p-6 space-y-6">
+           {!showAllTopics && <div className="bg-gray-800 rounded-b-lg p-6 space-y-6">
           {/* Course Assessment */}
           <div className="bg-gray-800 rounded-t-lg">
             <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
@@ -993,7 +1004,7 @@ const StudentDashboard = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>}
 
         </div>}
       </div>
