@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import * as Chart from 'chart.js';
 import {
   useStudentPerformance,
@@ -310,13 +313,33 @@ const StudentDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       {/* Header */}
+
       <div className="flex items-center justify-between mb-8">
+
+
+        <div>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link underline="hover" color="inherit" href="/">
+              MUI
+            </Link>
+            <Link
+              underline="hover"
+              color="inherit"
+              href="/material-ui/getting-started/installation/"
+            >
+              Core
+            </Link>
+            <Typography sx={{ color: 'text.primary' }}>Breadcrumbs</Typography>
+          </Breadcrumbs>
+        </div>
+
+
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
             <User className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold ml-2">{studentData.name}</h1>
-          
+
           {/* API Connection Status */}
           <div className="flex items-center space-x-2">
             {connectionLoading ? (
@@ -330,9 +353,16 @@ const StudentDashboard = () => {
               {connectionLoading ? 'Connecting...' : isConnected ? 'API Connected' : 'API Offline'}
             </span>
           </div>
+          <button
+            onClick={refreshAllData}
+            className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
+            title="Refresh Data"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="flex items-center space-x-6 gap-7">
+        {/* <div className="flex items-center space-x-6 gap-7">
           <div className="text-center flex justify-center items-center gap-4">
             <div className="text-sm text-gray-400">Completed Credits</div>
             <div className="text-xl font-bold">{studentData.completedCredits}</div>
@@ -347,14 +377,8 @@ const StudentDashboard = () => {
               <div className="text-xl font-bold">{studentSummary.overallAverage}%</div>
             </div>
           )}
-          <button
-            onClick={refreshAllData}
-            className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
-            title="Refresh Data"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-        </div>
+          
+        </div> */}
       </div>
 
       {/* Loading Indicator */}
@@ -391,7 +415,7 @@ const StudentDashboard = () => {
 
             <div className="mb-4">
               <h2 className="text-xl font-semibold mb-7">Courses</h2>
-              <button 
+              <button
                 onClick={() => setShowAddAssessmentForm(!showAddAssessmentForm)}
                 className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600"
               >
@@ -408,7 +432,7 @@ const StudentDashboard = () => {
                     <label className="block text-sm font-medium mb-1">Type</label>
                     <select
                       value={assessmentForm.assessment_type}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, assessment_type: e.target.value})}
+                      onChange={(e) => setAssessmentForm({ ...assessmentForm, assessment_type: e.target.value })}
                       className="w-full p-2 bg-gray-600 rounded"
                     >
                       <option value="CT">CT</option>
@@ -424,7 +448,7 @@ const StudentDashboard = () => {
                       type="number"
                       step="0.1"
                       value={assessmentForm.score}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, score: e.target.value})}
+                      onChange={(e) => setAssessmentForm({ ...assessmentForm, score: e.target.value })}
                       className="w-full p-2 bg-gray-600 rounded"
                       required
                     />
@@ -435,7 +459,7 @@ const StudentDashboard = () => {
                       type="number"
                       step="0.1"
                       value={assessmentForm.max_marks}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, max_marks: e.target.value})}
+                      onChange={(e) => setAssessmentForm({ ...assessmentForm, max_marks: e.target.value })}
                       className="w-full p-2 bg-gray-600 rounded"
                       required
                     />
@@ -444,7 +468,7 @@ const StudentDashboard = () => {
                     <label className="block text-sm font-medium mb-1">Feedback (Optional)</label>
                     <textarea
                       value={assessmentForm.feedback}
-                      onChange={(e) => setAssessmentForm({...assessmentForm, feedback: e.target.value})}
+                      onChange={(e) => setAssessmentForm({ ...assessmentForm, feedback: e.target.value })}
                       className="w-full p-2 bg-gray-600 rounded h-20"
                       placeholder="Enter feedback..."
                     />
@@ -661,7 +685,7 @@ const StudentDashboard = () => {
                 <span>Marks</span>
                 <span>Obtained</span>
               </div>
-              
+
               {/* Display API assessment data if available */}
               {assessments && assessments.length > 0 ? (
                 assessments.map((assessment, index) => (
@@ -705,7 +729,7 @@ const StudentDashboard = () => {
                   </div>
                 </div>
               )}
-              
+
               {/* Weakness insight based on weakest course from API */}
               {studentSummary && studentSummary.weakestCourse && (
                 <div className="mb-4 p-3 bg-yellow-600 rounded-lg">
@@ -713,18 +737,18 @@ const StudentDashboard = () => {
                     Area for Improvement
                   </div>
                   <div className="text-yellow-100">
-                    Your weakest course is {studentSummary.weakestCourse}. 
+                    Your weakest course is {studentSummary.weakestCourse}.
                     Focus on improving performance in this area.
                   </div>
                 </div>
               )}
 
               <div className="mb-7 text-lg font-semibold">
-                You have lost 4 marks on CT1 that consists loops. 
+                You have lost 4 marks on CT1 that consists loops.
                 Max possibilities in CT (avg best) ÷ 3
               </div>
-              
-              <button 
+
+              <button
                 className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm mb-3"
                 onClick={() => {
                   console.log('Requesting tailored plan for', CURRENT_COURSE);
@@ -732,8 +756,8 @@ const StudentDashboard = () => {
               >
                 Ask SPL Agent for tailored plan
               </button>
-              
-              <button 
+
+              <button
                 className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm"
                 onClick={() => {
                   console.log('Fetching resources for', CURRENT_COURSE);
