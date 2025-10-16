@@ -4,9 +4,10 @@ import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../../context/Context';
 import { assets } from '../../../assets/assets';
+import Title from '../../shared/Title';
 
 const QuickPromptsSection = () => {
-  const { onSent } = useContext(Context);
+  const { onSent, isDark } = useContext(Context);
   const navigate = useNavigate();
   const [ref, inView] = useInView({
     threshold: 0.1,
@@ -87,7 +88,7 @@ const QuickPromptsSection = () => {
   };
 
   return (
-    <section className="quick-prompts-section" ref={ref}>
+    <section className={`quick-prompts-section ${isDark ? 'bg-gray-800' : 'bg-white'}`} ref={ref}>
       <div className="quick-prompts-container">
         <motion.div
           className="quick-prompts-header"
@@ -95,7 +96,14 @@ const QuickPromptsSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="quick-prompts-title">Start Your Learning Journey</h2>
+          {/* <h2 className="quick-prompts-title">Start Your Learning Journey</h2> */}
+          
+          <Title
+            text="Start Your Learning Journey"
+            gradient="primary"
+            className="text-center mb-6"
+          />
+          
           <p className="quick-prompts-subtitle">
             Choose from our AI-powered learning tools designed to accelerate your programming skills
           </p>
@@ -110,7 +118,7 @@ const QuickPromptsSection = () => {
           {quickPrompts.map((prompt, index) => (
             <motion.div
               key={index}
-              className="quick-prompt-card"
+              className={`quick-prompt-card` + (isDark ? ' bg-gray-700 text-white shadow-lg' : ' bg-white text-gray-900 shadow-md')}
               variants={cardVariants}
               whileHover={{
                 y: -8,
@@ -127,7 +135,7 @@ const QuickPromptsSection = () => {
                     <img src={prompt.icon} alt="" />
                   </div>
                 </div>
-                <h3 className="prompt-title">{prompt.title}</h3>
+                <h3 className={`prompt-title ${isDark ? 'text-white' : 'text-gray-900'}`}>{prompt.title}</h3>
                 <p className="prompt-description">{prompt.description}</p>
                 <div className="prompt-action">
                   <span className="prompt-action-text">Start Learning</span>
@@ -147,7 +155,7 @@ const QuickPromptsSection = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           <button 
-            className="explore-more-btn"
+            className="explore-more-btn btn-bg-primary"
             onClick={() => navigate('/chat')}
           >
             Explore All Features
