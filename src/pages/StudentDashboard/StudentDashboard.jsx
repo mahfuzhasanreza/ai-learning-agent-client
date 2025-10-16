@@ -341,6 +341,8 @@ const StudentDashboard = () => {
 
   // Topic Mastery state
   const [showAllTopics, setShowAllTopics] = useState(false);
+  const [showAddTopicQuiz, setShowAddTopicQuiz] = useState(false);
+  const [selectedQuizTopic, setSelectedQuizTopic] = useState('');
 
   console.log(editingCourses +"EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -831,44 +833,82 @@ const StudentDashboard = () => {
                 /> */}
 
                 <button
+                  onClick={() => setShowAddTopicQuiz(!showAddTopicQuiz)}
                   className="flex items-center space-x-2 px-3 py-1 rounded bg-gray-700 hover:bg-gray-600"
                   title="Add New Topic"
                 >
                   <Plus className="w-4 h-4" />
-                  <span className="text-sm">Add Topic</span>
+                  <span className="text-sm">{showAddTopicQuiz ? 'Close' : 'Add Topic'}</span>
                 </button>
 
               </div>
             </div>
 
-            <div className="space-y-4">
-              {(showAllTopics ? studentData.selectedCourse.topics : studentData.selectedCourse.topics.slice(0, 2)).map((topic, index) => (
-                <div key={index} className='mb-3'>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>{topic.name}</span>
-                    <span>{topic.progress}%</span>
-                  </div>
-                  <ProgressBar percentage={topic.progress} />
+            {/* Quiz Section - Shown when Add Topic is clicked */}
+            {showAddTopicQuiz && (
+              <div className="bg-gray-700 rounded-lg p-4 mb-4 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Quiz Topic</label>
+                  <select
+                    value={selectedQuizTopic}
+                    onChange={(e) => setSelectedQuizTopic(e.target.value)}
+                    className="w-full p-2 bg-gray-600 rounded text-white mb-2"
+                  >
+                    <option value="">Choose a topic...</option>
+                    {studentData.selectedCourse.topics.map((topic, index) => (
+                      <option key={index} value={topic.name}>{topic.name}</option>
+                    ))}
+                  </select>
                 </div>
-              ))}
-            </div>
-
-            <div className="mt-7">
-              <div className="flex items-center justify-between p-2">
-                
                 <button 
-                  onClick={() => setShowAllTopics(!showAllTopics)}
-                  className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                  onClick={() => {
+                    if (selectedQuizTopic) {
+                      console.log('Taking quiz for topic:', selectedQuizTopic);
+                      // Add your quiz logic here
+                    } else {
+                      alert('Please select a topic first');
+                    }
+                  }}
+                  className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm"
                 >
-                  <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
-                </button>
-
-                <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
-                  <span className="text-sm">Quiz</span>
-                  <Edit className="w-3 h-3" />
+                  Take Quiz
                 </button>
               </div>
-            </div>
+            )}
+
+            {/* Topic List - Hidden when Add Topic Quiz is active */}
+            {!showAddTopicQuiz && (
+              <>
+                <div className="space-y-4">
+                  {(showAllTopics ? studentData.selectedCourse.topics : studentData.selectedCourse.topics.slice(0, 2)).map((topic, index) => (
+                    <div key={index} className='mb-3'>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>{topic.name}</span>
+                        <span>{topic.progress}%</span>
+                      </div>
+                      <ProgressBar percentage={topic.progress} />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-7">
+                  <div className="flex items-center justify-between p-2">
+                    
+                    <button 
+                      onClick={() => setShowAllTopics(!showAllTopics)}
+                      className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                    >
+                      <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
+                    </button>
+
+                    <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
+                      <span className="text-sm">Quiz</span>
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Detected Weakness */}
