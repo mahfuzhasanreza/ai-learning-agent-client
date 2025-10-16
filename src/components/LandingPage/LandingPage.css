@@ -1372,7 +1372,7 @@
 /* FAQ CTA */
 .faq-cta {
   text-align: center;
-  background: white;
+  /* background: white; */
   padding: 50px 40px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -1382,7 +1382,7 @@
 .faq-cta-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  /* color: #1f2937; */
   margin-bottom: 15px;
 }
 
@@ -1415,24 +1415,24 @@
 }
 
 .faq-contact-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
   color: white;
   box-shadow: 0 8px 25px rgba(102,126,234,0.3);
 }
 
 .faq-demo-btn {
-  background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  background: wheat;
+  color: #da6c23;
+  border: 2px solid #fd7f48;
 }
 
 .faq-contact-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(102,126,234,0.4);
+  box-shadow: 0 12px 35px rgba(234, 144, 102, 0.4);
 }
 
 .faq-demo-btn:hover {
-  background: #667eea;
+  background: #e98b54;
   color: white;
   transform: translateY(-2px);
 }

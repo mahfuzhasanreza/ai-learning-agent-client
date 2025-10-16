@@ -131,7 +131,7 @@ const FAQSection = () => {
         </motion.div>
 
         <motion.div
-          className="faq-cta"
+          className={`faq-cta ${isDark ? 'bg-dark text-white':'bg-white text-gray-900'} `}
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -141,7 +141,7 @@ const FAQSection = () => {
             Our support team is here to help you get started and make the most of your learning journey
           </p>
           <div className="faq-cta-buttons">
-            <button className="faq-contact-btn">
+            <button className={`faq-contact-btn btn-bg-primary`}>
               Contact Support
             </button>
             <button className="faq-demo-btn">
