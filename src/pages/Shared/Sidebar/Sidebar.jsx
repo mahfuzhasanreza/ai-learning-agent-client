@@ -221,15 +221,14 @@ const Sidebar = () => {
       }}>
         {!collapsed ? (
           <>
-            <h2 style={{ 
-              color: '#60a5fa', 
+            <h2 style={{  
               margin: 0, 
               fontSize: '20px',
               fontWeight: '600',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
-            }}>
+            }} className='primary-color'>
               <Brain size={24} />
               COSMOS-ITS
             </h2>
@@ -258,9 +257,9 @@ const Sidebar = () => {
             width: '28px',
             height: '28px',
             borderRadius: '50%',
-            border: '2px solid #3b82f6',
+            border: '2px solid #FF4B00',
             background: '#1a1f2e',
-            color: '#3b82f6',
+            color: '#FF4B00',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -270,13 +269,13 @@ const Sidebar = () => {
             boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.backgroundColor = '#FF4B00';
             e.currentTarget.style.color = '#ffffff';
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.5)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = '#1a1f2e';
-            e.currentTarget.style.color = '#3b82f6';
+            e.currentTarget.style.color = '#FF4B00';
             e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
           }}
           title={collapsed ? 'Expand' : 'Collapse'}
@@ -297,9 +296,9 @@ const Sidebar = () => {
             width: '28px',
             height: '28px',
             borderRadius: '50%',
-            border: '2px solid #3b82f6',
+            border: '2px solid #FF4B00',
             background: '#1a1f2e',
-            color: '#3b82f6',
+            color: '#FF4B00',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -309,13 +308,13 @@ const Sidebar = () => {
             boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.backgroundColor = '#FF4B00';
             e.currentTarget.style.color = '#ffffff';
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.5)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = '#1a1f2e';
-            e.currentTarget.style.color = '#3b82f6';
+            e.currentTarget.style.color = '#FF4B00';
             e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
           }}
           title={collapsed ? 'Expand' : 'Collapse'}

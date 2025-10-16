@@ -386,7 +386,7 @@ const StudentDashboard = () => {
 
       {/* Loading Indicator */}
       {isLoading && (
-        <div className="mb-4 p-4 bg-blue-600 rounded-lg text-center">
+        <div className="mb-4 p-4 bg-primary-color rounded-lg text-center">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
           Loading data...
         </div>
@@ -403,7 +403,7 @@ const StudentDashboard = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
           {/* Current Trimester */}
@@ -417,12 +417,12 @@ const StudentDashboard = () => {
             </div>
 
             <div className="mb-4">
-              <h2 className="text-xl font-semibold mb-7">Courses</h2>
+              {/* <h2 className="text-xl font-semibold mb-7">Courses</h2> */}
               <button
                 onClick={() => setShowAddAssessmentForm(!showAddAssessmentForm)}
                 className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600"
               >
-                + Add Assessment
+                + Add Courses
               </button>
             </div>
 
@@ -553,7 +553,7 @@ const StudentDashboard = () => {
 
           {/* Scores */}
           <div className="bg-gray-800 p-6">
-            <h3 className="text-xl font-semibold mb-4">Recent Scores</h3>
+            <h3 className="text-xl font-semibold mb-4">All Scores</h3>
             <div className="space-y-3">
               {trends && trends.length > 0 ? (
                 trends.slice(-5).map((trend, index) => (
@@ -636,7 +636,7 @@ const StudentDashboard = () => {
           </div>
 
           {/* Detected Weakness */}
-          <div className="bg-gray-800 rounded-b-lg p-6">
+          {/* <div className="bg-gray-800 rounded-b-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Detected Weakness In</h3>
               <div className="bg-red-500 rounded-full w-6 h-6 flex items-center justify-center text-sm">
@@ -644,7 +644,7 @@ const StudentDashboard = () => {
               </div>
             </div>
 
-            {/* Chart Section */}
+
             <div className="bg-gray-800 rounded-lg p-6">
               <div className="h-36 w-full">
                 <canvas ref={chartRef} />
@@ -674,13 +674,11 @@ const StudentDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </div> */}
 
-        {/* Right Column - Assessments & Performance */}
-        <div className="space-y-6">
+           <div className="bg-gray-800 rounded-b-lg p-6 space-y-6">
           {/* Course Assessment */}
-          <div className="bg-gray-800 rounded-t-lg p-6">
+          <div className="bg-gray-800 rounded-t-lg">
             <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
             <div className="space-y-2">
               <div className="grid grid-cols-3 gap-4 text-md font-semibold text-center border-b border-gray-600 pb-2">
@@ -718,7 +716,7 @@ const StudentDashboard = () => {
           </div>
 
           {/* Performance Insights */}
-          <div className="bg-gray-800 rounded-b-lg p-6">
+          <div className="bg-gray-800 rounded-b-lg pt-6">
             <div className="rounded-lg text-sm">
               {/* Display insights based on API data */}
               {coursePerformance && (
@@ -770,6 +768,8 @@ const StudentDashboard = () => {
               </button>
             </div>
           </div>
+        </div>
+
         </div>
       </div>
 
