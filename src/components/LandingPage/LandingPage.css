@@ -650,7 +650,7 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  /* border: 1px solid rgba(255,255,255,0.2); */
   transition: all 0.4s ease;
   cursor: pointer;
 }
@@ -1028,7 +1028,7 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  /* border: 1px solid rgba(255,255,255,0.2); */
   transition: all 0.4s ease;
   cursor: pointer;
 }
@@ -1075,7 +1075,7 @@
 .why-choose-us-card-title {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #1f2937;
+  /* color: #1f2937; */
   margin-bottom: 15px;
   line-height: 1.3;
 }

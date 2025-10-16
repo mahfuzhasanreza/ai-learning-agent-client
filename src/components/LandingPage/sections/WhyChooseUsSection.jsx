@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
@@ -11,8 +11,13 @@ import {
   FaClock,
   FaGlobe
 } from 'react-icons/fa';
+import Title from '../../shared/Title';
+import { Context } from '../../../context/Context';
 
 const WhyChooseUsSection = () => {
+
+  const {isDark} = useContext(Context);
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -134,15 +139,22 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section className="why-choose-us-section" ref={ref}>
+    <section className={`why-choose-us-section ${isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`} ref={ref}>
       <div className="why-choose-us-container">
         <motion.div
-          className="why-choose-us-header"
+          className={`why-choose-us-header ${isDark ? 'text-white' : 'text-gray-900'}`}
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="why-choose-us-title">Why Choose Us?</h2>
+          {/* <h2 className="why-choose-us-title">Why Choose Us?</h2> */}
+          
+          <Title
+            text="Why Choose Us?"
+            gradient="primary"
+            className="text-center mb-6"
+          />
+          
           <p className="why-choose-us-subtitle">
             Discover what makes our AI learning platform the preferred choice for thousands of successful developers worldwide
           </p>
@@ -157,7 +169,7 @@ const WhyChooseUsSection = () => {
           {reasons.map((reason, index) => (
             <motion.div
               key={index}
-              className="why-choose-us-card"
+              className={`why-choose-us-card ${isDark ? 'bg-gray-800 text-white shadow-lg':'bg-white text-gray-900 shadow-md'}`}
               variants={itemVariants}
               whileHover={{
                 y: -10,
