@@ -1252,7 +1252,7 @@
 /* FAQ Section */
 .faq-section {
   padding: 100px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  /* background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); */
   position: relative;
   overflow: hidden;
 }
@@ -1264,7 +1264,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="1.5" fill="rgba(102,126,234,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+  /* background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="1.5" fill="rgba(102,126,234,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>'); */
   opacity: 0.5;
 }
 
@@ -1283,7 +1283,7 @@
 .faq-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #da6c23 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1297,7 +1297,7 @@
 .faq-title {
   font-size: 3rem;
   font-weight: 700;
-  color: #1f2937;
+  /* color: #1f2937; */
   margin-bottom: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
@@ -1321,7 +1321,7 @@
 }
 
 .faq-item {
-  background: white;
+  /* background: white; */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);
@@ -1339,19 +1339,19 @@
 }
 
 .faq-question:hover {
-  background-color: #f9fafb;
+  background-color: #c75021;
 }
 
 .faq-question-text {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1f2937;
+  /* color: #1f2937; */
   margin: 0;
   line-height: 1.4;
 }
 
 .faq-chevron {
-  color: #667eea;
+  color: #eb7526;
   font-size: 1.2rem;
   transition: transform 0.3s ease;
 }

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FaChevronDown, FaQuestionCircle } from 'react-icons/fa';
+import Title from '../../shared/Title';
+import { Context } from '../../../context/Context';
 
 const FAQSection = () => {
   const [ref, inView] = useInView({
@@ -9,6 +11,7 @@ const FAQSection = () => {
     threshold: 0.1
   });
 
+  const {isDark} = useContext(Context);
   const [openFAQ, setOpenFAQ] = useState(null);
 
   const toggleFAQ = (index) => {
@@ -36,34 +39,6 @@ const FAQSection = () => {
       question: "Can I learn at my own pace?",
       answer: "Absolutely! Our platform is designed for self-paced learning. You have 24/7 access to all content, and the AI adjusts to your schedule. You can pause, resume, and review content as many times as needed."
     },
-    {
-      question: "What kind of support is available?",
-      answer: "We provide 24/7 AI support for technical questions, human support during business hours, community forums, and dedicated mentors for premium users. Our AI assistant can help with coding problems, concept explanations, and learning guidance."
-    },
-    {
-      question: "Do you offer certificates upon completion?",
-      answer: "Yes! You'll receive industry-recognized certificates upon completing courses. These certificates are verified and can be shared on LinkedIn, added to your resume, or used for professional development credits."
-    },
-    {
-      question: "Is the platform suitable for complete beginners?",
-      answer: "Yes! Our platform is designed for all skill levels. Beginners start with foundational concepts and gradually progress to advanced topics. The AI ensures you never feel overwhelmed and provides extra support when needed."
-    },
-    {
-      question: "Can I access the platform on mobile devices?",
-      answer: "Yes! Our platform is fully responsive and works seamlessly on desktop, tablet, and mobile devices. Your progress syncs across all devices, so you can learn anywhere, anytime."
-    },
-    {
-      question: "What makes this platform different from others?",
-      answer: "Our unique AI-powered personalization, 24/7 intelligent support, collaborative learning features, and expert-curated content set us apart. We focus on practical, job-ready skills with real-world applications."
-    },
-    {
-      question: "How do you ensure the quality of content?",
-      answer: "All content is created and reviewed by industry experts, experienced educators, and working professionals. We regularly update materials to reflect current industry standards and best practices."
-    },
-    {
-      question: "Can I cancel my subscription anytime?",
-      answer: "Yes, you can cancel your subscription at any time. There are no long-term contracts or cancellation fees. You'll retain access until the end of your current billing period."
-    }
   ];
 
   const containerVariants = {
@@ -88,7 +63,7 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="faq-section" ref={ref}>
+    <section className={`faq-section ${isDark ? 'bg-gray-900' : 'bg-white'}`} ref={ref}>
       <div className="faq-container">
         <motion.div
           className="faq-header"
@@ -99,7 +74,14 @@ const FAQSection = () => {
           <div className="faq-icon">
             <FaQuestionCircle />
           </div>
-          <h2 className="faq-title">Frequently Asked Questions</h2>
+          {/* <h2 className="faq-title">Frequently Asked Questions</h2> */}
+
+            <Title
+            text="Frequently Asked Questions"
+            gradient="primary"
+            className="text-center mb-6"
+          />
+
           <p className="faq-subtitle">
             Find answers to common questions about our AI learning platform
           </p>
@@ -114,7 +96,7 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
-              className="faq-item"
+              className={`faq-item ${isDark ? 'bg-gray-800 text-white':'bg-white text-gray-900'}`}
               variants={itemVariants}
               whileHover={{ scale: 1.02 }}
             >
