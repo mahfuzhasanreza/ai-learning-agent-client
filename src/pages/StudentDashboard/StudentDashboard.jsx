@@ -590,7 +590,87 @@ const StudentDashboard = () => {
             </div>
             
             {editingScores ? (
-              <></>
+              <div id="scores-editor" className="space-y-4">
+                {/* Display existing scores */}
+                <div className="grid grid-cols-3 gap-4 text-sm font-semibold text-center border-b border-gray-600 pb-2">
+                  <span>Assessment</span>
+                  <span>Obtain</span>
+                  <span>Marks</span>
+                </div>
+                {[
+                  { name: "CT1", obtain: 16, marks: 20 },
+                  { name: "CT1", obtain: 16, marks: 20 },
+                  { name: "CT1", obtain: 16, marks: 16 },
+                  { name: "Mid", obtain: 16, marks: 16 },
+                  { name: "Final", obtain: 16, marks: 16 }
+                ].map((score, index) => (
+                  <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
+                    <span>{score.name}</span>
+                    <span className="text-gray-300">{score.obtain}</span>
+                    <span className="text-gray-300">{score.marks}</span>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-4"
+                >
+                  Add Another CT
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                >
+                  Add Assignment/ project
+                </button>
+
+                <div className="grid grid-cols-2 gap-4 items-center">
+                  <div>
+                    <div className="text-sm font-semibold mb-2 text-center">CT Count</div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="number"
+                        min={0}
+                        value={scoresEditForm.ctCount}
+                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
+                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
+                      />
+                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
+                        <span className="text-sm">{scoresEditForm.ctCount}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm font-semibold mb-2 text-center">Assignment Count</div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="number"
+                        min={0}
+                        value={scoresEditForm.assignmentCount}
+                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
+                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
+                      />
+                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
+                        <span className="text-sm">{scoresEditForm.assignmentCount}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    console.log('Saved scores edits', scoresEditForm);
+                    setEditingScores(false);
+                  }}
+                  className="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded text-white mt-4"
+                >
+                  Save
+                </button>
+              </div>
             ) : (
               <div className="space-y-3">
                 {trends && trends.length > 0 ? (
