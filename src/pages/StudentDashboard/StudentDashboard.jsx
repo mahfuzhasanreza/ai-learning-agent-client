@@ -334,8 +334,10 @@ const StudentDashboard = () => {
     addedAssignments: []
   });
 
+  console.log(editingCourses +"EDIIIIIIIIIIIIIIIIIIIII");
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="bg-gray-900 text-white p-6 min-w-[1585px]">
       {/* Header */}
 
       <div className="flex items-center justify-between mb-8">
@@ -423,7 +425,7 @@ const StudentDashboard = () => {
         </div>
       )}
 
-      <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} gap-6`}>
+      <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
         {/* Left Column */}
         {!editingScores && <div className="space-y-6">
           {/* Current Trimester */}
@@ -557,7 +559,11 @@ const StudentDashboard = () => {
               {studentData.selectedCourse.credits} credits
             </div>
 
-            <div className="flex items-center justify-center">
+    
+            {editingScores ? 
+            <></>            
+            :
+            (<div className="flex items-center justify-center">
               <div className="flex items-center justify-between w-full text-center">
                 <div className="text-sm font-semibold mb-2">Course progress</div>
                 <div>
@@ -568,7 +574,9 @@ const StudentDashboard = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div>)
+
+            }
           </div>
 
           {/* Scores */}
