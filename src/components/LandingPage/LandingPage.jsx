@@ -17,9 +17,9 @@ const LandingPage = () => {
       <HeroSection />
       <KeyFeaturesSection />
       <WhyChooseUsSection />
-      <div id="features">
+      {/* <div id="features">
         <FeaturesSection />
-      </div>
+      </div> */}
       <div id="quick-start">
         <QuickPromptsSection />
       </div>
