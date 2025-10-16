@@ -581,7 +581,7 @@ const StudentDashboard = () => {
 
           {/* Scores */}
           <div className="bg-gray-800 p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className={`flex items-center justify-between mb-4`}>
               <h3 className="text-xl font-semibold">
                 {editingScores ? 'Recent Scores' : 'All Scores'}
               </h3>
@@ -600,7 +600,7 @@ const StudentDashboard = () => {
             {editingScores ? (
               <div id="scores-editor" className="space-y-4">
                 {/* Display existing scores */}
-                <div className="grid grid-cols-3 gap-4 text-sm font-semibold text-center border-b border-gray-600 pb-2">
+                <div className="mb-4 grid grid-cols-3 gap-4 text-sm font-semibold text-center border-b border-gray-600 pb-2">
                   <span>Assessment</span>
                   <span>Obtain</span>
                   <span>Marks</span>
@@ -620,7 +620,7 @@ const StudentDashboard = () => {
                 ))}
 
                 {/* Add Another CT Section */}
-                <div className="bg-gray-700 rounded-lg p-4 mt-4">
+                <div className="bg-gray-700 rounded-lg p-4 mt-10 mb-8">
                   <h4 className="text-md font-semibold mb-3">Add Another CT</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -653,20 +653,14 @@ const StudentDashboard = () => {
                       />
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setScoresEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
-                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-3"
-                  >
-                    + Add CT
-                  </button>
+        
                 </div>
 
                 {/* Add Another Assignment/Project Section */}
                 <div className="bg-gray-700 rounded-lg p-4 mt-4">
-                  <h4 className="text-md font-semibold mb-3">Add Another Assignment/ project</h4>
+                  <h4 className="text-md font-semibold mb-3">Add Another Assignment or Project</h4>
                   <div className="space-y-3">
-                    <div>
+                    <div className='mb-3'>
                       <label className="block text-sm font-medium mb-1">Assignment or Project</label>
                       <select
                         className="w-full p-2 bg-gray-600 rounded text-white"
@@ -711,13 +705,7 @@ const StudentDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setScoresEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
-                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-3"
-                  >
-                    + Add Assignment/Project
-                  </button>
+          
                 </div>
 
                 {/* CT and Assignment Count Section */}
@@ -807,6 +795,7 @@ const StudentDashboard = () => {
           </div>
 
           {/* CT Methods */}
+          {!editingScores && 
           <div className="bg-gray-800 rounded-b-lg p-6">
             <h3 className="text-xl font-semibold mb-4">CT Methods</h3>
             <div className="w-full grid grid-cols-3 gap-3 gap-x-18">
@@ -818,7 +807,7 @@ const StudentDashboard = () => {
               <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.marks}</div>
               <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
             </div>
-          </div>
+          </div>}
         </div>
 
         {/* Third Column - Topic Mastery */}
@@ -828,10 +817,19 @@ const StudentDashboard = () => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Topic Mastery</h3>
               <div className="flex items-center">
-                <CircularProgress
+                {/* <CircularProgress
                   percentage={studentData.selectedCourse.topicMastery}
                   size={40}
-                />
+                /> */}
+
+                <button
+                  className="flex items-center space-x-2 px-3 py-1 rounded bg-gray-700 hover:bg-gray-600"
+                  title="Add New Topic"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="text-sm">Add Topic</span>
+                </button>
+
               </div>
             </div>
 
@@ -849,7 +847,11 @@ const StudentDashboard = () => {
 
             <div className="mt-7">
               <div className="flex items-center justify-between p-2">
-                <span className="text-gray-400 text-sm">Topic Mastery</span>
+                
+                <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
+                  <span className="text-sm">See All</span>
+                </button>
+
                 <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
                   <span className="text-sm">Quiz</span>
                   <Edit className="w-3 h-3" />
