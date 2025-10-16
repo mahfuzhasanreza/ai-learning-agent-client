@@ -360,7 +360,7 @@ const Roadmap = () => {
   const progressPercent = Math.round((completionPercentage / totalItems) * 100);
 
   return (
-    <div className="min-w-[1585px] h-screen bg-black">
+    <div className="min-w-[1585px] h-screen bg-gray-900">
       {/* Header */}
 
       <div className="flex  gap-4 h-full">
