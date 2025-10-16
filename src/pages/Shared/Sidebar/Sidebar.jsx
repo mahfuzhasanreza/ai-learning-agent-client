@@ -49,7 +49,7 @@ const Sidebar = () => {
         gap: '12px',
         padding: collapsed ? '10px' : '10px 20px',
         border: 'none',
-        background: activeItem === path ? '#3b82f6' : 'transparent',
+        background: activeItem === path ? '#FF4B00' : 'transparent',
         color: activeItem === path ? '#ffffff' : '#94a3b8',
         fontSize: '14px',
         fontWeight: '500',
