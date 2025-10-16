@@ -166,7 +166,7 @@ const KeyFeaturesSection = () => {
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              className="key-feature-card"
+              className={`key-feature-card ${isDark ? 'bg-gray-800 text-white shadow-lg':'bg-white text-gray-900 shadow-md'} relative p-6 rounded-lg overflow-hidden border border-transparent hover:border-blue-500 transition-all duration-300`}
               variants={itemVariants}
               whileHover={{
                 y: -10,
