@@ -187,7 +187,7 @@ const WhyChooseUsSection = () => {
             </motion.div>
           ))}
         </motion.div>
-
+{/* 
         <motion.div
           className="testimonials-section"
           initial={{ opacity: 0, y: 30 }}
@@ -195,6 +195,9 @@ const WhyChooseUsSection = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           <h3 className="testimonials-title">What Our Learners Say</h3>
+          
+         
+          
           <div className="testimonials-grid">
             {testimonials.map((testimonial, index) => (
               <motion.div
@@ -223,7 +226,7 @@ const WhyChooseUsSection = () => {
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* <motion.div
           className="comparison-section"
