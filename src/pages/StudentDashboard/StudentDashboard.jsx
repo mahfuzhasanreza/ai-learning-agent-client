@@ -619,53 +619,149 @@ const StudentDashboard = () => {
                   </div>
                 ))}
 
-                <button
-                  type="button"
-                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
-                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-4"
-                >
-                  Add Another CT
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
-                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
-                >
-                  Add Assignment/ project
-                </button>
-
-                <div className="grid grid-cols-2 gap-4 items-center">
-                  <div>
-                    <div className="text-sm font-semibold mb-2 text-center">CT Count</div>
-                    <div className="flex items-center gap-4">
+                {/* Add Another CT Section */}
+                <div className="bg-gray-700 rounded-lg p-4 mt-4">
+                  <h4 className="text-md font-semibold mb-3">Add Another CT</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">CT No</label>
                       <input
                         type="number"
-                        min={0}
-                        value={scoresEditForm.ctCount}
-                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
-                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
+                        min="1"
+                        placeholder="Enter CT number"
+                        className="w-full p-2 bg-gray-600 rounded text-white"
+                        onKeyDown={(e) => {
+                          if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                            e.preventDefault();
+                          }
+                        }}
                       />
-                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
-                        <span className="text-sm">{scoresEditForm.ctCount}</span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Mark Obtained</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        placeholder="Enter marks"
+                        className="w-full p-2 bg-gray-600 rounded text-white"
+                        onKeyDown={(e) => {
+                          if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                            e.preventDefault();
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setScoresEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
+                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-3"
+                  >
+                    + Add CT
+                  </button>
+                </div>
+
+                {/* Add Another Assignment/Project Section */}
+                <div className="bg-gray-700 rounded-lg p-4 mt-4">
+                  <h4 className="text-md font-semibold mb-3">Add Another Assignment/ project</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Assignment or Project</label>
+                      <select
+                        className="w-full p-2 bg-gray-600 rounded text-white"
+                        onChange={(e) => {
+                          const isAssignment = e.target.value === 'assignment';
+                          // You can store this state if needed
+                        }}
+                      >
+                        <option value="assignment">Assignment</option>
+                        <option value="project">Project</option>
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Assignment Number</label>
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Enter number"
+                          className="w-full p-2 bg-gray-600 rounded text-white"
+                          onKeyDown={(e) => {
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Mark Obtained</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          placeholder="Enter marks"
+                          className="w-full p-2 bg-gray-600 rounded text-white"
+                          onKeyDown={(e) => {
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setScoresEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
+                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-3"
+                  >
+                    + Add Assignment/Project
+                  </button>
+                </div>
 
-                  <div>
-                    <div className="text-sm font-semibold mb-2 text-center">Assignment Count</div>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="number"
-                        min={0}
-                        value={scoresEditForm.assignmentCount}
-                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
-                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
-                      />
-                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
-                        <span className="text-sm">{scoresEditForm.assignmentCount}</span>
-                      </div>
-                    </div>
+                {/* CT and Assignment Count Section */}
+                <div className="grid grid-cols-2 gap-4 items-center mt-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-semibold">CT Count</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={scoresEditForm.ctCount}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value || 0);
+                        if (value >= 0) {
+                          setScoresEditForm(prev => ({ ...prev, ctCount: value }));
+                        }
+                      }}
+                      className="w-20 p-2 bg-gray-600 rounded text-white text-center"
+                      onKeyDown={(e) => {
+                        if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '.') {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-semibold">Assignment Count</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={scoresEditForm.assignmentCount}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value || 0);
+                        if (value >= 0) {
+                          setScoresEditForm(prev => ({ ...prev, assignmentCount: value }));
+                        }
+                      }}
+                      className="w-20 p-2 bg-gray-600 rounded text-white text-center"
+                      onKeyDown={(e) => {
+                        if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '.') {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
                   </div>
                 </div>
 
