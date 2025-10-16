@@ -316,6 +316,24 @@ const StudentDashboard = () => {
   // Loading states
   const isLoading = summaryLoading || courseLoading || trendsLoading || assessmentsLoading;
 
+  // Edit All Courses UI state
+  const [editingCourses, setEditingCourses] = useState(false);
+  const [courseEditForm, setCourseEditForm] = useState({
+    ctCount: 2,
+    assignmentCount: 2,
+    addedCTs: [],
+    addedAssignments: []
+  });
+
+  // Edit Scores UI state
+  const [editingScores, setEditingScores] = useState(false);
+  const [scoresEditForm, setScoresEditForm] = useState({
+    ctCount: 2,
+    assignmentCount: 2,
+    addedCTs: [],
+    addedAssignments: []
+  });
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       {/* Header */}
@@ -405,9 +423,9 @@ const StudentDashboard = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
         {/* Left Column */}
-        <div className="space-y-6">
+        {!editingScores && <div className="space-y-6">
           {/* Current Trimester */}
           <div className="bg-gray-800 rounded-lg p-6">
             <div className='mb-5'>
@@ -522,7 +540,7 @@ const StudentDashboard = () => {
               ))}
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* Center Column - Course Details */}
         <div className="space-y-6">
@@ -555,34 +573,133 @@ const StudentDashboard = () => {
 
           {/* Scores */}
           <div className="bg-gray-800 p-6">
-            <h3 className="text-xl font-semibold mb-4">All Scores</h3>
-            <div className="space-y-3">
-              {trends && trends.length > 0 ? (
-                trends.slice(-5).map((trend, index) => (
-                  <div key={index} className="flex mb-1 justify-between items-center">
-                    <span className="font-medium">{trend.assessment_type}</span>
-                    <span className="text-gray-300">
-                      {trend.score}/{100}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                // Fallback to static data
-                [
-                  { name: "CT1", score: 16, total: 20 },
-                  { name: "CT2", score: 16, total: 20 },
-                  { name: "MID", score: 30, total: 30 },
-                  { name: "Final", score: 40, total: 40 }
-                ].map((score, index) => (
-                  <div key={index} className="flex mb-1 justify-between items-center">
-                    <span className="font-medium">{score.name}</span>
-                    <span className="text-gray-300">
-                      {score.score} out of {score.total}
-                    </span>
-                  </div>
-                ))
-              )}
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold">
+                {editingScores ? 'Recent Scores' : 'All Scores'}
+              </h3>
+              <button
+                onClick={() => setEditingScores(prev => !prev)}
+                aria-expanded={editingScores}
+                aria-controls="scores-editor"
+                className={`flex items-center space-x-2 px-3 py-1 rounded ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                title="Edit Scores"
+              >
+                <Edit className="w-4 h-4" />
+                <span className="text-sm">{editingScores ? 'Close' : 'Edit'}</span>
+              </button>
             </div>
+            
+            {editingScores ? (
+              <div id="scores-editor" className="space-y-4">
+                {/* Display existing scores */}
+                <div className="grid grid-cols-3 gap-4 text-sm font-semibold text-center border-b border-gray-600 pb-2">
+                  <span>Assessment</span>
+                  <span>Obtain</span>
+                  <span>Marks</span>
+                </div>
+                {[
+                  { name: "CT1", obtain: 16, marks: 20 },
+                  { name: "CT1", obtain: 16, marks: 20 },
+                  { name: "CT1", obtain: 16, marks: 16 },
+                  { name: "Mid", obtain: 16, marks: 16 },
+                  { name: "Final", obtain: 16, marks: 16 }
+                ].map((score, index) => (
+                  <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
+                    <span>{score.name}</span>
+                    <span className="text-gray-300">{score.obtain}</span>
+                    <span className="text-gray-300">{score.marks}</span>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded mt-4"
+                >
+                  Add Another CT
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setScoresEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                >
+                  Add Assignment/ project
+                </button>
+
+                <div className="grid grid-cols-2 gap-4 items-center">
+                  <div>
+                    <div className="text-sm font-semibold mb-2 text-center">CT Count</div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="number"
+                        min={0}
+                        value={scoresEditForm.ctCount}
+                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
+                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
+                      />
+                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
+                        <span className="text-sm">{scoresEditForm.ctCount}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm font-semibold mb-2 text-center">Assignment Count</div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="number"
+                        min={0}
+                        value={scoresEditForm.assignmentCount}
+                        onChange={(e) => setScoresEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
+                        className="flex-1 p-2 bg-gray-600 rounded text-white text-center"
+                      />
+                      <div className="flex items-center justify-center w-12 h-10 bg-gray-700 rounded">
+                        <span className="text-sm">{scoresEditForm.assignmentCount}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    console.log('Saved scores edits', scoresEditForm);
+                    setEditingScores(false);
+                  }}
+                  className="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded text-white mt-4"
+                >
+                  Save
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {trends && trends.length > 0 ? (
+                  trends.slice(-5).map((trend, index) => (
+                    <div key={index} className="flex mb-1 justify-between items-center">
+                      <span className="font-medium">{trend.assessment_type}</span>
+                      <span className="text-gray-300">
+                        {trend.score}/{100}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  // Fallback to static data
+                  [
+                    { name: "CT1", score: 16, total: 20 },
+                    { name: "CT2", score: 16, total: 20 },
+                    { name: "MID", score: 30, total: 30 },
+                    { name: "Final", score: 40, total: 40 }
+                  ].map((score, index) => (
+                    <div key={index} className="flex mb-1 justify-between items-center">
+                      <span className="font-medium">{score.name}</span>
+                      <span className="text-gray-300">
+                        {score.score} out of {score.total}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
 
           {/* CT Methods */}
@@ -601,7 +718,7 @@ const StudentDashboard = () => {
         </div>
 
         {/* Third Column - Topic Mastery */}
-        <div className="space-y-6">
+        {!editingScores && <div className="space-y-6">
           {/* Topic Mastery */}
           <div className="bg-gray-800 rounded-t-lg p-6">
             <div className="flex items-center justify-between mb-4">
@@ -772,39 +889,147 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        </div>
+        </div>}
       </div>
 
       {/* Additional Data Section */}
       {studentSummary && (
         <div className="mt-8 bg-gray-800 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4">All Courses Summary</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {studentSummary.courses.map((course, index) => (
-              <div key={index} className="bg-gray-700 rounded-lg p-4">
-                <div className="font-semibold mb-2">{course.courseId}</div>
-                <div className="text-sm space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Average:</span>
-                    <span>{course.average || 'N/A'}%</span>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold">All Courses Summary</h3>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setEditingCourses(prev => !prev)}
+                aria-expanded={editingCourses}
+                aria-controls="all-courses-editor"
+                className={`flex items-center space-x-2 px-3 py-1 rounded ${editingCourses ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                title="Edit All Courses"
+              >
+                <Edit className="w-4 h-4" />
+                <span className="text-sm">{editingCourses ? 'Close' : 'Edit'}</span>
+              </button>
+            </div>
+          </div>
+
+          {editingCourses ? (
+            <div id="all-courses-editor" className="bg-gray-700 rounded-md p-6">
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={() => setCourseEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                >
+                  Add Another CT
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCourseEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                >
+                  Add Assignment/ project
+                </button>
+
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <div className="col-span-2">
+                    <div className="text-sm font-semibold mb-1">CT Count</div>
+                    <input
+                      type="number"
+                      min={0}
+                      value={courseEditForm.ctCount}
+                      onChange={(e) => setCourseEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
+                      className="w-full p-2 bg-gray-600 rounded text-white"
+                    />
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Count:</span>
-                    <span>{course.count}</span>
+                  <div className="flex items-center justify-center">
+                    <div className="text-sm">{courseEditForm.ctCount}</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Range:</span>
-                    <span>{course.lowest}% - {course.highest}%</span>
+
+                  <div className="col-span-2">
+                    <div className="text-sm font-semibold mb-1">Assignment Count</div>
+                    <input
+                      type="number"
+                      min={0}
+                      value={courseEditForm.assignmentCount}
+                      onChange={(e) => setCourseEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
+                      className="w-full p-2 bg-gray-600 rounded text-white"
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <div className="text-sm">{courseEditForm.assignmentCount}</div>
                   </div>
                 </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    onClick={() => {
+                      // for now just log and close
+                      console.log('Saved course edits', courseEditForm);
+                      setEditingCourses(false);
+                    }}
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 py-2 rounded text-white"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setEditingCourses(false)}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 py-2 rounded text-white"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                {/* preview of added items */}
+                {(courseEditForm.addedCTs.length > 0 || courseEditForm.addedAssignments.length > 0) && (
+                  <div className="mt-4">
+                    {courseEditForm.addedCTs.length > 0 && (
+                      <div className="mb-2">
+                        <div className="text-sm font-semibold mb-1">Added CTs</div>
+                        <ul className="list-disc ml-5 text-sm">
+                          {courseEditForm.addedCTs.map((ct, idx) => <li key={idx}>{ct}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {courseEditForm.addedAssignments.length > 0 && (
+                      <div>
+                        <div className="text-sm font-semibold mb-1">Added Assignments</div>
+                        <ul className="list-disc ml-5 text-sm">
+                          {courseEditForm.addedAssignments.map((a, idx) => <li key={idx}>{a}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {studentSummary.courses.map((course, index) => (
+                <div key={index} className="bg-gray-700 rounded-lg p-4">
+                  <div className="font-semibold mb-2">{course.courseId}</div>
+                  <div className="text-sm space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Average:</span>
+                      <span>{course.average || 'N/A'}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Count:</span>
+                      <span>{course.count}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Range:</span>
+                      <span>{course.lowest}% - {course.highest}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {/* Debug Section (Remove in production) */}
-      {process.env.NODE_ENV === 'development' && (
+  {import.meta && import.meta.env && import.meta.env.DEV && (
         <div className="mt-8 bg-gray-800 rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">API Data Debug</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
