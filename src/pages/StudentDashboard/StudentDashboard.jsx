@@ -251,7 +251,7 @@ const StudentDashboard = () => {
   };
 
   // Components
-  const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "blue" }) => {
+  const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
     const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
@@ -260,7 +260,8 @@ const StudentDashboard = () => {
       blue: "stroke-blue-500",
       green: "stroke-green-500",
       yellow: "stroke-yellow-500",
-      red: "stroke-red-500"
+      red: "stroke-red-500",
+      primary: "stroke-[#FF4B00]",
     };
 
     return (
@@ -294,11 +295,12 @@ const StudentDashboard = () => {
     );
   };
 
-  const ProgressBar = ({ percentage, color = "blue" }) => {
+  const ProgressBar = ({ percentage, color = "primary" }) => {
     const colorClasses = {
       blue: "bg-blue-500",
       green: "bg-green-500",
-      yellow: "bg-yellow-500"
+      yellow: "bg-yellow-500",
+      primary: "bg-[#FF4B00]"
     };
 
     return (
@@ -627,7 +629,7 @@ const StudentDashboard = () => {
             <div className="mt-7">
               <div className="flex items-center justify-between p-2">
                 <span className="text-gray-400 text-sm">Topic Mastery</span>
-                <button className="flex px-7 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg gap-1 items-center">
+                <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
                   <span className="text-sm">Quiz</span>
                   <Edit className="w-3 h-3" />
                 </button>
@@ -750,7 +752,7 @@ const StudentDashboard = () => {
               </div>
 
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm mb-3"
+                className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm mb-3"
                 onClick={() => {
                   console.log('Requesting tailored plan for', CURRENT_COURSE);
                 }}
@@ -759,7 +761,7 @@ const StudentDashboard = () => {
               </button>
 
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm"
+                className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm"
                 onClick={() => {
                   console.log('Fetching resources for', CURRENT_COURSE);
                 }}
