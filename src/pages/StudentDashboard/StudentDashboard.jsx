@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../Shared/Sidebar/Sidebar';
 import { Context } from '../../context/Context';
+import Quiz from '../../components/Quiz/Quiz';
 
 const StudentDashboard = () => {
 
@@ -343,6 +344,7 @@ const StudentDashboard = () => {
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [showAddTopicQuiz, setShowAddTopicQuiz] = useState(false);
   const [selectedQuizTopic, setSelectedQuizTopic] = useState('');
+  const [showQuiz, setShowQuiz] = useState(false);
 
   console.log(editingCourses +"EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -863,8 +865,7 @@ const StudentDashboard = () => {
                 <button 
                   onClick={() => {
                     if (selectedQuizTopic) {
-                      console.log('Taking quiz for topic:', selectedQuizTopic);
-                      // Add your quiz logic here
+                      setShowQuiz(true);
                     } else {
                       alert('Please select a topic first');
                     }
@@ -901,7 +902,12 @@ const StudentDashboard = () => {
                       <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
                     </button>
 
-                    <button className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center">
+                    <button 
+                      onClick={() => {
+                        setShowAddTopicQuiz(true);
+                      }}
+                      className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                    >
                       <span className="text-sm">Quiz</span>
                       <Edit className="w-3 h-3" />
                     </button>
@@ -1214,6 +1220,27 @@ const StudentDashboard = () => {
                 {JSON.stringify(assessments, null, 2)}
               </pre>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Modal */}
+      {showQuiz && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <Quiz
+              topic={selectedQuizTopic}
+              onClose={() => {
+                setShowQuiz(false);
+                setShowAddTopicQuiz(false);
+                setSelectedQuizTopic('');
+              }}
+              onComplete={(results) => {
+                console.log('Quiz completed:', results);
+                // You can add logic here to save results to API or update state
+                alert(`Quiz completed! Score: ${results.score}/${results.total} (${results.percentage}%)`);
+              }}
+            />
           </div>
         </div>
       )}

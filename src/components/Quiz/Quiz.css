@@ -1,0 +1,107 @@
+/* Quiz Component Styles */
+
+.quiz-container {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quiz-option {
+  transition: all 0.2s ease;
+}
+
+.quiz-option:hover {
+  transform: translateX(4px);
+}
+
+.quiz-option-selected {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.quiz-progress-bar {
+  transition: width 0.5s ease;
+}
+
+.quiz-timer-warning {
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.quiz-result-score {
+  animation: scaleIn 0.5s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Custom scrollbar for review section */
+.quiz-review-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.quiz-review-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.quiz-review-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 184, 0, 0.5);
+  border-radius: 4px;
+}
+
+.quiz-review-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 184, 0, 0.7);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .quiz-container {
+    padding: 1rem;
+  }
+  
+  .quiz-option {
+    padding: 0.75rem;
+  }
+  
+  .quiz-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
