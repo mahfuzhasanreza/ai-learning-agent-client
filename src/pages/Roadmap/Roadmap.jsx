@@ -133,7 +133,7 @@ const Roadmap = () => {
       .attr("text-anchor", "middle") // center-align the text horizontally
       .attr("font-size", "18px")
       .attr("font-weight", "bold")
-      .attr("fill", "#1e293b")
+      .attr("fill", "#FF4B00")
       .text(`${roadmapData.topic}`);
 
 
@@ -270,34 +270,34 @@ const Roadmap = () => {
 
 
     nodes.append("rect")
-  .attr("class", "text-background")
-  .attr("x", d => {
-    const dims = textDimensions.get(d);
-    return -dims.width / 2;
-  })
-  .attr("y", d => {
-    const dims = textDimensions.get(d);
-    const yOffset = d.data.type === "root" ? 0 : d.data.type === "stage" ? 0 : 0;
-    return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
-  })
-  .attr("width", d => textDimensions.get(d).width)
-  .attr("height", d => textDimensions.get(d).height)
-  .attr("fill", d => {
-    if (d.data.type === "stage") return "yellow";
-    if (d.data.type === "item") {
-      switch (d.data.difficulty) {
-        case "easy": return "#8BC34A";    // Green
-        case "medium": return "#FFC107";  // Amber
-        case "hard": return "#F44336";    // Red
-        default: return "gold";           // fallback
-      }
-    }
-    return "white"; // for root
-  })
-  .attr("stroke", "black")
-  .attr("stroke-width", 1)
-  .attr("rx", 4) // Border radius
-  .attr("ry", 4);
+      .attr("class", "text-background")
+      .attr("x", d => {
+        const dims = textDimensions.get(d);
+        return -dims.width / 2;
+      })
+      .attr("y", d => {
+        const dims = textDimensions.get(d);
+        const yOffset = d.data.type === "root" ? 0 : d.data.type === "stage" ? 0 : 0;
+        return yOffset - dims.fontSize + dims.fontSize * 0.2 - 6; // Adjust for padding
+      })
+      .attr("width", d => textDimensions.get(d).width)
+      .attr("height", d => textDimensions.get(d).height)
+      .attr("fill", d => {
+        if (d.data.type === "stage") return "yellow";
+        if (d.data.type === "item") {
+          switch (d.data.difficulty) {
+            case "easy": return "#8BC34A";    // Green
+            case "medium": return "#FFC107";  // Amber
+            case "hard": return "#F44336";    // Red
+            default: return "gold";           // fallback
+          }
+        }
+        return "white"; // for root
+      })
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
+      .attr("rx", 4) // Border radius
+      .attr("ry", 4);
 
 
 
@@ -360,82 +360,82 @@ const Roadmap = () => {
   const progressPercent = Math.round((completionPercentage / totalItems) * 100);
 
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-w-[1585px] h-screen bg-black">
       {/* Header */}
 
       <div className="flex  gap-4 h-full">
         {/* Tree visualization */}
-        <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden">
           <svg ref={svgRef} className="w-full h-full"></svg>
         </div>
 
         {/* Side panel */}
-{/* Side panel */}
-{selectedNode && (
-  <div className="w-96 bg-white rounded-lg shadow-md p-6 overflow-y-auto flex flex-col">
-    {/* Tabs */}
-    <div className="flex border-b mb-4">
-      <button
-        className={`flex-1 py-2 text-center font-medium ${activeTab === "details" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
-        onClick={() => setActiveTab("details")}
-      >
-        Details
-      </button>
-      <button
-        className={`flex-1 py-2 text-center font-medium ${activeTab === "chatbot" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
-        onClick={() => setActiveTab("chatbot")}
-      >
-        AI Chatbot Insights
-      </button>
-    </div>
+        {/* Side panel */}
+        {selectedNode && (
+          <div className="w-96 bg-white rounded-lg shadow-md p-6 overflow-y-auto flex flex-col">
+            {/* Tabs */}
+            <div className="flex border-b mb-4">
+              <button
+                className={`flex-1 py-2 text-center font-medium ${activeTab === "details" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+                onClick={() => setActiveTab("details")}
+              >
+                Details
+              </button>
+              <button
+                className={`flex-1 py-2 text-center font-medium ${activeTab === "chatbot" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+                onClick={() => setActiveTab("chatbot")}
+              >
+                AI Chatbot Insights
+              </button>
+            </div>
 
-    {/* Tab content */}
-    {activeTab === "details" && (
-      <div className="flex-1">
-        <h3 className="text-lg font-bold text-gray-800 mb-3">{selectedNode.name}</h3>
+            {/* Tab content */}
+            {activeTab === "details" && (
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">{selectedNode.name}</h3>
 
-        {selectedNode.type === "item" && (
-          <div className="mb-4 flex items-center gap-3">
-            <span className={`px-2 py-1 rounded text-xs font-medium ${selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
-              selectedNode.difficulty === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                "bg-red-100 text-red-800"
-              }`}>
-              {selectedNode.difficulty}
-            </span>
-            <span className="text-sm text-gray-600">{selectedNode.timeCommitment}</span>
-            {completedItems.has(selectedNode.id) && (
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                ✓ Completed
-              </span>
+                {selectedNode.type === "item" && (
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${selectedNode.difficulty === "Easy" ? "bg-green-100 text-green-800" :
+                      selectedNode.difficulty === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                        "bg-red-100 text-red-800"
+                      }`}>
+                      {selectedNode.difficulty}
+                    </span>
+                    <span className="text-sm text-gray-600">{selectedNode.timeCommitment}</span>
+                    {completedItems.has(selectedNode.id) && (
+                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
+                        ✓ Completed
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <div className="text-gray-700 text-sm leading-relaxed">
+                  {selectedNode.description.split('\n').map((line, index) => (
+                    <p key={index} className="mb-2">{line}</p>
+                  ))}
+                </div>
+
+                {selectedNode.type === "item" && (
+                  <button
+                    onClick={() => toggleCompletion(selectedNode.id)}
+                    className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${completedItems.has(selectedNode.id)
+                      ? "bg-green-500 text-white hover:bg-green-600"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                  >
+                    {completedItems.has(selectedNode.id) ? "Mark as Incomplete" : "Mark as Complete"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {activeTab === "chatbot" && (
+              <ChatBotPanel topic={selectedNode.name} />
             )}
           </div>
         )}
-
-        <div className="text-gray-700 text-sm leading-relaxed">
-          {selectedNode.description.split('\n').map((line, index) => (
-            <p key={index} className="mb-2">{line}</p>
-          ))}
-        </div>
-
-        {selectedNode.type === "item" && (
-          <button
-            onClick={() => toggleCompletion(selectedNode.id)}
-            className={`mt-4 w-full px-4 py-2 rounded font-medium transition-colors ${completedItems.has(selectedNode.id)
-              ? "bg-green-500 text-white hover:bg-green-600"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-              }`}
-          >
-            {completedItems.has(selectedNode.id) ? "Mark as Incomplete" : "Mark as Complete"}
-          </button>
-        )}
-      </div>
-    )}
-
-    {activeTab === "chatbot" && (
-      <ChatBotPanel topic={selectedNode.name} />
-    )}
-  </div>
-)}
 
 
       </div>
