@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -28,8 +28,12 @@ import {
   RefreshCw
 } from 'lucide-react';
 import Sidebar from '../Shared/Sidebar/Sidebar';
+import { Context } from '../../context/Context';
 
 const StudentDashboard = () => {
+
+  const { isDark } = useContext(Context);
+
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
@@ -317,21 +321,20 @@ const StudentDashboard = () => {
       <div className="flex items-center justify-between mb-8">
 
 
-        <div>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/">
-              MUI
-            </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/material-ui/getting-started/installation/"
-            >
-              Core
-            </Link>
-            <Typography sx={{ color: 'text.primary' }}>Breadcrumbs</Typography>
-          </Breadcrumbs>
-        </div>
+        <Breadcrumbs
+          separator="›"
+          aria-label="breadcrumb"
+          sx={{
+            color: `${isDark ? 'white' : 'text.primary'}`, // default color for links and separator
+            '& .MuiBreadcrumbs-separator': {
+              color: `${isDark ? 'white' : 'text.secondary'}`,
+            },
+          }}
+        >
+          {/* <Link underline="hover" color="inherit" href="/">MUI</Link> */}
+          <Link underline="hover" color="inherit" href="/">Home</Link>
+          <Typography sx={{ color: `${isDark ? 'white' : 'text.primary'}` }}>Performance Tracking</Typography>
+        </Breadcrumbs>
 
 
         <div className="flex items-center space-x-4">
