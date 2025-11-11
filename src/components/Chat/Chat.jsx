@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import './Main.css';
+import './Chat.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -11,7 +11,7 @@ import { FaCog } from "react-icons/fa";
 import ListenButton from '../ListenButton/ListenButton';
 import TTSSettings from '../TTSSettings/TTSSettings';
 
-const Main = () => {
+const Chat = () => {
 
     const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData } = useContext(Context);
     const [extended, setExtended] = useState(false);
@@ -260,4 +260,4 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default Chat;
