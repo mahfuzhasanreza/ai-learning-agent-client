@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Brain, BookOpen, Zap, Shield, Users, Trophy, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Brain, BookOpen, Zap, Shield, Users, Trophy, CheckCircle, Phone } from 'lucide-react';
 import { UserAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { session, signUpNewUser } = UserAuth();
+  const { signUpNewUser } = UserAuth();
   const [error, setError] = useState('');
   
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +16,8 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
+    gender: '',
     userType: 'student',
     agreeTerms: false,
     agreeNewsletter: false
@@ -49,30 +48,55 @@ const Register = () => {
     }
   };
 
-  console.log(formData.email, formData.password);
-  console.log("AuthContext session:", session);
-
-  // const handleRegister = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   // Simulate registration process
-  //   await new Promise(resolve => setTimeout(resolve, 2500));
-  //   setIsLoading(false);
-  //   console.log('Registration attempted with:', formData);
-  // };
-
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
+    
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
+    // Validate terms agreement
+    if (!formData.agreeTerms) {
+      setError('Please agree to the Terms of Service and Privacy Policy');
+      setIsLoading(false);
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
     
     try {
-      const result = await signUpNewUser(formData.email, formData.password);
+      // Prepare user data for API
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        phone: formData.phone || '',
+        gender: formData.gender || '',
+      };
+
+      const result = await signUpNewUser(userData);
 
       if (result.success) {
-        navigate('/dashboard')
+        // Successfully registered, navigate to dashboard
+        navigate('/dashboard');
+      } else {
+        // Registration failed, show error message
+        setError(result.error || 'Failed to create account. Please try again.');
+        
+        // Clear error message after 5 seconds
+        setTimeout(() => setError(''), 5000);
       }
-    } catch (error) {
-      setError('an error occurred');
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('An unexpected error occurred. Please try again.');
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => setError(''), 5000);
     } finally {
       setIsLoading(false);
     }
@@ -189,6 +213,13 @@ const Register = () => {
 
           {/* Registration Form */}
           <div className="space-y-8 xl:space-y-10">
+            {/* Error Message Display */}
+            {error && (
+              <div className="p-4 bg-red-100 border border-red-400 rounded-xl">
+                <p className="text-red-700 text-sm text-center">{error}</p>
+              </div>
+            )}
+            
             {/* User Type Selection */}
             <div className="relative">
               <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
@@ -287,6 +318,55 @@ const Register = () => {
                   placeholder="Enter your email"
                   required
                 />
+              </div>
+            </div>
+
+            {/* Phone and Gender Fields */}
+            <div className="grid grid-cols-2 mt-4 gap-4 xl:gap-6">
+              <div className="relative">
+                <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
+                  Phone Number <span className="text-gray-400 text-sm">(Optional)</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none">
+                    <Phone className={`h-6 w-6 xl:h-7 xl:w-7 transition-colors duration-200 ${focusedField === 'phone' ? 'text-emerald-600' : 'text-gray-400'
+                      }`} />
+                  </div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    onFocus={() => setFocusedField('phone')}
+                    onBlur={() => setFocusedField('')}
+                    className={`w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 border rounded-xl xl:rounded-2xl text-base xl:text-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200 ${focusedField === 'phone' ? 'border-emerald-500 shadow-lg' : 'border-gray-300'
+                      }`}
+                    placeholder="Phone number"
+                  />
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="block text-base xl:text-lg font-medium text-gray-700 mb-3">
+                  Gender <span className="text-gray-400 text-sm">(Optional)</span>
+                </label>
+                <div className="relative">
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    onFocus={() => setFocusedField('gender')}
+                    onBlur={() => setFocusedField('')}
+                    className={`w-full px-4 xl:px-6 py-4 xl:py-5 border rounded-xl xl:rounded-2xl text-base xl:text-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200 ${focusedField === 'gender' ? 'border-emerald-500 shadow-lg' : 'border-gray-300'
+                      }`}
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer-not-to-say">Prefer not to say</option>
+                  </select>
+                </div>
               </div>
             </div>
 

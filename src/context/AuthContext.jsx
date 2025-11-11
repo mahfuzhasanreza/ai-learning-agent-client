@@ -1,72 +1,94 @@
 import { createContext, useEffect, useState, useContext } from "react";
-import { supabase } from "../../src/supabaseClient";
+import * as authService from "../services/authService";
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-    const [session, setSession] = useState(undefined);
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // sign up
-    const signUpNewUser = async (email, password) => {
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
-
-        if (error) {
-            console.log("Error signing up:", error.message);
-            return { success: false, error };
-        }
-
-        return { success: true, data };
-    };
-
-    // sign in
-    const signInUser = async ( email, password ) => {
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-            if (error) {
-                console.log("Error signing in:", error.message);
-                return { success: false, error: error.message };
-            }
-            console.log("User signed in:", data);
-            return { success: true, data };
-
-        }
-        catch (error) {
-            console.log("Error signing in:", error.message);
-            return { success: false, error };
-        }
-    }
-
+    // Check if user is already logged in on mount
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
-
-        supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-        });
+        const savedToken = authService.getAuthToken();
+        const savedUser = authService.getCurrentUser();
+        
+        if (savedToken && savedUser) {
+            setToken(savedToken);
+            setUser(savedUser);
+        }
+        setIsLoading(false);
     }, []);
 
-    // sign out
-    const signOut = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.log("Error signing out:", error.message);
+    // Sign up new user
+    const signUpNewUser = async (userData) => {
+        try {
+            const result = await authService.signUp(userData);
+
+            if (result.success) {
+                setToken(result.token);
+                setUser(result.data.user || result.data);
+                return { success: true, data: result.data };
+            }
+
+            return { success: false, error: result.error };
+        } catch (error) {
+            console.error("Error signing up:", error);
+            return { success: false, error: error.message };
         }
-    }
+    };
+
+    // Sign in existing user
+    const signInUser = async (email, password) => {
+        try {
+            const result = await authService.signIn({ email, password });
+
+            if (result.success) {
+                setToken(result.token);
+                setUser(result.data.user || result.data);
+                return { success: true, data: result.data };
+            }
+
+            return { success: false, error: result.error };
+        } catch (error) {
+            console.error("Error signing in:", error);
+            return { success: false, error: error.message };
+        }
+    };
+
+    // Sign out
+    const signOutUser = async () => {
+        authService.signOut();
+        setToken(null);
+        setUser(null);
+    };
+
+    // Get auth token
+    const getToken = () => {
+        return token || authService.getAuthToken();
+    };
+
+    // Check if authenticated
+    const isAuthenticated = () => {
+        return authService.isAuthenticated();
+    };
 
     return (
-        <AuthContext.Provider value={{ session, signUpNewUser, signInUser, signOut }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            token,
+            isLoading,
+            signUpNewUser, 
+            signInUser, 
+            signOut: signOutUser,
+            getToken,
+            isAuthenticated
+        }}>
             {children}
         </AuthContext.Provider>
-    )
+    );
 };
 
 export const UserAuth = () => {
     return useContext(AuthContext);
-}
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, Brain, BookOpen, Zap, Sparkles, Star, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext';
@@ -10,8 +10,8 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
   const [error, setError] = useState(null);
+  
   const { signInUser } = UserAuth();
   const navigate = useNavigate();
 
@@ -23,35 +23,36 @@ const Login = () => {
     });
   };
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   // Simulate login process
-  //   await new Promise(resolve => setTimeout(resolve, 2000));
-  //   setIsLoading(false);
-  //   console.log('Login attempted with:', { email, password });
-  // };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const { session, error } = await signInUser(email, password); // Use your signIn function
+    setError(null);
 
-    if (error) {
-      setError(error); // Set the error message if sign-in fails
+    try {
+      const result = await signInUser(email, password);
 
-      // Set a timeout to clear the error message after a specific duration (e.g., 3 seconds)
+      if (result.success) {
+        // Successfully signed in, navigate to dashboard
+        navigate("/dashboard");
+      } else {
+        // Sign-in failed, show error message
+        setError(result.error || "Failed to sign in. Please try again.");
+        
+        // Clear error message after 3 seconds
+        setTimeout(() => {
+          setError(null);
+        }, 3000);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+      
+      // Clear error message after 3 seconds
       setTimeout(() => {
-        setError("");
-      }, 3000); // 3000 milliseconds = 3 seconds
-    } else {
-      // Redirect or perform any necessary actions after successful sign-in
+        setError(null);
+      }, 3000);
+    } finally {
       setIsLoading(false);
-      navigate("/dashboard");
-    }
-
-    if (session) {
-      setError(""); // Reset the error when there's a session
     }
   };
 
@@ -196,6 +197,13 @@ const Login = () => {
 
           {/* Enhanced Login Form */}
           <div className=" backdrop-blur-xl bg-white/10 rounded-3xl p-8 border border-white/20 shadow-2xl">
+            {/* Error Message Display */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl backdrop-blur-sm">
+                <p className="text-red-200 text-sm text-center">{error}</p>
+              </div>
+            )}
+            
             <form onSubmit={handleLogin} className="space-y-6">
               {/* Enhanced Email Field */}
               <div className="relative group">
