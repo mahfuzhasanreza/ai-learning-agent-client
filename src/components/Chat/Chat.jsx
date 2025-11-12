@@ -13,11 +13,21 @@ import TTSSettings from '../TTSSettings/TTSSettings';
 
 const Chat = () => {
 
-    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData } = useContext(Context);
+    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
+    const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     // console.log(conversation);
     // console.log(activeChat, "activeChat");
+
+    // Available agents list
+    const agents = [
+        { id: 'dbms_agent', name: 'DBMS Agent', description: 'Database Management Expert' },
+        { id: 'python_agent', name: 'Python Agent', description: 'Python Programming Expert' },
+        { id: 'java_agent', name: 'Java Agent', description: 'Java Programming Expert' },
+        { id: 'web_agent', name: 'Web Development Agent', description: 'Web Development Expert' },
+        { id: 'ml_agent', name: 'ML Agent', description: 'Machine Learning Expert' },
+    ];
 
     // const loadPrompt = async(prompt) => {
     //     await onSent(prompt);
@@ -30,22 +40,89 @@ const Chat = () => {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition();
 
-    if (!browserSupportsSpeechRecognition) {
-        return <span>Browser doesn't support speech recognition.</span>;
-    }
-
     useEffect(() => {
         if (listening && transcript) {
             setInput(transcript);
         }
-    }, [transcript, listening]);
+    }, [transcript, listening, setInput]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showAgentDropdown && !event.target.closest('.agent-dropdown-container')) {
+                setShowAgentDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showAgentDropdown]);
+
+    if (!browserSupportsSpeechRecognition) {
+        return <span>Browser doesn't support speech recognition.</span>;
+    }
 
     return (
         <div className='main'>
             <div className="nav border-b-2 border-gray-300 text-gray-600">
-                <div className='flex gap-2'>
-                    <p className='ml-3 font-semibold'>Model GPT 7.0</p>
-                    <img className='cursor-pointer' src={assets.CaretDown} alt="" />
+                <div className='flex gap-4 items-center'>
+                    <div className='flex gap-2'>
+                        <p className='ml-3 font-semibold'>Model GPT 7.0</p>
+                        <img className='cursor-pointer' src={assets.CaretDown} alt="" />
+                    </div>
+                    
+                    {/* Agent Selection Dropdown */}
+                    <div className='relative agent-dropdown-container'>
+                        <button
+                            onClick={() => setShowAgentDropdown(!showAgentDropdown)}
+                            className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
+                                selectedAgent 
+                                    ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                                    : 'border-gray-300 hover:bg-gray-50'
+                            }`}
+                        >
+                            {selectedAgent && (
+                                <span className='w-2 h-2 bg-blue-500 rounded-full'></span>
+                            )}
+                            <span className='font-semibold text-sm'>
+                                {selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
+                            </span>
+                            <img className='cursor-pointer w-4' src={assets.CaretDown} alt="" />
+                        </button>
+                        
+                        {showAgentDropdown && (
+                            <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg w-72 z-50">
+                                <div className="p-2">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedAgent(null);
+                                            setShowAgentDropdown(false);
+                                        }}
+                                        className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${!selectedAgent ? 'bg-blue-50 text-blue-600' : ''}`}
+                                    >
+                                        <p className='font-semibold text-sm'>No Agent (Default)</p>
+                                        <p className='text-xs text-gray-500'>Use general AI assistant</p>
+                                    </button>
+                                    <div className='border-t border-gray-200 my-2'></div>
+                                    {agents.map((agent) => (
+                                        <button
+                                            key={agent.id}
+                                            onClick={() => {
+                                                setSelectedAgent(agent.id);
+                                                setShowAgentDropdown(false);
+                                            }}
+                                            className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${selectedAgent === agent.id ? 'bg-blue-50 text-blue-600' : ''}`}
+                                        >
+                                            <p className='font-semibold text-sm'>{agent.name}</p>
+                                            <p className='text-xs text-gray-500'>{agent.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <div className='flex text-2xl gap-4 mr-16'>
                     <MdOutlineLightMode className='cursor-pointer font-bold text-blue-600' />

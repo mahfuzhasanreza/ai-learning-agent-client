@@ -581,3 +581,49 @@
     gap: 6px;
   }
 }
+
+/* Agent Selection Dropdown Styles */
+.agent-dropdown-button {
+    transition: all 0.3s ease;
+}
+
+.agent-dropdown-button:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.agent-dropdown-menu {
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.agent-option {
+    transition: all 0.2s ease;
+}
+
+.agent-option:hover {
+    transform: translateX(4px);
+}
+
+.agent-option.selected {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.agent-option.selected p {
+    color: white;
+}
+
+.agent-option.selected .text-gray-500 {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
