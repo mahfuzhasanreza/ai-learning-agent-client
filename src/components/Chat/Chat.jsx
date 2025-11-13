@@ -118,7 +118,7 @@ const Chat = () => {
             <ChatSidebar
                 isOpen={isSidebarOpen}
                 setIsOpen={setIsSidebarOpen}
-                newChat={() => console.log("New chat")}
+    
             />
 
 

@@ -3,8 +3,8 @@ import { PlusCircle, FileText, Volume2, X, MessageSquare, Settings, Trash2, Sear
 import ApiService from '../../services/apiService';
 import { Context } from '../../context/Context';
 
-export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
-  const { loadChatHistory, threadId } = useContext(Context);
+export default function ChatSidebar({ isOpen, setIsOpen }) {
+  const { loadChatHistory, threadId, newChat } = useContext(Context);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({
     today: true,
@@ -141,8 +141,8 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
               <MessageSquare className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">COSMOS</h2>
-              <p className="text-xs text-gray-400">Chat History</p>
+              <h2 className="text-lg font-bold text-white">Chat Menu</h2>
+              {/* <p className="text-xs text-gray-400">Chat History</p> */}
             </div>
           </div>
           <button
@@ -158,7 +158,6 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
           <button
             onClick={() => {
               newChat();
-              setIsOpen(false);
             }}
             className="w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white font-semibold hover:shadow-lg hover:shadow-[#FF4B00]/30 transition-all duration-300 transform hover:-translate-y-0.5"
           >
