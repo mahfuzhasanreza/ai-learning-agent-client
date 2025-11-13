@@ -301,7 +301,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
             onClick={() => {
               // setTtsSettingsOpen(true);
               setTtsSettingsOpen(true);
-              setIsOpen(false);
+              // setIsOpen(false);
             }}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
           >
