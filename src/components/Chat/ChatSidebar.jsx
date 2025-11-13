@@ -4,7 +4,7 @@ import ApiService from '../../services/apiService';
 import { Context } from '../../context/Context';
 
 export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettingsOpen }) {
-  const { loadChatHistory } = useContext(Context);
+  const { loadChatHistory, threadId } = useContext(Context);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({
     today: true,
@@ -21,10 +21,10 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
   const [loading, setLoading] = useState(false);
 
   // Handle chat click to load history
-  const handleChatClick = async (threadId) => {
+  const handleChatClick = async (clickedThreadId) => {
     try {
-      await loadChatHistory(threadId);
-      setIsOpen(false); // Close sidebar after loading chat
+      await loadChatHistory(clickedThreadId);
+      // Don't close sidebar - keep it open to show active state
     } catch (error) {
       console.error('Failed to load chat:', error);
     }
@@ -227,21 +227,34 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
                     {/* Collapsible Chat List */}
                     {isExpanded && (
                       <div className="space-y-1 mt-2">
-                        {filteredChats.map((chat) => (
-                          <button
-                            key={chat.id}
-                            onClick={() => handleChatClick(chat.id)}
-                            className="w-full group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all duration-200 text-left border border-transparent hover:border-white/10"
-                          >
+                        {filteredChats.map((chat) => {
+                          const isActive = chat.id === threadId;
+                          
+                          return (
+                            <button
+                              key={chat.id}
+                              onClick={() => handleChatClick(chat.id)}
+                              className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left border ${
+                                isActive 
+                                  ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 border-[#FF4B00]/50' 
+                                  : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10'
+                              }`}
+                            >
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className="w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <MessageSquare className="w-4 h-4 text-[#FF4B00]" />
+                              <div className={`w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                isActive ? 'ring-2 ring-[#FF4B00]/50' : ''
+                              }`}>
+                                <MessageSquare className={`w-4 h-4 ${isActive ? 'text-[#FF4B00]' : 'text-[#FF4B00]'}`} />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm text-gray-200 font-medium truncate group-hover:text-white transition-colors">
+                                <p className={`text-sm font-medium truncate transition-colors ${
+                                  isActive ? 'text-white' : 'text-gray-200 group-hover:text-white'
+                                }`}>
                                   {chat.title}
                                 </p>
-                                <p className="text-xs text-gray-500 mt-0.5">{chat.time}</p>
+                                <p className={`text-xs mt-0.5 ${
+                                  isActive ? 'text-gray-400' : 'text-gray-500'
+                                }`}>{chat.time}</p>
                               </div>
                             </div>
                             
@@ -259,7 +272,8 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
                               <ChevronRight className="w-4 h-4 text-gray-500" />
                             </div>
                           </button>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
