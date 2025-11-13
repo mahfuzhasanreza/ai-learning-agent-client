@@ -68,9 +68,11 @@ const ContextProvider = (props) => {
 
         let data;
         let response;
+        let currentPrompt;
         
         try {
             if (prompt !== undefined) {
+                currentPrompt = prompt;
                 setInput(prompt);
 
                 // Pass threadId and selectedAgent to runChat
@@ -81,7 +83,7 @@ const ContextProvider = (props) => {
                 }
                 
                 response = data.response;
-                setCourseData(data.course);
+                setCourseData(data.course || data.agent_name || "");
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -89,18 +91,9 @@ const ContextProvider = (props) => {
                 }
                 
                 setRecentPrompt(prompt);
-
-                if (!loading && !showResult) {
-                    setNewChatPrompts(prev => 
-                        prev.includes(prompt) ? prev : [...prev, prompt]
-                    );
-                    setActiveChat(prompt);
-                    
-                    setConversation(prev => [...prev, { chat: prompt, input: prompt, response: newResponse4 }]);
-                } else {
-                    setConversation((prev) => [...prev, { chat: activeChat, input: prompt, response: newResponse4 }]);
-                }
             } else {
+                currentPrompt = input;
+                
                 // Pass threadId and selectedAgent to runChat
                 data = await runChat(input, threadId, selectedAgent);
                 
@@ -109,7 +102,7 @@ const ContextProvider = (props) => {
                 }
                 
                 response = data.response;
-                setCourseData(data.course);
+                setCourseData(data.course || data.agent_name || "");
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -117,30 +110,9 @@ const ContextProvider = (props) => {
                 }
                 
                 setRecentPrompt(input);
-
-                if (!loading && !showResult) {
-                    setNewChatPrompts(prev => [...prev, input]);
-                    setActiveChat(input);
-
-                    setConversation(prev => [...prev, { chat: input, input: input, response: newResponse4 }]);
-                } else {
-                    setConversation((prev) => [...prev, { chat: activeChat, input: input, response: newResponse4 }]);
-                }
             }
 
-            // manually add formatting for bold and new line
-            // let responseArray = response.split("**");
-            // let newResponse;
-            // for (let i = 0; i < responseArray.length; i++) {
-            //     if (i === 0 || i % 2 !== 1) {
-            //         newResponse += responseArray[i];
-            //     } else {
-            //         newResponse += "<b>" + responseArray[i] + "</b>";
-            //     }
-            // }
-            // let newResponse2 = newResponse.split("*").join("<br/>");
-            // let newResponse3 = <Markdown remarkPlugins={[remarkGfm]}>{response}</Markdown>;
-
+            // Create formatted response with Markdown
             let newResponse4 = <Markdown
                 children={response}
                 components={{
@@ -163,14 +135,20 @@ const ContextProvider = (props) => {
                     }
                 }}
             />;
+
+            // Add to conversation after response is formatted
+            if (!loading && !showResult) {
+                setNewChatPrompts(prev => 
+                    prev.includes(currentPrompt) ? prev : [...prev, currentPrompt]
+                );
+                setActiveChat(currentPrompt);
+                
+                setConversation(prev => [...prev, { chat: currentPrompt, input: currentPrompt, response: newResponse4 }]);
+            } else {
+                setConversation((prev) => [...prev, { chat: activeChat, input: currentPrompt, response: newResponse4 }]);
+            }
+
             setResultData(newResponse4);
-
-            // create typing effect
-            // let newResponseArray = newResponse4.split(" ");
-            // for (let i = 0; i < newResponseArray.length; i++) {
-            //     delayPara(i, newResponseArray[i] + " ");
-            // }
-
             setLoading(false);
             setInput("");
         } catch (error) {

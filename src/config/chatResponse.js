@@ -59,15 +59,35 @@ async function runChat(prompt, threadId = null, agentName = null) {
         const data = await response.json();
         console.log(data);
 
-        // Print response data for debugging
-        console.log('📥 API Response:', {
-            response: data.response ? `${data.response.substring(0, 100)}...` : data.response,
-            thread_id: data.thread_id,
-            course: data.course,
-            full_response_length: data.response ? data.response.length : 0
+        // Print full API response for debugging
+        console.log('📥 Full API Response:', data);
+        
+        // Extract the correct fields from the response structure
+        const actualResponse = data.display_message || data.response;
+        const extractedThreadId = data.metadata?.thread_id || data.thread_id;
+        const course = data.metadata?.course || data.course;
+        const extractedAgentName = data.llm_response?.agent_name;
+        
+        // Normalize the response to match expected format
+        const normalizedData = {
+            response: actualResponse,
+            thread_id: extractedThreadId,
+            course: course,
+            agent_name: extractedAgentName,
+            metadata: data.metadata,
+            raw: data // Keep the original response for reference
+        };
+        
+        // Print normalized response data for debugging
+        console.log('📥 Normalized Response:', {
+            response: actualResponse ? `${actualResponse.substring(0, 100)}...` : actualResponse,
+            thread_id: extractedThreadId,
+            course: course,
+            agent_name: extractedAgentName,
+            full_response_length: actualResponse ? actualResponse.length : 0
         });
 
-        return data;
+        return normalizedData;
     } catch (error) {
         console.error("Error:", error);
         throw error; // Re-throw to handle in the calling function
