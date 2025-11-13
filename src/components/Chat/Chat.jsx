@@ -76,54 +76,7 @@ const Chat = () => {
 
             <Navigation></Navigation>
             <div className="nav border-b-2 border-gray-300 text-gray-600">
-                <div className='relative agent-dropdown-container'>
-                    <button
-                        onClick={() => setShowAgentDropdown(!showAgentDropdown)}
-                        className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${selectedAgent
-                            ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
-                            : 'border-gray-300 hover:bg-gray-50'
-                            }`}
-                    >
-                        {selectedAgent && (
-                            <span className='w-2 h-2 bg-blue-500 rounded-full'></span>
-                        )}
-                        <span className='font-semibold text-sm'>
-                            {selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
-                        </span>
-                        <img className='cursor-pointer w-4' src={assets.CaretDown} alt="" />
-                    </button>
-
-                    {showAgentDropdown && (
-                        <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg w-72 z-50">
-                            <div className="p-2">
-                                <button
-                                    onClick={() => {
-                                        setSelectedAgent(null);
-                                        setShowAgentDropdown(false);
-                                    }}
-                                    className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${!selectedAgent ? 'bg-blue-50 text-blue-600' : ''}`}
-                                >
-                                    <p className='font-semibold text-sm'>No Agent (Default)</p>
-                                    <p className='text-xs text-gray-500'>Use general AI assistant</p>
-                                </button>
-                                <div className='border-t border-gray-200 my-2'></div>
-                                {agents.map((agent) => (
-                                    <button
-                                        key={agent.id}
-                                        onClick={() => {
-                                            setSelectedAgent(agent.id);
-                                            setShowAgentDropdown(false);
-                                        }}
-                                        className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${selectedAgent === agent.id ? 'bg-blue-50 text-blue-600' : ''}`}
-                                    >
-                                        <p className='font-semibold text-sm'>{agent.name}</p>
-                                        <p className='text-xs text-gray-500'>{agent.description}</p>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
+                {/* Removed agent dropdown from here */}
             </div>
 
             <div className="main-container">
@@ -364,6 +317,57 @@ const Chat = () => {
                                     onClick={() => SpeechRecognition.startListening({ continuous: true })}
                                     src={assets.mic_icon} alt="" />
                         }
+
+                        {/* Agent Dropdown in Input Field */}
+                        <div className='relative agent-dropdown-container'>
+                            <button
+                                onClick={() => setShowAgentDropdown(!showAgentDropdown)}
+                                className={`flex items-center gap-1 px-3 py-1.5 border rounded-lg transition-colors text-xs ${selectedAgent
+                                    ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                                    : 'border-gray-300 hover:bg-gray-50 text-gray-600'
+                                    }`}
+                                title={selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
+                            >
+                                {selectedAgent && (
+                                    <span className='w-1.5 h-1.5 bg-blue-500 rounded-full'></span>
+                                )}
+                                <span className='font-semibold'>
+                                    {selectedAgent ? agents.find(a => a.id === selectedAgent)?.name.split(' ')[0] : 'Agent'}
+                                </span>
+                                <img className='cursor-pointer w-3' src={assets.CaretDown} alt="" />
+                            </button>
+
+                            {showAgentDropdown && (
+                                <div className="absolute bottom-12 right-0 bg-white border border-gray-300 rounded-lg shadow-lg w-72 z-50">
+                                    <div className="p-2">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedAgent(null);
+                                                setShowAgentDropdown(false);
+                                            }}
+                                            className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${!selectedAgent ? 'bg-blue-50 text-blue-600' : ''}`}
+                                        >
+                                            <p className='font-semibold text-sm'>No Agent (Default)</p>
+                                            <p className='text-xs text-gray-500'>Use general AI assistant</p>
+                                        </button>
+                                        <div className='border-t border-gray-200 my-2'></div>
+                                        {agents.map((agent) => (
+                                            <button
+                                                key={agent.id}
+                                                onClick={() => {
+                                                    setSelectedAgent(agent.id);
+                                                    setShowAgentDropdown(false);
+                                                }}
+                                                className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors ${selectedAgent === agent.id ? 'bg-blue-50 text-blue-600' : ''}`}
+                                            >
+                                                <p className='font-semibold text-sm'>{agent.name}</p>
+                                                <p className='text-xs text-gray-500'>{agent.description}</p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
                         {input || listening ? <img onClick={() => onSent()} className='send-icon' src={assets.send_icon} alt="" /> : null}
                     </div>
