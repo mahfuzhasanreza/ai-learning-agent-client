@@ -14,6 +14,9 @@ const Navigation = () => {
   const location = useLocation();
   const {isDark, isSidebarOpen} = useContext(Context);
 
+  // Check if we're on the chat page
+  const isChatPage = location.pathname === '/cosmos-chatbot';
+
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 50;
@@ -76,7 +79,7 @@ const Navigation = () => {
     //  <div className={`main transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}></div>
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? `${isDark ? 'bg-nav-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
+        scrolled || isChatPage ? `${isDark ? 'bg-nav-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -95,7 +98,7 @@ const Navigation = () => {
               <FaRobot className="text-white text-sm lg:text-base" />
             </div> */}
               <img className='bg-transparent' src={logo} alt="COSMOS" />
-            <span className={`ml-3 font-bold text-xl lg:text-3xl tracking-tight cursor-pointer ${scrolled ? `${isDark? 'text-white' : 'text-gray-900'}` : 'text-white'}`}>
+            <span className={`ml-3 font-bold text-xl lg:text-3xl tracking-tight cursor-pointer ${scrolled || isChatPage ? `${isDark? 'text-white' : 'text-gray-900'}` : 'text-white'}`}>
               COSMOS
             </span>
           </motion.div>
@@ -107,10 +110,10 @@ const Navigation = () => {
                 key={item.name}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative group cursor-pointer ${
                   isActive(item.id)
-                    ? scrolled 
+                    ? (scrolled || isChatPage)
                       ? 'text-amber-600 border-b-amber-600' 
                       : 'text-white border-b-amber-600'
-                    : scrolled 
+                    : (scrolled || isChatPage)
                       ? `${isDark? 'text-gray-100' : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80'}`
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
@@ -125,7 +128,7 @@ const Navigation = () => {
                   isActive(item.id) 
                     ? 'w-3/4' 
                     : 'w-0 group-hover:w-3/4'
-                } ${scrolled ? 'group-hover:bg-yellow-600' : 'group-hover:bg-white'}`} />
+                } ${(scrolled || isChatPage) ? 'group-hover:bg-yellow-600' : 'group-hover:bg-white'}`} />
               </motion.button>
             ))}
             <div className="ml-4 pl-4 border-l border-gray-300/30">
@@ -155,10 +158,10 @@ const Navigation = () => {
                 key={item.name}
                 className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 text-sm cursor-pointer ${
                   isActive(item.id)
-                    ? scrolled 
+                    ? (scrolled || isChatPage)
                       ? 'text-yellow-600 bg-yellow-50/80 border border-yellow-200/50' 
                       : 'text-white bg-white/20 border border-white/30'
-                    : scrolled 
+                    : (scrolled || isChatPage)
                       ? 'text-gray-700 hover:text-yellow-600 hover:bg-gray-100/80' 
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
@@ -192,7 +195,7 @@ const Navigation = () => {
           <div className="md:hidden">
             <motion.button
               className={`p-2 rounded-lg transition-all duration-200 cursor-pointer ${
-                scrolled 
+                (scrolled || isChatPage)
                   ? 'text-gray-700 hover:bg-gray-100/80' 
                   : 'text-white hover:bg-white/10'
               }`}
