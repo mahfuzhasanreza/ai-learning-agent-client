@@ -1,0 +1,148 @@
+/* Code Block Wrapper - ChatGPT Style */
+.code-block-wrapper {
+    margin: 16px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* Code Block Header */
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: linear-gradient(to bottom, #2d2d2d, #252525);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.code-block-language {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e5e7eb;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+
+/* Copy Button */
+.code-block-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #d4d4d4;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.code-block-copy-btn:hover {
+    background-color: rgba(255, 75, 0, 0.1);
+    border-color: #FF4B00;
+    color: #FF4B00;
+}
+
+.code-block-copy-btn:active {
+    transform: scale(0.95);
+}
+
+.code-block-copy-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Utility classes for SVG */
+.w-4 {
+    width: 1rem;
+}
+
+.h-4 {
+    height: 1rem;
+}
+
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+/* Inline Code */
+code {
+    background-color: rgba(255, 75, 0, 0.12);
+    color: #FF4B00;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875em;
+    border: 1px solid rgba(255, 75, 0, 0.25);
+    font-weight: 500;
+}
+
+/* Override for code inside pre (handled by SyntaxHighlighter) */
+.code-block-wrapper code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    font-weight: normal;
+}
+
+/* Syntax Highlighter Overrides */
+.code-block-wrapper pre {
+    margin: 0 !important;
+    padding: 16px !important;
+    background-color: #000000 !important;
+    overflow-x: auto;
+}
+
+/* Scrollbar for code blocks */
+.code-block-wrapper pre::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.code-block-wrapper pre::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.code-block-wrapper pre::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+    border: 2px solid #1a1a1a;
+}
+
+.code-block-wrapper pre::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .code-block-header {
+        padding: 8px 12px;
+    }
+    
+    .code-block-copy-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+        gap: 4px;
+    }
+    
+    .code-block-copy-btn .ml-2 {
+        display: none;
+    }
+    
+    .code-block-language {
+        font-size: 12px;
+    }
+
+    .code-block-wrapper pre {
+        padding: 12px !important;
+    }
+}

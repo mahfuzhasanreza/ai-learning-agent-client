@@ -2,8 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import runChat from "../config/chatResponse";
 import Markdown from "react-markdown";
 // import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import CodeBlock from "../components/CodeBlock/CodeBlock";
 import ApiService from "../services/apiService";
 
 export const Context = createContext();
@@ -139,13 +138,9 @@ const ContextProvider = (props) => {
                                     const { children, className, ...rest } = props
                                     const match = /language-(\w+)/.exec(className || '')
                                     return match ? (
-                                        <SyntaxHighlighter
-                                            {...rest}
-                                            PreTag="div"
-                                            children={String(children).replace(/\n$/, '')}
-                                            language={match[1]}
-                                            style={dark}
-                                        />
+                                        <CodeBlock language={match[1]}>
+                                            {children}
+                                        </CodeBlock>
                                     ) : (
                                         <code {...rest} className={className}>
                                             {children}
@@ -313,13 +308,9 @@ const ContextProvider = (props) => {
                             const { children, className, ...rest } = props
                             const match = /language-(\w+)/.exec(className || '')
                             return match ? (
-                                <SyntaxHighlighter
-                                    {...rest}
-                                    PreTag="div"
-                                    children={String(children).replace(/\n$/, '')}
-                                    language={match[1]}
-                                    style={dark}
-                                />
+                                <CodeBlock language={match[1]}>
+                                    {children}
+                                </CodeBlock>
                             ) : (
                                 <code {...rest} className={className}>
                                     {children}
