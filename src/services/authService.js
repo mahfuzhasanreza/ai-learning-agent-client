@@ -30,16 +30,22 @@ export const signUp = async (userData) => {
       };
     }
 
+    // Extract token from the response structure
+    // Token can be at: data.token OR data.auth.session.access_token
+    const token = data.token || data.auth?.session?.access_token;
+    const user = data.user || data.auth?.user;
+
     // Store the auth token if provided
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user || data));
+    if (token) {
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(user || data));
     }
 
     return {
       success: true,
       data: data,
-      token: data.token,
+      token: token,
+      user: user,
     };
   } catch (error) {
     console.error('Sign up error:', error);
@@ -87,16 +93,28 @@ export const signIn = async (credentials) => {
       };
     }
 
+    // Extract token from the response structure
+    // Token can be at: data.token OR data.auth.session.access_token
+    const token = data.token || data.auth?.session?.access_token;
+    const user = data.user || data.auth?.user;
+
     // Store the auth token and user data
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user || data));
+    if (token) {
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(user || data));
+      
+      // Log stored authentication data
+      console.log('💾 Token and User Saved to LocalStorage:');
+      console.log('Token Length:', token.length);
+      console.log('Token Preview:', `${token.substring(0, 30)}...`);
+      console.log('User Data:', user || data);
     }
 
     return {
       success: true,
       data: data,
-      token: data.token,
+      token: token,
+      user: user,
     };
   } catch (error) {
     console.error('Sign in error:', error);

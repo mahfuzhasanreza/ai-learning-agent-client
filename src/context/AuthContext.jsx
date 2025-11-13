@@ -27,7 +27,7 @@ export const AuthContextProvider = ({ children }) => {
 
             if (result.success) {
                 setToken(result.token);
-                setUser(result.data.user || result.data);
+                setUser(result.user || result.data.user || result.data);
                 return { success: true, data: result.data };
             }
 
@@ -45,7 +45,13 @@ export const AuthContextProvider = ({ children }) => {
 
             if (result.success) {
                 setToken(result.token);
-                setUser(result.data.user || result.data);
+                setUser(result.user || result.data.user || result.data);
+                
+                // Log authentication details
+                console.log('🔐 Authentication Set in Context:');
+                console.log('Token:', result.token);
+                console.log('User:', result.user || result.data.user || result.data);
+                
                 return { success: true, data: result.data };
             }
 

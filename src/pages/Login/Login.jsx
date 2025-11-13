@@ -32,6 +32,15 @@ const Login = () => {
       const result = await signInUser(email, password);
 
       if (result.success) {
+        // Print auth token and user info for debugging
+        const token = localStorage.getItem('authToken');
+        const user = localStorage.getItem('user');
+        
+        console.log('✅ Login Successful!');
+        console.log('🔑 Auth Token:', token);
+        console.log('👤 User Info:', JSON.parse(user || '{}'));
+        console.log('📋 Full Result:', result);
+        
         // Successfully signed in, navigate to dashboard
         navigate("/dashboard");
       } else {
