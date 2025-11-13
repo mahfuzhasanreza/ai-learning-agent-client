@@ -215,6 +215,27 @@ class ApiService {
       throw error;
     }
   }
+
+  // Get chat messages by thread_id
+  static async getChatByThreadId(threadId) {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/chats/${threadId}`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching chat by thread ID:', error);
+      throw error;
+    }
+  }
 }
 
 export default ApiService;

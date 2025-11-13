@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { PlusCircle, FileText, Volume2, X, MessageSquare, Settings, Trash2, Search, ChevronRight, History, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import ApiService from '../../services/apiService';
+import { Context } from '../../context/Context';
 
 export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettingsOpen }) {
+  const { loadChatHistory } = useContext(Context);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({
     today: true,
@@ -17,6 +19,16 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
     previous30days: []
   });
   const [loading, setLoading] = useState(false);
+
+  // Handle chat click to load history
+  const handleChatClick = async (threadId) => {
+    try {
+      await loadChatHistory(threadId);
+      setIsOpen(false); // Close sidebar after loading chat
+    } catch (error) {
+      console.error('Failed to load chat:', error);
+    }
+  };
 
   // Helper function to format time ago
   const formatTimeAgo = useCallback((date) => {
@@ -218,6 +230,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
                         {filteredChats.map((chat) => (
                           <button
                             key={chat.id}
+                            onClick={() => handleChatClick(chat.id)}
                             className="w-full group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all duration-200 text-left border border-transparent hover:border-white/10"
                           >
                             <div className="flex items-center gap-3 flex-1 min-w-0">

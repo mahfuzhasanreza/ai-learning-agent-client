@@ -4,6 +4,7 @@ import Markdown from "react-markdown";
 // import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ApiService from "../services/apiService";
 
 export const Context = createContext();
 
@@ -61,6 +62,101 @@ const ContextProvider = (props) => {
         setShowResult(false);
         setActiveChat("");
         setThreadId(null); // Reset thread ID for new chat
+        setConversation([]); // Clear conversation
+        setQuestions([]); // Clear questions
+    }
+
+    const loadChatHistory = async (threadId) => {
+        try {
+            setLoading(true);
+            setShowResult(true);
+            
+            const data = await ApiService.getChatByThreadId(threadId);
+            
+            if (!data || !data.messages) {
+                throw new Error("No messages found");
+            }
+
+            // Set the thread ID
+            setThreadId(data.thread_id);
+            
+            // Clear existing conversation
+            setConversation([]);
+            
+            // Process messages and build conversation
+            const processedConversation = [];
+            
+            data.messages.forEach((message) => {
+                if (message.type === 'human') {
+                    // Store the user input
+                    const userInput = message.content;
+                    
+                    // Find the corresponding AI response (next message)
+                    const aiMessageIndex = data.messages.indexOf(message) + 1;
+                    if (aiMessageIndex < data.messages.length) {
+                        const aiMessage = data.messages[aiMessageIndex];
+                        
+                        if (aiMessage.type === 'ai') {
+                            // Format the AI response with Markdown
+                            const formattedResponse = <Markdown
+                                children={aiMessage.content}
+                                components={{
+                                    code(props) {
+                                        const { children, className, ...rest } = props
+                                        const match = /language-(\w+)/.exec(className || '')
+                                        return match ? (
+                                            <SyntaxHighlighter
+                                                {...rest}
+                                                PreTag="div"
+                                                children={String(children).replace(/\n$/, '')}
+                                                language={match[1]}
+                                                style={dark}
+                                            />
+                                        ) : (
+                                            <code {...rest} className={className}>
+                                                {children}
+                                            </code>
+                                        )
+                                    }
+                                }}
+                            />;
+                            
+                            // Add to conversation
+                            processedConversation.push({
+                                chat: userInput,
+                                input: userInput,
+                                response: formattedResponse
+                            });
+                            
+                            // Set agent name if available
+                            if (aiMessage.agent_name) {
+                                setSelectedAgent(aiMessage.agent_name);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            setConversation(processedConversation);
+            
+            // Set the most recent prompt
+            if (processedConversation.length > 0) {
+                const lastConversation = processedConversation[processedConversation.length - 1];
+                setRecentPrompt(lastConversation.input);
+                setActiveChat(lastConversation.chat);
+                setResultData(lastConversation.response);
+            }
+            
+            setLoading(false);
+        } catch (error) {
+            console.error("Error loading chat history:", error);
+            setLoading(false);
+            setResultData(
+                <div className="text-red-500">
+                    <p>Error: Failed to load chat history. Please try again.</p>
+                </div>
+            );
+        }
     }
 
     const onSent = async (prompt) => {
@@ -134,7 +230,7 @@ const ContextProvider = (props) => {
                 children={response}
                 components={{
                     code(props) {
-                        const { children, className, node, ...rest } = props
+                        const { children, className, ...rest } = props
                         const match = /language-(\w+)/.exec(className || '')
                         return match ? (
                             <SyntaxHighlighter
@@ -195,6 +291,7 @@ const ContextProvider = (props) => {
         input,
         setInput,
         newChat,
+        loadChatHistory,
         conversation,
         activeChat,
         setActiveChat,
