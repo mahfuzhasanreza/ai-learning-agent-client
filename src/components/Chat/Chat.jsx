@@ -10,12 +10,16 @@ import { MdOutlineDarkMode } from "react-icons/md";
 import { FaCog } from "react-icons/fa";
 import ListenButton from '../ListenButton/ListenButton';
 import TTSSettings from '../TTSSettings/TTSSettings';
+import Navigation from '../LandingPage/components/Navigation';
+import ChatSidebar from './ChatSidebar';
+
 
 const Chat = () => {
 
     const { ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
+      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Available agents list
     const agents = [
@@ -59,6 +63,18 @@ const Chat = () => {
 
     return (
         <div className='main'>
+            
+
+            {/* Sidebar */}
+      <ChatSidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        newChat={() => console.log("New chat")}
+        setTtsSettingsOpen={() => console.log("TTS Settings")}
+      />
+
+
+            {/* <Navigation></Navigation> */}
             <div className="nav border-b-2 border-gray-300 text-gray-600">
                 <div className='relative agent-dropdown-container'>
                     <button

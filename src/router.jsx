@@ -9,6 +9,7 @@ import StudentDashboard from "./pages/StudentDashboard/StudentDashboard.jsx";
 import StudyPlan from "./pages/StudyPlan/StudyPlan.jsx";
 import SidebarLayout from "./layout/SidebarLayout.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
+import Navigation from "./components/LandingPage/components/Navigation.jsx";
 
 
 export const router = createBrowserRouter([
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
   { 
     path: "/", 
     // element: <SidebarLayout></SidebarLayout>,
+    // element: <Navigation></Navigation>,
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "roadmap", element: <Roadmap /> },
