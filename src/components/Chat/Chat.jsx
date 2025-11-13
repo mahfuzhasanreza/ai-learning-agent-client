@@ -186,7 +186,7 @@ const Chat = () => {
                                     </div>
                                     <div className="result-data">
                                         <img src={assets.logo} alt="" />
-                                        <div className="message-content">
+                                        <div className="message-content flex justify-between">
                                             <div className='flex flex-col'>
                                                 {/* Show agent name for each message */}
                                                 {(item.agentName || item.courseData) && (
