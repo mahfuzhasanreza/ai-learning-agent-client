@@ -9,6 +9,7 @@ export const Context = createContext();
 
 const ContextProvider = (props) => {
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
@@ -210,6 +211,8 @@ const ContextProvider = (props) => {
         toggleDarkMode,
         ttsSettingsOpen,
         setTtsSettingsOpen,
+        isSidebarOpen,
+        setIsSidebarOpen,
     }
 
     return (

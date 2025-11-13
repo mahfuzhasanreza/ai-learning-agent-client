@@ -12,7 +12,7 @@ const Navigation = () => {
   const [activeSection, setActiveSection] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const {isDark} = useContext(Context);
+  const {isDark, isSidebarOpen} = useContext(Context);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,15 +72,17 @@ const Navigation = () => {
   };
 
   return (
+
+    //  <div className={`main transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}></div>
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled ? `${isDark ? 'bg-nav-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`${isSidebarOpen ? 'ml-100' : ''} max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
           <motion.div

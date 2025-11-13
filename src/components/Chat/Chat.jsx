@@ -16,10 +16,10 @@ import ChatSidebar from './ChatSidebar';
 
 const Chat = () => {
 
-    const { ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
+    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
     // Available agents list
     const agents = [
