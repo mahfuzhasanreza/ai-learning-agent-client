@@ -252,34 +252,102 @@ const Chat = () => {
                                         {/* Display Questions if available */}
                                         {questions && questions.length > 0 && (
                                             <div className="questions-container mt-6">
-                                                <h3 className="text-xl font-semibold mb-4 text-gray-700">Questions:</h3>
+                                                <h3 className="text-xl font-semibold mb-4 text-gray-700">
+                                                    Questions Found: {questions.length}
+                                                </h3>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     {questions.map((question, qIndex) => (
                                                         <div 
                                                             key={question.id || qIndex} 
-                                                            className="question-card bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                                            className="question-card bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300"
                                                         >
-                                                            <div className="flex items-start justify-between mb-2">
+                                                            {/* Header with Question Number and Course */}
+                                                            <div className="flex items-start justify-between mb-3">
                                                                 <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                                                                     Q{question.question_number}
                                                                     {question.sub_question && question.sub_question !== '-' && (
                                                                         <span>.{question.sub_question}</span>
                                                                     )}
                                                                 </span>
-                                                                {question.course_code && (
-                                                                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                                                        {question.course_code}
-                                                                    </span>
-                                                                )}
+                                                                <div className="flex gap-2">
+                                                                    {question.course_code && (
+                                                                        <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded font-medium">
+                                                                            {question.course_code}
+                                                                        </span>
+                                                                    )}
+                                                                    {question.exam_type && (
+                                                                        <span className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded font-medium uppercase">
+                                                                            {question.exam_type}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                            <p className="text-gray-700 text-sm leading-relaxed line-clamp-4">
+
+                                                            {/* Course Title */}
+                                                            {question.course_title && (
+                                                                <p className="text-xs text-gray-500 mb-2 capitalize">
+                                                                    {question.course_title}
+                                                                </p>
+                                                            )}
+
+                                                            {/* Question Text */}
+                                                            <p className="text-gray-700 text-sm leading-relaxed mb-3">
                                                                 {question.question_text}
                                                             </p>
-                                                            {question.marks && (
-                                                                <div className="mt-2 text-xs text-gray-500">
-                                                                    Marks: {question.marks}
+
+                                                            {/* Description Content if available */}
+                                                            {question.has_description && question.description_content && question.description_content !== 'N/A' && (
+                                                                <div className="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                                    <p className="text-xs font-semibold text-blue-700 mb-1">Description:</p>
+                                                                    <p className="text-xs text-gray-600 line-clamp-3">
+                                                                        {question.description_content}
+                                                                    </p>
                                                                 </div>
                                                             )}
+
+                                                            {/* Footer with Marks, Image, and PDF */}
+                                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                                                <div className="flex gap-2 items-center">
+                                                                    {question.marks && (
+                                                                        <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+                                                                            Marks: {question.marks}
+                                                                        </span>
+                                                                    )}
+                                                                    {question.semester_term && (
+                                                                        <span className="text-xs text-gray-500">
+                                                                            Term: {question.semester_term}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    {question.has_image && question.image_url && question.image_url !== 'N/A' && (
+                                                                        <a 
+                                                                            href={question.image_url} 
+                                                                            target="_blank" 
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded flex items-center gap-1"
+                                                                        >
+                                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                            </svg>
+                                                                            Image
+                                                                        </a>
+                                                                    )}
+                                                                    {question.pdf_url && question.pdf_url !== 'N/A' && (
+                                                                        <a 
+                                                                            href={question.pdf_url} 
+                                                                            target="_blank" 
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-xs text-red-600 hover:text-red-800 bg-red-50 px-2 py-1 rounded flex items-center gap-1"
+                                                                        >
+                                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                                            </svg>
+                                                                            PDF
+                                                                        </a>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
