@@ -118,12 +118,12 @@ const Chat = () => {
             <ChatSidebar
                 isOpen={isSidebarOpen}
                 setIsOpen={setIsSidebarOpen}
-    
+
             />
 
 
             <Navigation></Navigation>
-            
+
 
             <div className="main-container">
                 {!showResult
@@ -214,140 +214,139 @@ const Chat = () => {
                                     {/* Display Questions if available - only on the last message */}
                                     {questions && questions.length > 0 && index === conversation.length - 1 && (
                                         <div className="questions-container mt-6 text-gray-200">
-  <h3 className="text-2xl font-bold mb-6 text-white">
-    Questions Found: <span className="text-[#FF4B00]">{questions.length}</span>
-  </h3>
+                                            <h3 className="text-2xl font-bold mb-6 text-white">
+                                                Questions Found: <span className="text-[#FF4B00]">{questions.length}</span>
+                                            </h3>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-    {questions.map((question, qIndex) => (
-      <div
-        key={question.id || qIndex}
-        className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"
-      >
-        {/* Gradient Accent Line */}
-        <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff]" />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                {questions.map((question, qIndex) => (
+                                                    <div
+                                                        key={question.id || qIndex}
+                                                        className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"
+                                                    >
+                                                        {/* Gradient Accent Line */}
+                                                        <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff]" />
 
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <span className="text-sm font-semibold text-[#FF4B00] bg-[#FF4B0015] px-3 py-1 rounded-full">
-            Q{question.question_number}
-            {question.sub_question && question.sub_question !== '-' && (
-              <span>.{question.sub_question}</span>
-            )}
-          </span>
+                                                        {/* Header */}
+                                                        <div className="flex items-start justify-between mb-3">
+                                                            <span className="text-sm font-semibold text-[#FF4B00] bg-[#FF4B0015] px-3 py-1 rounded-full">
+                                                                Q{question.question_number}
+                                                                {question.sub_question && question.sub_question !== '-' && (
+                                                                    <span>.{question.sub_question}</span>
+                                                                )}
+                                                            </span>
 
-          <div className="flex gap-2">
-            {question.course_code && (
-              <span className="text-xs text-gray-300 bg-[#2a2938] px-2 py-1 rounded-md font-medium">
-                {question.course_code}
-              </span>
-            )}
-            {question.exam_type && (
-              <span className="text-xs text-[#a200ff] bg-[#a200ff15] px-2 py-1 rounded-md font-medium uppercase">
-                {question.exam_type}
-              </span>
-            )}
-          </div>
-        </div>
+                                                            <div className="flex gap-2">
+                                                                {question.course_code && (
+                                                                    <span className="text-xs text-gray-300 bg-[#2a2938] px-2 py-1 rounded-md font-medium">
+                                                                        {question.course_code}
+                                                                    </span>
+                                                                )}
+                                                                {question.exam_type && (
+                                                                    <span className="text-xs text-[#a200ff] bg-[#a200ff15] px-2 py-1 rounded-md font-medium uppercase">
+                                                                        {question.exam_type}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
 
-        {/* Course Title */}
-        {question.course_title && (
-          <p className="text-xs text-gray-400 mb-2 capitalize">
-            {question.course_title}
-          </p>
-        )}
+                                                        {/* Course Title */}
+                                                        {question.course_title && (
+                                                            <p className="text-xs text-gray-400 mb-2 capitalize">
+                                                                {question.course_title}
+                                                            </p>
+                                                        )}
 
-        {/* Question Text */}
-        <p className="text-gray-100 text-sm leading-relaxed mb-3 whitespace-pre-line">
-          {question.question_text}
-        </p>
+                                                        {/* Question Text */}
+                                                        <p className="text-gray-100 text-sm leading-relaxed mb-3 whitespace-pre-line">
+                                                            {question.question_text}
+                                                        </p>
 
-        {/* Description Section */}
-        {question.has_description &&
-          question.description_content &&
-          question.description_content !== 'N/A' && (
-            <div className="mb-3 p-3 bg-[#FF4B0010] rounded-lg border border-[#FF4B0030]">
-              <p className="text-xs font-semibold text-[#FF4B00] mb-1">
-                Description:
-              </p>
-              <p className="text-xs text-gray-300 whitespace-pre-line">
-                {question.description_content}
-              </p>
-            </div>
-          )}
+                                                        {/* Description Section */}
+                                                        {question.has_description &&
+                                                            question.description_content &&
+                                                            question.description_content !== 'N/A' && (
+                                                                <div className="mb-3 p-3 bg-[#FF4B0010] rounded-lg border border-[#FF4B0030]">
+                                                                    <p className="text-xs font-semibold text-[#FF4B00] mb-1">
+                                                                        Description:
+                                                                    </p>
+                                                                    <p className="text-xs text-gray-300 whitespace-pre-line">
+                                                                        {question.description_content}
+                                                                    </p>
+                                                                </div>
+                                                            )}
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
-          <div className="flex gap-2 items-center">
-            {question.marks && (
-              <span className="text-xs font-medium text-[#10b981] bg-[#10b98115] px-2 py-1 rounded">
-                Marks: {question.marks}
-              </span>
-            )}
-            {question.semester_term && (
-              <span className="text-xs text-gray-400">
-                Term: {question.semester_term}
-              </span>
-            )}
-          </div>
+                                                        {/* Footer */}
+                                                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                                                            <div className="flex gap-2 items-center">
+                                                                {question.marks && (
+                                                                    <span className="text-xs font-medium text-[#10b981] bg-[#10b98115] px-2 py-1 rounded">
+                                                                        Marks: {question.marks}
+                                                                    </span>
+                                                                )}
+                                                                {question.semester_term && (
+                                                                    <span className="text-xs text-gray-400">
+                                                                        Term: {question.semester_term}
+                                                                    </span>
+                                                                )}
+                                                            </div>
 
-          <div className="flex gap-2">
-            {question.has_image &&
-              question.image_url &&
-              question.image_url !== 'N/A' && (
-                <a
-                  href={question.image_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-[#FF4B00] hover:text-white bg-[#FF4B0015] hover:bg-[#FF4B00] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
-                >
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Image
-                </a>
-              )}
+                                                            <div className="flex gap-2">
+                                                                {question.has_image &&
+                                                                    question.image_url &&
+                                                                    question.image_url !== 'N/A' && (
+                                                                        <a
+                                                                            href={question.image_url}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-xs text-[#FF4B00] hover:text-white bg-[#FF4B0015] hover:bg-[#FF4B00] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
+                                                                        >
+                                                                            <svg
+                                                                                className="w-3 h-3"
+                                                                                fill="none"
+                                                                                stroke="currentColor"
+                                                                                viewBox="0 0 24 24"
+                                                                            >
+                                                                                <path
+                                                                                    strokeLinecap="round"
+                                                                                    strokeLinejoin="round"
+                                                                                    strokeWidth={2}
+                                                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                                />
+                                                                            </svg>
+                                                                            Image
+                                                                        </a>
+                                                                    )}
 
-            {question.pdf_url && question.pdf_url !== 'N/A' && (
-              <a
-                href={question.pdf_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-[#dc2626] hover:text-white bg-[#dc262615] hover:bg-[#dc2626] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
-              >
-                <svg
-                  className="w-3 h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  />
-                </svg>
-                PDF
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
+                                                                {question.pdf_url && question.pdf_url !== 'N/A' && (
+                                                                    <a
+                                                                        href={question.pdf_url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="text-xs text-[#dc2626] hover:text-white bg-[#dc262615] hover:bg-[#dc2626] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
+                                                                    >
+                                                                        <svg
+                                                                            className="w-3 h-3"
+                                                                            fill="none"
+                                                                            stroke="currentColor"
+                                                                            viewBox="0 0 24 24"
+                                                                        >
+                                                                            <path
+                                                                                strokeLinecap="round"
+                                                                                strokeLinejoin="round"
+                                                                                strokeWidth={2}
+                                                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                                                            />
+                                                                        </svg>
+                                                                        PDF
+                                                                    </a>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             )
@@ -411,8 +410,8 @@ const Chat = () => {
                             <button
                                 onClick={() => setShowAgentDropdown(!showAgentDropdown)}
                                 className={`flex items-center gap-1 px-2 py-1 border rounded-lg transition-colors text-xs ${selectedAgent
-                                        ? 'border-[#FF4B00] bg-[#FF4B00]/20 text-[#FF4B00] hover:bg-[#FF4B00]/30'
-                                        : 'border-gray-600 bg-[#101828] text-gray-300 hover:border-[#FF4B00] hover:bg-[#FF4B00]/10'
+                                    ? 'border-[#FF4B00] bg-[#FF4B00]/20 text-[#FF4B00] hover:bg-[#FF4B00]/30'
+                                    : 'border-gray-600 bg-[#101828] text-gray-300 hover:border-[#FF4B00] hover:bg-[#FF4B00]/10'
                                     }`}
                                 title={selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
                             >
