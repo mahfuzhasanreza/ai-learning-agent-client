@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import './Chat.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
@@ -22,6 +22,7 @@ const Chat = () => {
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     const [agents, setAgents] = useState([]);
     const [loadingAgents, setLoadingAgents] = useState(false);
+    const resultEndRef = useRef(null);
 
 
     // Fetch agents from API
@@ -91,6 +92,13 @@ const Chat = () => {
             setInput(transcript);
         }
     }, [transcript, listening, setInput]);
+
+    // Auto-scroll to bottom when conversation or loading changes
+    useEffect(() => {
+        if (resultEndRef.current) {
+            resultEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [conversation, loading]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -374,6 +382,9 @@ const Chat = () => {
                                     </div>
                                 </div>
                             </> : null}
+
+                        {/* Scroll anchor */}
+                        <div ref={resultEndRef} />
 
                     </div>
                 }
