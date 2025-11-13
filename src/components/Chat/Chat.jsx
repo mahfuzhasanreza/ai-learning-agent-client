@@ -17,7 +17,7 @@ import ApiService from '../../services/apiService';
 
 const Chat = () => {
 
-    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
+    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     const [agents, setAgents] = useState([]);
@@ -357,9 +357,9 @@ const Chat = () => {
                                 <div className="result-title">
                                     <img src={assets.user_icon} alt="" />
                                     <div className="message-content">
-                                        <p>{input}</p>
+                                        <p>{lastSentPrompt}</p>
                                         <ListenButton
-                                            text={input}
+                                            text={lastSentPrompt}
                                             size="small"
                                             className="message-listen-btn"
                                         />

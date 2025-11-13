@@ -14,6 +14,7 @@ const ContextProvider = (props) => {
     const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
+    const [lastSentPrompt, setLastSentPrompt] = useState(""); // Track the last sent message for loading state
     const [newChatPrompts, setNewChatPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -207,7 +208,8 @@ const ContextProvider = (props) => {
         try {
             if (prompt !== undefined) {
                 currentPrompt = prompt;
-                setInput(prompt);
+                setLastSentPrompt(prompt); // Save for loading state
+                // Don't show predefined prompts in input field
 
                 // Pass threadId and selectedAgent to runChat
                 data = await runChat(prompt, threadId, selectedAgent);
@@ -234,6 +236,8 @@ const ContextProvider = (props) => {
                 setRecentPrompt(prompt);
             } else {
                 currentPrompt = input;
+                setLastSentPrompt(input); // Save for loading state
+                setInput(""); // Clear input field immediately
                 
                 // Pass threadId and selectedAgent to runChat
                 data = await runChat(input, threadId, selectedAgent);
@@ -325,6 +329,7 @@ const ContextProvider = (props) => {
         resultData,
         input,
         setInput,
+        lastSentPrompt,
         newChat,
         loadChatHistory,
         conversation,
