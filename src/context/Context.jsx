@@ -73,6 +73,15 @@ const ContextProvider = (props) => {
             
             const data = await ApiService.getChatByThreadId(threadId);
             
+            console.log('=== CHAT HISTORY LOADED ===');
+            console.log('Thread ID:', data.thread_id);
+            console.log('Total Messages:', data.total_messages);
+            console.log('Retrieved At:', data.retrieved_at);
+            console.log('Thread Metadata:', data.thread_metadata);
+            console.log('Full Response:', data);
+            console.log('Messages:', data.messages);
+            console.log('===========================');
+            
             if (!data || !data.messages) {
                 throw new Error("No messages found");
             }
