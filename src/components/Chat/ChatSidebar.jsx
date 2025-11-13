@@ -42,7 +42,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
     <>
       {/* Sidebar - No overlay, just push content */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl z-50 transform transition-all duration-300 ease-out ${
+        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl z-50 transform transition-all duration-300 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -66,7 +66,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-white/10 flex-shrink-0">
           <button
             onClick={() => {
               newChat();
@@ -80,7 +80,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
         </div>
 
         {/* Search Bar */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-white/10 flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -94,7 +94,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
         </div>
 
         {/* Chat History - Scrollable */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 380px)' }}>
+        <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0">
           <div className="p-4 space-y-3">
             {sections.map((section) => {
               const chats = chatHistory[section.key];
@@ -176,13 +176,13 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
         </div>
 
         {/* Bottom Actions */}
-        <div className="border-t border-white/10 p-4 space-y-2 bg-gradient-to-t from-[#0a0a0a] to-transparent">
+        <div className="border-t border-white/10 p-4 space-y-2 bg-gradient-to-t from-[#0a0a0a] to-transparent flex-shrink-0">
           <button
             onClick={() => {
               console.log('Navigate to history');
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
+            className="w-full flex items-center gap-3 p-3 pt-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
           >
             <FileText className="w-5 h-5" />
             View All History
