@@ -30,23 +30,29 @@ const Chat = () => {
             try {
                 setLoadingAgents(true);
                 const response = await ApiService.getAgents();
-                
+
                 console.log('=== PROCESSING AGENTS ===');
                 console.log('Full API Response:', response);
                 console.log('Agents Data:', response.data);
                 console.log('Metadata:', response.metadata);
-                
+
                 // Process the agents from the data object
                 if (response.data && typeof response.data === 'object') {
                     const formattedAgents = Object.entries(response.data)
                         .filter(([, agent]) => agent.is_active) // Only active agents
-                        .map(([, agent]) => ({
-                            id: agent.name,
-                            name: agent.display_name,
-                            description: agent.description,
-                            agentId: agent.id
-                        }));
-                    
+                        .map(([, agent]) => {
+                            // Remove "Professor" and add "Agent" suffix
+                            let displayName = agent.display_name.replace(/^Professor\s+/i, '');
+                            displayName = `${displayName} Agent`;
+
+                            return {
+                                id: agent.name,
+                                name: displayName,
+                                description: agent.description,
+                                agentId: agent.id
+                            };
+                        });
+
                     console.log('Formatted Agents:', formattedAgents);
                     console.log('Total Active Agents:', formattedAgents.length);
                     setAgents(formattedAgents);
@@ -54,7 +60,7 @@ const Chat = () => {
                     console.log('Unexpected data format:', response);
                     setAgents([]);
                 }
-                
+
                 setLoadingAgents(false);
             } catch (error) {
                 console.error('Failed to fetch agents:', error);
@@ -366,14 +372,12 @@ const Chat = () => {
                             <button
                                 onClick={() => setShowAgentDropdown(!showAgentDropdown)}
                                 className={`flex items-center gap-1 px-2 py-1 border rounded-lg transition-colors text-xs ${selectedAgent
-                                    ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
-                                    : 'border-gray-300 hover:bg-gray-50 text-gray-600'
+                                        ? 'border-[#FF4B00] bg-[#FF4B00]/20 text-[#FF4B00] hover:bg-[#FF4B00]/30'
+                                        : 'border-gray-600 bg-[#101828] text-gray-300 hover:border-[#FF4B00] hover:bg-[#FF4B00]/10'
                                     }`}
                                 title={selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
                             >
-                                {selectedAgent && (
-                                    <span className='w-1.5 h-1.5 bg-blue-500 rounded-full'></span>
-                                )}
+
                                 <span className='font-semibold'>
                                     {selectedAgent ? agents.find(a => a.id === selectedAgent)?.name.split(' ')[0] : 'Agent'}
                                 </span>
@@ -381,7 +385,7 @@ const Chat = () => {
                             </button>
 
                             {showAgentDropdown && (
-                                <div className="absolute bottom-13 right-0 bg-[#1a1f2e] border border-gray-700 rounded-lg shadow-lg w-51 z-50 overflow-hidden">
+                                <div className="absolute bottom-13 right-0 bg-[#1a1f2e] border border-gray-700 rounded-lg shadow-lg w-100 z-50 overflow-hidden">
                                     <div className="p-2 flex flex-col gap-2">
                                         {/* Default agent */}
                                         <button
@@ -407,8 +411,8 @@ const Chat = () => {
                                                     setShowAgentDropdown(false);
                                                 }}
                                                 className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 border border-transparent hover:border-[#FF4B00] hover:bg-[#FF4B00]/10 flex flex-col ${selectedAgent === agent.id
-                                                        ? "bg-[#FF4B00]/20 text-[#FF4B00]"
-                                                        : "text-gray-300"
+                                                    ? "bg-[#FF4B00]/20 text-[#FF4B00]"
+                                                    : "text-gray-300"
                                                     }`}
                                             >
                                                 <p className="font-semibold text-sm">{agent.name}</p>
