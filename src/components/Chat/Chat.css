@@ -129,6 +129,7 @@
     padding: 20px;
     opacity: 0;
     animation: fadeInUp 1.2s ease-out 0.8s forwards;
+    z-index: 0;
 }
 
 .main .card {
