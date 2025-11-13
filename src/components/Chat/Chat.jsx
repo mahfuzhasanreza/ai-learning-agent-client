@@ -17,7 +17,7 @@ import ApiService from '../../services/apiService';
 
 const Chat = () => {
 
-    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
+    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions, isTyping } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     const [agents, setAgents] = useState([]);
@@ -209,7 +209,13 @@ const Chat = () => {
                                                     </p>
                                                 )}
                                                 <br />
-                                                <p>{item.response}</p>
+                                                <p>
+                                                    {item.response}
+                                                    {/* Show typing cursor on the last message if typing */}
+                                                    {isTyping && index === conversation.length - 1 && (
+                                                        <span className="typing-cursor"></span>
+                                                    )}
+                                                </p>
                                             </div>
                                             <ListenButton
                                                 text={item.response}

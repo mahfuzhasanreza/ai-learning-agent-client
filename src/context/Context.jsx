@@ -25,6 +25,7 @@ const ContextProvider = (props) => {
     const [threadId, setThreadId] = useState(null); // Thread ID for chat session
     const [selectedAgent, setSelectedAgent] = useState(null); // Selected agent name
     const [questions, setQuestions] = useState([]); // Questions array from API
+    const [isTyping, setIsTyping] = useState(false); // Track if typewriter effect is active
     
     // Dark Mode State
     const [isDark, setIsDark] = useState(() => {
@@ -65,7 +66,30 @@ const ContextProvider = (props) => {
         setThreadId(null); // Reset thread ID for new chat
         setConversation([]); // Clear conversation
         setQuestions([]); // Clear questions
+        setIsTyping(false); // Reset typing state
     }
+
+    // Typewriter effect function
+    const typeWriterEffect = (text, callback) => {
+        setIsTyping(true);
+        let index = 0;
+        const speed = 5; // milliseconds per character (faster for better UX)
+        
+        const type = () => {
+            if (index < text.length) {
+                // Type in chunks for smoother rendering (5 characters at a time)
+                const chunkSize = 5;
+                const nextIndex = Math.min(index + chunkSize, text.length);
+                callback(text.substring(0, nextIndex));
+                index = nextIndex;
+                setTimeout(type, speed);
+            } else {
+                setIsTyping(false);
+            }
+        };
+        
+        type();
+    };
 
     const loadChatHistory = async (threadId) => {
         try {
@@ -264,45 +288,76 @@ const ContextProvider = (props) => {
                 setRecentPrompt(input);
             }
 
-            // Create formatted response with Markdown
-            let newResponse4 = <Markdown
-                children={response}
-                components={{
-                    code(props) {
-                        const { children, className, ...rest } = props
-                        const match = /language-(\w+)/.exec(className || '')
-                        return match ? (
-                            <SyntaxHighlighter
-                                {...rest}
-                                PreTag="div"
-                                children={String(children).replace(/\n$/, '')}
-                                language={match[1]}
-                                style={dark}
-                            />
-                        ) : (
-                            <code {...rest} className={className}>
-                                {children}
-                            </code>
-                        )
-                    }
-                }}
-            />;
+            // Typewriter effect: Start with loading off and show result
+            setLoading(false);
 
-            // Add to conversation after response is formatted
-            if (!loading && !showResult) {
+            // Store the agent name and course data
+            const agentName = data.course || data.agent_name || "";
+            const courseDataValue = data.course || data.agent_name || "";
+
+            // Add to conversation with typewriter effect
+            if (!showResult) {
                 setNewChatPrompts(prev => 
                     prev.includes(currentPrompt) ? prev : [...prev, currentPrompt]
                 );
                 setActiveChat(currentPrompt);
-                
-                setConversation(prev => [...prev, { chat: currentPrompt, input: currentPrompt, response: newResponse4 }]);
-            } else {
-                setConversation((prev) => [...prev, { chat: activeChat, input: currentPrompt, response: newResponse4 }]);
             }
 
-            setResultData(newResponse4);
-            setLoading(false);
-            setInput("");
+            // Start typewriter effect
+            typeWriterEffect(response, (displayedText) => {
+                // Create formatted response with Markdown for the currently displayed text
+                const formattedResponse = <Markdown
+                    children={displayedText}
+                    components={{
+                        code(props) {
+                            const { children, className, ...rest } = props
+                            const match = /language-(\w+)/.exec(className || '')
+                            return match ? (
+                                <SyntaxHighlighter
+                                    {...rest}
+                                    PreTag="div"
+                                    children={String(children).replace(/\n$/, '')}
+                                    language={match[1]}
+                                    style={dark}
+                                />
+                            ) : (
+                                <code {...rest} className={className}>
+                                    {children}
+                                </code>
+                            )
+                        }
+                    }}
+                />;
+
+                // Update the last message in conversation with typing effect
+                setConversation((prev) => {
+                    const newConv = [...prev];
+                    const lastIndex = newConv.length - 1;
+                    
+                    if (lastIndex >= 0 && newConv[lastIndex].input === currentPrompt) {
+                        // Update existing message
+                        newConv[lastIndex] = {
+                            ...newConv[lastIndex],
+                            response: formattedResponse,
+                            agentName: agentName,
+                            courseData: courseDataValue
+                        };
+                    } else {
+                        // Add new message
+                        newConv.push({
+                            chat: activeChat || currentPrompt,
+                            input: currentPrompt,
+                            response: formattedResponse,
+                            agentName: agentName,
+                            courseData: courseDataValue
+                        });
+                    }
+                    
+                    return newConv;
+                });
+
+                setResultData(formattedResponse);
+            });
         } catch (error) {
             console.error("Error in onSent:", error);
             setLoading(false);
@@ -330,6 +385,7 @@ const ContextProvider = (props) => {
         input,
         setInput,
         lastSentPrompt,
+        isTyping,
         newChat,
         loadChatHistory,
         conversation,
