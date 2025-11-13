@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Home,
@@ -12,6 +12,7 @@ import {
   FileText,
   PlusCircle,
 } from "lucide-react";
+import { Context } from "../../../context/Context";
 
 const menuItems = [
   { label: "Cosmos Chatbot", icon: Brain, path: "/cosmos-chatbot" },
@@ -23,14 +24,14 @@ const menuItems = [
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { onSent, newChatPrompts, setRecentPrompt, newChat, setActiveChat } = useContext(Context);
 
   const showChatSubmenu = location.pathname.startsWith("/cosmos-chatbot");
 
   return (
     <div
-      className={`${
-        collapsed ? "w-20" : "w-64"
-      } h-full bg-[#1a1f2e] border-r border-[#2d3548] transition-all duration-300 flex flex-col`}
+      className={`${collapsed ? "w-20" : "w-64"
+        } h-full bg-[#1a1f2e] border-r border-[#2d3548] transition-all duration-300 flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-[#2d3548]">
@@ -63,10 +64,9 @@ export default function Sidebar() {
             <NavLink
               to={path}
               className={({ isActive }) =>
-                `flex items-center gap-3 p-3 rounded-md mx-2 mb-1 text-sm font-medium transition-colors duration-200 ${
-                  isActive
-                    ? "bg-[#FF4B00] text-white"
-                    : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
+                `flex items-center gap-3 p-3 rounded-md mx-2 mb-1 text-sm font-medium transition-colors duration-200 ${isActive
+                  ? "bg-[#FF4B00] text-white"
+                  : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
                 }`
               }
             >
@@ -80,29 +80,20 @@ export default function Sidebar() {
                 <NavLink
                   to="/cosmos-chatbot/history"
                   className={({ isActive }) =>
-                    `flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 ${
-                      isActive
-                        ? "bg-[#FF4B00] text-white"
-                        : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
+                    `flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 ${isActive
+                      ? "bg-[#FF4B00] text-white"
+                      : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
                     }`
                   }
                 >
                   <FileText className="w-4 h-4" />
                   History
                 </NavLink>
-                <NavLink
-                  to="/cosmos-chatbot/new"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 ${
-                      isActive
-                        ? "bg-[#FF4B00] text-white"
-                        : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
-                    }`
-                  }
-                >
-                  <PlusCircle className="w-4 h-4" />
+
+                <button onClick={() => newChat()} className="flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 text-gray-400 hover:bg-[#2d3548] hover:text-gray-100">
+                  <PlusCircle className="w-4 h-4 " />
                   New Chat
-                </NavLink>
+                </button>
               </div>
             )}
           </div>
@@ -114,10 +105,9 @@ export default function Sidebar() {
         <NavLink
           to="/settings"
           className={({ isActive }) =>
-            `flex items-center gap-3 p-3 rounded-md mx-2 mt-2 text-sm font-medium transition-colors duration-200 ${
-              isActive
-                ? "bg-[#FF4B00] text-white"
-                : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
+            `flex items-center gap-3 p-3 rounded-md mx-2 mt-2 text-sm font-medium transition-colors duration-200 ${isActive
+              ? "bg-[#FF4B00] text-white"
+              : "text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
             }`
           }
         >
