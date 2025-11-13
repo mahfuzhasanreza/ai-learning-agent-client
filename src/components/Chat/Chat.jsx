@@ -13,9 +13,8 @@ import TTSSettings from '../TTSSettings/TTSSettings';
 
 const Chat = () => {
 
-    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
+    const { ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
-    const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     // console.log(conversation);
     // console.log(activeChat, "activeChat");

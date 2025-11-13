@@ -9,6 +9,7 @@ export const Context = createContext();
 
 const ContextProvider = (props) => {
 
+    const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
     const [newChatPrompts, setNewChatPrompts] = useState([]);
@@ -206,7 +207,9 @@ const ContextProvider = (props) => {
         // Dark Mode values
         isDark,
         setIsDark,
-        toggleDarkMode
+        toggleDarkMode,
+        ttsSettingsOpen,
+        setTtsSettingsOpen,
     }
 
     return (

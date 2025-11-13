@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { Volume2 } from "lucide-react";
 import {
   Home,
   BookOpen,
@@ -24,7 +25,7 @@ const menuItems = [
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const { onSent, newChatPrompts, setRecentPrompt, newChat, setActiveChat } = useContext(Context);
+  const { ttsSettingsOpen, setTtsSettingsOpen, onSent, newChatPrompts, setRecentPrompt, newChat, setActiveChat } = useContext(Context);
 
   const showChatSubmenu = location.pathname.startsWith("/cosmos-chatbot");
 
@@ -76,7 +77,13 @@ export default function Sidebar() {
 
             {/* Chat submenu */}
             {showChatSubmenu && path === "/cosmos-chatbot" && !collapsed && (
+
               <div className="ml-8 flex flex-col gap-1">
+                <button onClick={() => newChat()} className="flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 text-gray-400 hover:bg-[#2d3548] hover:text-gray-100">
+                  <PlusCircle className="w-4 h-4 " />
+                  New Chat
+                </button>
+
                 <NavLink
                   to="/cosmos-chatbot/history"
                   className={({ isActive }) =>
@@ -90,10 +97,15 @@ export default function Sidebar() {
                   History
                 </NavLink>
 
-                <button onClick={() => newChat()} className="flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 text-gray-400 hover:bg-[#2d3548] hover:text-gray-100">
-                  <PlusCircle className="w-4 h-4 " />
-                  New Chat
+                <button
+                  onClick={() => setTtsSettingsOpen(true)}
+                  className="flex items-center gap-2 p-2 rounded-md text-sm transition-colors duration-200 text-gray-400 hover:bg-[#2d3548] hover:text-gray-100"
+                >
+                  <Volume2 className="w-4 h-4" /> {/* Use any Lucide icon for TTS */}
+                  Text-to-Speech Setting
                 </button>
+
+
               </div>
             )}
           </div>
