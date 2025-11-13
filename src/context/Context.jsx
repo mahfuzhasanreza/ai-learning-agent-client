@@ -134,7 +134,9 @@ const ContextProvider = (props) => {
                         processedConversation.push({
                             chat: message.content,
                             input: message.content,
-                            response: formattedResponse
+                            response: formattedResponse,
+                            agentName: nextMessage.agent_name || null,
+                            courseData: nextMessage.agent_name || ''
                         });
                         
                         // Track agent name

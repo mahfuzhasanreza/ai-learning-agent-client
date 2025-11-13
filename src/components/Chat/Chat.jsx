@@ -188,10 +188,18 @@ const Chat = () => {
                                         <img src={assets.logo} alt="" />
                                         <div className="message-content">
                                             <div className='flex flex-col'>
-                                                <p className='w-fit px-5 py-1 font-bold bg-blue-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-blue-700'>
-
-                                                    {courseData}
-                                                </p>
+                                                {/* Show agent name for each message */}
+                                                {(item.agentName || item.courseData) && (
+                                                    <p className='w-fit px-5 py-1 font-bold bg-blue-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-blue-700'>
+                                                        {item.agentName || item.courseData}
+                                                    </p>
+                                                )}
+                                                {/* Fallback to global courseData if not in item */}
+                                                {!item.agentName && !item.courseData && courseData && (
+                                                    <p className='w-fit px-5 py-1 font-bold bg-blue-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-blue-700'>
+                                                        {courseData}
+                                                    </p>
+                                                )}
                                                 <br />
                                                 <p>{item.response}</p>
                                             </div>
