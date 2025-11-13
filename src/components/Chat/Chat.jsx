@@ -119,7 +119,6 @@ const Chat = () => {
                 isOpen={isSidebarOpen}
                 setIsOpen={setIsSidebarOpen}
                 newChat={() => console.log("New chat")}
-                setTtsSettingsOpen={() => console.log("TTS Settings")}
             />
 
 

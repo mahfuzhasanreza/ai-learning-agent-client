@@ -3,7 +3,7 @@ import { PlusCircle, FileText, Volume2, X, MessageSquare, Settings, Trash2, Sear
 import ApiService from '../../services/apiService';
 import { Context } from '../../context/Context';
 
-export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettingsOpen }) {
+export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
   const { loadChatHistory, threadId } = useContext(Context);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({
@@ -19,6 +19,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
     previous30days: []
   });
   const [loading, setLoading] = useState(false);
+  const {setTtsSettingsOpen} = useContext(Context);
 
   // Handle chat click to load history
   const handleChatClick = async (clickedThreadId) => {
@@ -298,13 +299,14 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
 
           <button
             onClick={() => {
+              // setTtsSettingsOpen(true);
               setTtsSettingsOpen(true);
               setIsOpen(false);
             }}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
           >
             <Volume2 className="w-5 h-5" />
-            Text-to-Speech
+            Text-to-Speech Setting
           </button>
 
           <button
