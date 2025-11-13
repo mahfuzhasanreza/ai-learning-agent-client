@@ -76,10 +76,10 @@ const Navigation = () => {
 
   return (
 
-    //  <div className={`main transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}></div>
+    // bg-nav-dark
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled || isChatPage ? `${isDark ? 'bg-nav-dark' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
+        scrolled || isChatPage ? `${isDark ? '' : 'bg-white/95'}  backdrop-blur-md shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}

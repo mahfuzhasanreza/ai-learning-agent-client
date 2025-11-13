@@ -113,7 +113,7 @@ const Chat = () => {
     return (
         // <div className='main'>
 
-        <div className={`main transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
+        <div className={`main pt-25 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
             {/* Sidebar */}
             <ChatSidebar
                 isOpen={isSidebarOpen}
@@ -123,9 +123,7 @@ const Chat = () => {
 
 
             <Navigation></Navigation>
-            <div className="nav border-b-2 border-gray-300 text-gray-600">
-                {/* Removed agent dropdown from here */}
-            </div>
+            
 
             <div className="main-container">
                 {!showResult
