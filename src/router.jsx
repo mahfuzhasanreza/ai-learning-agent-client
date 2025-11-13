@@ -18,13 +18,13 @@ export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { 
     path: "/", 
-    // element: <SidebarLayout></SidebarLayout>,
+    element: <SidebarLayout></SidebarLayout>,
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "roadmap", element: <Roadmap /> },
-      { path: "student-dashboard", element: <StudentDashboard /> },
+      { path: "performance-tracking", element: <StudentDashboard /> },
       { path: "study-plan", element: <StudyPlan /> },
-      { path: "chat", element: <ChatPage></ChatPage> },
+      { path: "cosmos-chatbot", element: <ChatPage></ChatPage> },
     ]
   }
 ]);
