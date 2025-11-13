@@ -236,6 +236,31 @@ class ApiService {
       throw error;
     }
   }
+
+  // Get available agents list
+  static async getAgents() {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/agents/`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('=== AGENTS API RESPONSE ===');
+      console.log('Full Response:', data);
+      console.log('===========================');
+      return data;
+    } catch (error) {
+      console.error('Error fetching agents:', error);
+      throw error;
+    }
+  }
 }
 
 export default ApiService;

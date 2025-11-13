@@ -12,6 +12,7 @@ import ListenButton from '../ListenButton/ListenButton';
 import TTSSettings from '../TTSSettings/TTSSettings';
 import Navigation from '../LandingPage/components/Navigation';
 import ChatSidebar from './ChatSidebar';
+import ApiService from '../../services/apiService';
 
 
 const Chat = () => {
@@ -19,16 +20,58 @@ const Chat = () => {
     const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
+    const [agents, setAgents] = useState([]);
+    const [loadingAgents, setLoadingAgents] = useState(false);
 
 
-    // Available agents list
-    const agents = [
-        { id: 'dbms_agent', name: 'DBMS Agent', description: 'Database Management Expert' },
-        { id: 'python_agent', name: 'Python Agent', description: 'Python Programming Expert' },
-        { id: 'java_agent', name: 'Java Agent', description: 'Java Programming Expert' },
-        { id: 'web_agent', name: 'Web Development Agent', description: 'Web Development Expert' },
-        { id: 'ml_agent', name: 'ML Agent', description: 'Machine Learning Expert' },
-    ];
+    // Fetch agents from API
+    useEffect(() => {
+        const fetchAgents = async () => {
+            try {
+                setLoadingAgents(true);
+                const response = await ApiService.getAgents();
+                
+                console.log('=== PROCESSING AGENTS ===');
+                console.log('Full API Response:', response);
+                console.log('Agents Data:', response.data);
+                console.log('Metadata:', response.metadata);
+                
+                // Process the agents from the data object
+                if (response.data && typeof response.data === 'object') {
+                    const formattedAgents = Object.entries(response.data)
+                        .filter(([, agent]) => agent.is_active) // Only active agents
+                        .map(([, agent]) => ({
+                            id: agent.name,
+                            name: agent.display_name,
+                            description: agent.description,
+                            agentId: agent.id
+                        }));
+                    
+                    console.log('Formatted Agents:', formattedAgents);
+                    console.log('Total Active Agents:', formattedAgents.length);
+                    setAgents(formattedAgents);
+                } else {
+                    console.log('Unexpected data format:', response);
+                    setAgents([]);
+                }
+                
+                setLoadingAgents(false);
+            } catch (error) {
+                console.error('Failed to fetch agents:', error);
+                setLoadingAgents(false);
+                // Fallback to default agents if API fails
+                setAgents([
+                    { id: 'dbms_agent', name: 'DBMS Agent', description: 'Database Management Expert' },
+                    { id: 'python_agent', name: 'Python Agent', description: 'Python Programming Expert' },
+                    { id: 'java_agent', name: 'Java Agent', description: 'Java Programming Expert' },
+                    { id: 'web_agent', name: 'Web Development Agent', description: 'Web Development Expert' },
+                    { id: 'ml_agent', name: 'ML Agent', description: 'Machine Learning Expert' },
+                ]);
+            }
+        };
+
+        fetchAgents();
+    }, []);
 
     const {
         transcript,
