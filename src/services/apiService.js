@@ -1,6 +1,6 @@
 // src/services/apiService.js
 
-const BASE_URL = 'http://localhost:8000'; // Change this to your FastAPI server URL
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 class ApiService {
   // Helper method to get auth headers
@@ -191,6 +191,27 @@ class ApiService {
       return await response.json();
     } catch (error) {
       console.error('Error in structured chat:', error);
+      throw error;
+    }
+  }
+
+  // Get chat history
+  static async getChatHistory() {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/chats`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
       throw error;
     }
   }

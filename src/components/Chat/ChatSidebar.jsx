@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PlusCircle, FileText, Volume2, X, MessageSquare, Settings, Trash2, Search, ChevronRight, History, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import ApiService from '../../services/apiService';
 
 export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettingsOpen }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,27 +10,101 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
     previous7days: false,
     previous30days: false
   });
+  const [chatHistory, setChatHistory] = useState({
+    today: [],
+    yesterday: [],
+    previous7days: [],
+    previous30days: []
+  });
+  const [loading, setLoading] = useState(false);
 
-  // Mock chat history data
-  const chatHistory = {
-    today: [
-      { id: 1, title: 'What is C Programming?', time: '2 hours ago' },
-      { id: 2, title: 'Database Management Systems', time: '3 hours ago' },
-      { id: 3, title: 'Python Functions Explained', time: '5 hours ago' },
-    ],
-    yesterday: [
-      { id: 4, title: 'Machine Learning Basics', time: 'Yesterday' },
-      { id: 5, title: 'Web Development Guide', time: 'Yesterday' },
-    ],
-    previous7days: [
-      { id: 6, title: 'Data Structures Overview', time: '3 days ago' },
-      { id: 7, title: 'Java Programming', time: '5 days ago' },
-    ],
-    previous30days: [
-      { id: 8, title: 'Algorithm Analysis', time: '2 weeks ago' },
-      { id: 9, title: 'Network Security', time: '3 weeks ago' },
-    ]
-  };
+  // Helper function to format time ago
+  const formatTimeAgo = useCallback((date) => {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 60) {
+      return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else if (diffDays < 14) {
+      return '1 week ago';
+    } else if (diffDays < 30) {
+      return `${Math.floor(diffDays / 7)} weeks ago`;
+    } else {
+      return `${Math.floor(diffDays / 30)} months ago`;
+    }
+  }, []);
+
+  // Helper function to organize chats by time period
+  const organizeChatsByTime = useCallback((chats) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const organized = {
+      today: [],
+      yesterday: [],
+      previous7days: [],
+      previous30days: []
+    };
+
+    chats.forEach(chat => {
+      const chatDate = new Date(chat.created_at);
+      const formattedChat = {
+        id: chat.thread_id,
+        title: chat.title,
+        time: formatTimeAgo(chatDate)
+      };
+
+      if (chatDate >= today) {
+        organized.today.push(formattedChat);
+      } else if (chatDate >= yesterday) {
+        organized.yesterday.push(formattedChat);
+      } else if (chatDate >= sevenDaysAgo) {
+        organized.previous7days.push(formattedChat);
+      } else if (chatDate >= thirtyDaysAgo) {
+        organized.previous30days.push(formattedChat);
+      }
+    });
+
+    return organized;
+  }, [formatTimeAgo]);
+
+  // Fetch chat history when sidebar opens
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        setLoading(true);
+        const data = await ApiService.getChatHistory();
+        
+        // Organize chats by time period
+        const organized = organizeChatsByTime(data.chats || []);
+        setChatHistory(organized);
+      } catch (error) {
+        console.error('Failed to fetch chat history:', error);
+        // Keep empty state on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchChatHistory();
+    }
+  }, [isOpen, organizeChatsByTime]);
 
   const sections = [
     { key: 'today', label: 'Today', icon: Clock },
@@ -96,82 +171,88 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
         {/* Chat History - Scrollable */}
         <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0">
           <div className="p-4 space-y-3">
-            {sections.map((section) => {
-              const chats = chatHistory[section.key];
-              if (!chats || chats.length === 0) return null;
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4B00]"></div>
+              </div>
+            ) : (
+              sections.map((section) => {
+                const chats = chatHistory[section.key];
+                if (!chats || chats.length === 0) return null;
 
-              const isExpanded = expandedSections[section.key];
-              const filteredChats = chats.filter(chat => 
-                searchQuery === '' || 
-                chat.title.toLowerCase().includes(searchQuery.toLowerCase())
-              );
+                const isExpanded = expandedSections[section.key];
+                const filteredChats = chats.filter(chat => 
+                  searchQuery === '' || 
+                  chat.title.toLowerCase().includes(searchQuery.toLowerCase())
+                );
 
-              return (
-                <div key={section.key} className="space-y-2">
-                  {/* Section Header - Clickable to toggle */}
-                  <button
-                    onClick={() => setExpandedSections(prev => ({
-                      ...prev,
-                      [section.key]: !prev[section.key]
-                    }))}
-                    className="w-full flex items-center justify-between px-2 py-2 rounded-lg hover:bg-white/5 transition-colors duration-200 group"
-                  >
-                    <div className="flex items-center gap-2">
-                      <section.icon className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
-                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-gray-300">
-                        {section.label}
-                      </h3>
-                      <span className="text-xs text-gray-600 bg-white/5 px-2 py-0.5 rounded-full">
-                        {filteredChats.length}
-                      </span>
-                    </div>
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                return (
+                  <div key={section.key} className="space-y-2">
+                    {/* Section Header - Clickable to toggle */}
+                    <button
+                      onClick={() => setExpandedSections(prev => ({
+                        ...prev,
+                        [section.key]: !prev[section.key]
+                      }))}
+                      className="w-full flex items-center justify-between px-2 py-2 rounded-lg hover:bg-white/5 transition-colors duration-200 group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <section.icon className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-gray-300">
+                          {section.label}
+                        </h3>
+                        <span className="text-xs text-gray-600 bg-white/5 px-2 py-0.5 rounded-full">
+                          {filteredChats.length}
+                        </span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                      )}
+                    </button>
+                    
+                    {/* Collapsible Chat List */}
+                    {isExpanded && (
+                      <div className="space-y-1 mt-2">
+                        {filteredChats.map((chat) => (
+                          <button
+                            key={chat.id}
+                            className="w-full group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all duration-200 text-left border border-transparent hover:border-white/10"
+                          >
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className="w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <MessageSquare className="w-4 h-4 text-[#FF4B00]" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-gray-200 font-medium truncate group-hover:text-white transition-colors">
+                                  {chat.title}
+                                </p>
+                                <p className="text-xs text-gray-500 mt-0.5">{chat.time}</p>
+                              </div>
+                            </div>
+                            
+                            {/* Action Buttons */}
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('Delete chat', chat.id);
+                                }}
+                                className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                              <ChevronRight className="w-4 h-4 text-gray-500" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     )}
-                  </button>
-                  
-                  {/* Collapsible Chat List */}
-                  {isExpanded && (
-                    <div className="space-y-1 mt-2">
-                      {filteredChats.map((chat) => (
-                        <button
-                          key={chat.id}
-                          className="w-full group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all duration-200 text-left border border-transparent hover:border-white/10"
-                        >
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <div className="w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <MessageSquare className="w-4 h-4 text-[#FF4B00]" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm text-gray-200 font-medium truncate group-hover:text-white transition-colors">
-                                {chat.title}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-0.5">{chat.time}</p>
-                            </div>
-                          </div>
-                          
-                          {/* Action Buttons */}
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                console.log('Delete chat', chat.id);
-                              }}
-                              className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                            <ChevronRight className="w-4 h-4 text-gray-500" />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 
