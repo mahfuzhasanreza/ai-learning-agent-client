@@ -35,15 +35,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
 
   return (
     <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
+      {/* Sidebar - No overlay, just push content */}
       <div
         className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl z-50 transform transition-all duration-300 ease-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -216,7 +208,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat, setTtsSettings
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed top-6 left-6 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white p-3 rounded-xl shadow-lg shadow-[#FF4B00]/30 hover:shadow-2xl hover:shadow-[#FF4B00]/40 z-30 transition-all duration-300 transform hover:scale-110 group"
+          className="fixed top-50 left-6 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white p-3 rounded-xl shadow-lg shadow-[#FF4B00]/30 hover:shadow-2xl hover:shadow-[#FF4B00]/40 z-30 transition-all duration-300 transform hover:scale-110 group"
         >
           <MessageSquare className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
         </button>
