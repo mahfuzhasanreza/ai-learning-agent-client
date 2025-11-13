@@ -291,7 +291,7 @@ const Chat = () => {
                                                             )}
 
                                                             {/* Question Text */}
-                                                            <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                                                            <p className="text-gray-700 text-sm leading-relaxed mb-3 whitespace-pre-line">
                                                                 {question.question_text}
                                                             </p>
 
@@ -299,7 +299,7 @@ const Chat = () => {
                                                             {question.has_description && question.description_content && question.description_content !== 'N/A' && (
                                                                 <div className="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
                                                                     <p className="text-xs font-semibold text-blue-700 mb-1">Description:</p>
-                                                                    <p className="text-xs text-gray-600 line-clamp-3">
+                                                                    <p className="text-xs text-gray-600 whitespace-pre-line">
                                                                         {question.description_content}
                                                                     </p>
                                                                 </div>

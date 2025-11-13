@@ -645,6 +645,11 @@
     overflow: hidden;
 }
 
+.question-card .whitespace-pre-line {
+    white-space: pre-line;
+    word-wrap: break-word;
+}
+
 .question-card::before {
     content: '';
     position: absolute;
