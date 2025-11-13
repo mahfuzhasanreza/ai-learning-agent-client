@@ -86,69 +86,93 @@ const ContextProvider = (props) => {
                 throw new Error("No messages found");
             }
 
-            // Set the thread ID
+            // Set the thread ID for continuing the conversation
             setThreadId(data.thread_id);
             
             // Clear existing conversation
             setConversation([]);
+            setQuestions([]); // Clear previous questions
             
             // Process messages and build conversation
             const processedConversation = [];
+            let lastAgentName = null;
+            let latestQuestions = [];
             
-            data.messages.forEach((message) => {
+            for (let i = 0; i < data.messages.length; i++) {
+                const message = data.messages[i];
+                
                 if (message.type === 'human') {
-                    // Store the user input
-                    const userInput = message.content;
-                    
                     // Find the corresponding AI response (next message)
-                    const aiMessageIndex = data.messages.indexOf(message) + 1;
-                    if (aiMessageIndex < data.messages.length) {
-                        const aiMessage = data.messages[aiMessageIndex];
+                    const nextMessage = i + 1 < data.messages.length ? data.messages[i + 1] : null;
+                    
+                    if (nextMessage && nextMessage.type === 'ai') {
+                        // Format the AI response with Markdown
+                        const formattedResponse = <Markdown
+                            children={nextMessage.content}
+                            components={{
+                                code(props) {
+                                    const { children, className, ...rest } = props
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return match ? (
+                                        <SyntaxHighlighter
+                                            {...rest}
+                                            PreTag="div"
+                                            children={String(children).replace(/\n$/, '')}
+                                            language={match[1]}
+                                            style={dark}
+                                        />
+                                    ) : (
+                                        <code {...rest} className={className}>
+                                            {children}
+                                        </code>
+                                    )
+                                }
+                            }}
+                        />;
                         
-                        if (aiMessage.type === 'ai') {
-                            // Format the AI response with Markdown
-                            const formattedResponse = <Markdown
-                                children={aiMessage.content}
-                                components={{
-                                    code(props) {
-                                        const { children, className, ...rest } = props
-                                        const match = /language-(\w+)/.exec(className || '')
-                                        return match ? (
-                                            <SyntaxHighlighter
-                                                {...rest}
-                                                PreTag="div"
-                                                children={String(children).replace(/\n$/, '')}
-                                                language={match[1]}
-                                                style={dark}
-                                            />
-                                        ) : (
-                                            <code {...rest} className={className}>
-                                                {children}
-                                            </code>
-                                        )
-                                    }
-                                }}
-                            />;
-                            
-                            // Add to conversation
-                            processedConversation.push({
-                                chat: userInput,
-                                input: userInput,
-                                response: formattedResponse
-                            });
-                            
-                            // Set agent name if available
-                            if (aiMessage.agent_name) {
-                                setSelectedAgent(aiMessage.agent_name);
-                            }
+                        // Add to conversation
+                        processedConversation.push({
+                            chat: message.content,
+                            input: message.content,
+                            response: formattedResponse
+                        });
+                        
+                        // Track agent name
+                        if (nextMessage.agent_name) {
+                            lastAgentName = nextMessage.agent_name;
                         }
+                        
+                        // Check for questions in tool_response
+                        if (nextMessage.response_type === 'tool_based' && 
+                            nextMessage.tool_response && 
+                            nextMessage.tool_response.processed_questions) {
+                            latestQuestions = nextMessage.tool_response.processed_questions;
+                        }
+                        
+                        // Skip the AI message in next iteration since we already processed it
+                        i++;
                     }
                 }
-            });
+            }
             
+            console.log('Processed Conversation:', processedConversation);
+            console.log('Latest Agent:', lastAgentName);
+            console.log('Latest Questions:', latestQuestions);
+            
+            // Set the conversation
             setConversation(processedConversation);
             
-            // Set the most recent prompt
+            // Set agent name if available
+            // if (lastAgentName) {
+            //     setSelectedAgent(lastAgentName);
+            // }
+            
+            // Set questions from the last message if available
+            if (latestQuestions.length > 0) {
+                setQuestions(latestQuestions);
+            }
+            
+            // Set the most recent prompt and result
             if (processedConversation.length > 0) {
                 const lastConversation = processedConversation[processedConversation.length - 1];
                 setRecentPrompt(lastConversation.input);

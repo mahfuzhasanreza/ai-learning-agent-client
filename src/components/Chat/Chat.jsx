@@ -171,9 +171,7 @@ const Chat = () => {
                         </div>
                     </>
                     : <div className='result'>
-                        {conversation
-                            .filter(item => item.chat === activeChat)
-                            .map((item, index) => {
+                        {conversation.map((item, index) => {
                                 return (
                                     <div key={index}>
                                         <div className="result-title">
@@ -206,8 +204,8 @@ const Chat = () => {
                                             </div>
                                         </div>
 
-                                        {/* Display Questions if available */}
-                                        {questions && questions.length > 0 && (
+                                        {/* Display Questions if available - only on the last message */}
+                                        {questions && questions.length > 0 && index === conversation.length - 1 && (
                                             <div className="questions-container mt-6">
                                                 <h3 className="text-xl font-semibold mb-4 text-gray-700">
                                                     Questions Found: {questions.length}
