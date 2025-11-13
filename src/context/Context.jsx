@@ -20,6 +20,7 @@ const ContextProvider = (props) => {
     const [courseData, setCourseData] = useState("");
     const [threadId, setThreadId] = useState(null); // Thread ID for chat session
     const [selectedAgent, setSelectedAgent] = useState(null); // Selected agent name
+    const [questions, setQuestions] = useState([]); // Questions array from API
     
     // Dark Mode State
     const [isDark, setIsDark] = useState(() => {
@@ -85,6 +86,13 @@ const ContextProvider = (props) => {
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
                 
+                // Set questions if available
+                if (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) {
+                    setQuestions(data.raw.questions);
+                } else {
+                    setQuestions([]);
+                }
+                
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
                     setThreadId(data.thread_id);
@@ -103,6 +111,13 @@ const ContextProvider = (props) => {
                 
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
+                
+                // Set questions if available
+                if (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) {
+                    setQuestions(data.raw.questions);
+                } else {
+                    setQuestions([]);
+                }
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -186,6 +201,8 @@ const ContextProvider = (props) => {
         setThreadId,
         selectedAgent,
         setSelectedAgent,
+        questions,
+        setQuestions,
         // Dark Mode values
         isDark,
         setIsDark,

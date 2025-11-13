@@ -13,7 +13,7 @@ import TTSSettings from '../TTSSettings/TTSSettings';
 
 const Chat = () => {
 
-    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent } = useContext(Context);
+    const { recentPrompt, onSent, loading, showResult, resultData, setInput, input, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
@@ -248,6 +248,43 @@ const Chat = () => {
                                                 />
                                             </div>
                                         </div>
+                                        
+                                        {/* Display Questions if available */}
+                                        {questions && questions.length > 0 && (
+                                            <div className="questions-container mt-6">
+                                                <h3 className="text-xl font-semibold mb-4 text-gray-700">Questions:</h3>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {questions.map((question, qIndex) => (
+                                                        <div 
+                                                            key={question.id || qIndex} 
+                                                            className="question-card bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                                        >
+                                                            <div className="flex items-start justify-between mb-2">
+                                                                <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                                                                    Q{question.question_number}
+                                                                    {question.sub_question && question.sub_question !== '-' && (
+                                                                        <span>.{question.sub_question}</span>
+                                                                    )}
+                                                                </span>
+                                                                {question.course_code && (
+                                                                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                                                        {question.course_code}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-gray-700 text-sm leading-relaxed line-clamp-4">
+                                                                {question.question_text}
+                                                            </p>
+                                                            {question.marks && (
+                                                                <div className="mt-2 text-xs text-gray-500">
+                                                                    Marks: {question.marks}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )
                             })}
