@@ -474,7 +474,7 @@
 }
 
 .main .card:hover .card-content {
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
 }
 
 /* Card Icon */

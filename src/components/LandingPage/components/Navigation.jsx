@@ -75,12 +75,10 @@ const Navigation = () => {
   };
 
   return (
-
-    // bg-nav-dark
     // backdrop-blur-md
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled || isChatPage ? `${isDark ? '' : 'bg-white/95'} shadow-lg border-b border-gray-200/20` : 'bg-transparent'
+        scrolled || isChatPage ? `${isDark ? 'bg-[#13121D]' : 'bg-white/95'} shadow-lg border-b border-gray-200/20` : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
