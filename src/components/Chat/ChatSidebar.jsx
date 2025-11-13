@@ -286,7 +286,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
 
         {/* Bottom Actions */}
         <div className="border-t border-white/10 p-4 space-y-2 bg-gradient-to-t from-[#0a0a0a] to-transparent flex-shrink-0">
-          <button
+          {/* <button
             onClick={() => {
               console.log('Navigate to history');
               setIsOpen(false);
@@ -295,7 +295,7 @@ export default function ChatSidebar({ isOpen, setIsOpen, newChat }) {
           >
             <FileText className="w-5 h-5" />
             View All History
-          </button>
+          </button> */}
 
           <button
             onClick={() => {
