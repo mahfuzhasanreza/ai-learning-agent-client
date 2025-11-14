@@ -52,8 +52,9 @@ const Navigation = () => {
   }, [location.pathname]);
 
   const navItems = [
-    { name: 'Features', href: '#features', id: 'features' },
-    { name: 'Learning Tools', href: '#quick-start', id: 'quick-start' },
+    { name: 'Home', href: '/', id: 'home' },
+    { name: 'Study Plan', href: '/study-plan', id: 'features' },
+    { name: 'Roadmap', href: '/roadmap', id: 'quick-start' },
     { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
     { name: 'AI Chat', href: '/chat', id: 'chat' }
   ];

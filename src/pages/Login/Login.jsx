@@ -450,7 +450,7 @@ const Login = () => {
         console.log('📋 Full Result:', result);
         
         // Successfully signed in, navigate to dashboard
-        navigate("/dashboard");
+        navigate("/cosmos-chatbot");
       } else {
         // Sign-in failed, show error message
         setError(result.error || "Failed to sign in. Please try again.");
