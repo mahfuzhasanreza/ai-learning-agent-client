@@ -1668,25 +1668,7 @@ const StudentDashboard = () => {
                   ) : (
                     // Fallback to static data
                     <>
-                      {[
-                        { type: "CT", marks: 20, obtained: 20 },
-                        { type: "Assignment", marks: 5, obtained: 5 },
-                        { type: "Attendance", marks: 5, obtained: 5 },
-                        { type: "MID", marks: 30, obtained: 30 },
-                        { type: "Final", marks: 40, obtained: 40 }
-                      ].map((assessment, index) => (
-                        <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
-                          <span>{assessment.type}</span>
-                          <span className='text-gray-400'>{assessment.marks}</span>
-                          <span className='text-gray-400'>{assessment.obtained}</span>
-                        </div>
-                      ))}
-                      {/* Grand Total Row for static data */}
-                      <div className="grid grid-cols-3 text-center text-xs sm:text-sm mt-3 pt-3 border-t border-gray-600 font-bold">
-                        <span className="text-[#FF4B00]">TOTAL</span>
-                        <span className='text-[#FF4B00]'>100</span>
-                        <span className='text-[#FF4B00]'>100</span>
-                      </div>
+                     
                     </>
                   )}
                 </div>
@@ -1721,10 +1703,7 @@ const StudentDashboard = () => {
                     </div>
                   )}
 
-                  <div className="mb-5 sm:mb-7 text-base sm:text-lg font-semibold">
-                    You have lost 4 marks on CT1 that consists loops.
-                    Max possibilities in CT (avg best) ÷ 3
-                  </div>
+     
 
                   <button
                     className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm mb-3"
