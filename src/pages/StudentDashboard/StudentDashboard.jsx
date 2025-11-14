@@ -584,6 +584,98 @@ const StudentDashboard = () => {
     }
   };
 
+  // Handle adding assessment
+  const handleAddAssessmentSubmit = async () => {
+    if (!selectedCourse) {
+      setAddFailureMessage('Please select a course first');
+      setShowAddFailureNotification(true);
+      setTimeout(() => setShowAddFailureNotification(false), 5000);
+      return;
+    }
+
+    // Validation
+    if (!newAssessment.marks || !newAssessment.full_marks) {
+      setAddFailureMessage('Please fill in all required fields');
+      setShowAddFailureNotification(true);
+      setTimeout(() => setShowAddFailureNotification(false), 5000);
+      return;
+    }
+
+    if ((newAssessment.assessment_type === 'ct' || newAssessment.assessment_type === 'assignment') && 
+        !(newAssessment.ct_no || newAssessment.assignment_no)) {
+      setAddFailureMessage(`Please enter ${newAssessment.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`);
+      setShowAddFailureNotification(true);
+      setTimeout(() => setShowAddFailureNotification(false), 5000);
+      return;
+    }
+
+    setAddingAssessment(true);
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const requestBody = {
+        student_id: STUDENT_ID,
+        course_id: selectedCourse.course_id,
+        assessment_type: newAssessment.assessment_type,
+        marks: parseFloat(newAssessment.marks),
+        full_marks: parseFloat(newAssessment.full_marks)
+      };
+
+      // Add ct_no or assignment_no if applicable
+      if (newAssessment.assessment_type === 'ct') {
+        requestBody.ct_no = parseInt(newAssessment.ct_no);
+      } else if (newAssessment.assessment_type === 'assignment') {
+        requestBody.assignment_no = parseInt(newAssessment.assignment_no);
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/assessments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      // Reset form
+      setNewAssessment({
+        assessment_type: 'ct',
+        ct_no: '',
+        assignment_no: '',
+        marks: '',
+        full_marks: ''
+      });
+
+      // Close modal
+      setShowAddAssessmentModal(false);
+
+      // Show success notification
+      setCountUpdateMessage('Assessment added successfully');
+      setShowCountUpdateSuccess(true);
+      setTimeout(() => {
+        setShowCountUpdateSuccess(false);
+      }, 3000);
+
+      // Refresh enrolled courses
+      fetchEnrolledCourses(selectedTrimester);
+
+    } catch (error) {
+      console.error('Error adding assessment:', error);
+      setAddFailureMessage(error.message || 'Failed to add assessment. Please try again.');
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000);
+    } finally {
+      setAddingAssessment(false);
+    }
+  };
+
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
@@ -695,6 +787,17 @@ const StudentDashboard = () => {
   const [updatingCounts, setUpdatingCounts] = useState(false);
   const [showCountUpdateSuccess, setShowCountUpdateSuccess] = useState(false);
   const [countUpdateMessage, setCountUpdateMessage] = useState('');
+
+  // Add assessment modal states
+  const [showAddAssessmentModal, setShowAddAssessmentModal] = useState(false);
+  const [newAssessment, setNewAssessment] = useState({
+    assessment_type: 'ct',
+    ct_no: '',
+    assignment_no: '',
+    marks: '',
+    full_marks: ''
+  });
+  const [addingAssessment, setAddingAssessment] = useState(false);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1089,16 +1192,26 @@ const StudentDashboard = () => {
                 <h3 className="text-lg sm:text-xl font-semibold">
                   {editingScores ? 'Recent Scores' : 'All Scores'}
                 </h3>
-                <button
-                  onClick={() => setEditingScores(prev => !prev)}
-                  aria-expanded={editingScores}
-                  aria-controls="scores-editor"
-                  className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
-                  title="Edit Scores"
-                >
-                  <Edit className="w-4 h-4" />
-                  <span className="hidden sm:inline text-sm">{editingScores ? 'Close' : 'Edit'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowAddAssessmentModal(true)}
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-[#FF4B00] hover:bg-[#E04300] text-white text-sm font-semibold transition-all transform hover:scale-105"
+                    title="Add Assessment"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span className="hidden sm:inline text-sm">Add</span>
+                  </button>
+                  <button
+                    onClick={() => setEditingScores(prev => !prev)}
+                    aria-expanded={editingScores}
+                    aria-controls="scores-editor"
+                    className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                    title="Edit Scores"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span className="hidden sm:inline text-sm">{editingScores ? 'Close' : 'Edit'}</span>
+                  </button>
+                </div>
               </div>
 
               {editingScores ? (
@@ -1953,6 +2066,141 @@ const StudentDashboard = () => {
                   </button>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Add Assessment Modal */}
+        {showAddAssessmentModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Add Assessment</h3>
+                  <button
+                    onClick={() => {
+                      setShowAddAssessmentModal(false);
+                      setNewAssessment({
+                        assessment_type: 'ct',
+                        ct_no: '',
+                        assignment_no: '',
+                        marks: '',
+                        full_marks: ''
+                      });
+                    }}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Assessment Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Assessment Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={newAssessment.assessment_type}
+                      onChange={(e) => setNewAssessment({ ...newAssessment, assessment_type: e.target.value })}
+                      className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                    >
+                      <option value="ct">CT</option>
+                      <option value="assignment">Assignment</option>
+                      <option value="mid">Mid</option>
+                      <option value="final">Final</option>
+                    </select>
+                  </div>
+
+                  {/* CT Number or Assignment Number */}
+                  {(newAssessment.assessment_type === 'ct' || newAssessment.assessment_type === 'assignment') && (
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        {newAssessment.assessment_type === 'ct' ? 'CT Number' : 'Assignment Number'} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={newAssessment.assessment_type === 'ct' ? newAssessment.ct_no : newAssessment.assignment_no}
+                        onChange={(e) => {
+                          if (newAssessment.assessment_type === 'ct') {
+                            setNewAssessment({ ...newAssessment, ct_no: e.target.value });
+                          } else {
+                            setNewAssessment({ ...newAssessment, assignment_no: e.target.value });
+                          }
+                        }}
+                        placeholder={`Enter ${newAssessment.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`}
+                        className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                      />
+                    </div>
+                  )}
+
+                  {/* Marks Obtained */}
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Marks Obtained <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={newAssessment.marks}
+                      onChange={(e) => setNewAssessment({ ...newAssessment, marks: e.target.value })}
+                      placeholder="Enter marks obtained"
+                      className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                    />
+                  </div>
+
+                  {/* Full Marks */}
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Full Marks <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={newAssessment.full_marks}
+                      onChange={(e) => setNewAssessment({ ...newAssessment, full_marks: e.target.value })}
+                      placeholder="Enter full marks"
+                      className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => {
+                      setShowAddAssessmentModal(false);
+                      setNewAssessment({
+                        assessment_type: 'ct',
+                        ct_no: '',
+                        assignment_no: '',
+                        marks: '',
+                        full_marks: ''
+                      });
+                    }}
+                    disabled={addingAssessment}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddAssessmentSubmit}
+                    disabled={addingAssessment}
+                    className="flex-1 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {addingAssessment ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Adding...
+                      </>
+                    ) : (
+                      'Add Assessment'
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
