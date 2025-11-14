@@ -441,6 +441,15 @@ const Chat = () => {
                             value={listening && transcript ? transcript : input}
                             type="text"
                             placeholder="Talk to COSMOS..."
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter' && (input || listening)) {
+                                    onSent();
+                                    if (listening) {
+                                        SpeechRecognition.stopListening();
+                                        resetTranscript();
+                                    }
+                                }
+                            }}
                         />
 
                         <img src={assets.gallery_icon} alt="" />
@@ -517,7 +526,13 @@ const Chat = () => {
                             )}
                         </div>
 
-                        {input || listening ? <img onClick={() => onSent()} className='send-icon' src={assets.send_icon} alt="" /> : null}
+                        {input || listening ? <img onClick={() => {
+                            onSent();
+                            if (listening) {
+                                SpeechRecognition.stopListening();
+                                resetTranscript();
+                            }
+                        }} className='send-icon' src={assets.send_icon} alt="" /> : null}
                     </div>
                     <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
