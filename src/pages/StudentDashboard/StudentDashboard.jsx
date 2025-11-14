@@ -32,6 +32,7 @@ import {
 import Sidebar from '../Shared/Sidebar/Sidebar';
 import { Context } from '../../context/Context';
 import Quiz from '../../components/Quiz/Quiz';
+import FooterSection from '../../components/LandingPage/sections/FooterSection';
 
 const StudentDashboard = () => {
 
@@ -431,7 +432,9 @@ const StudentDashboard = () => {
   console.log(editingCourses +"EDIIIIIIIIIIIIIIIIIIIII");
 
   return (
-    <div className="bg-gray-900 text-white p-6 min-w-[1585px]">
+
+    <div className="flex flex-col min-h-screen">
+    <div className="bg-gray-900 text-white p-6 pb-20 min-w-[1585px]">
       {/* Header */}
 
       <div className="mb-20">
@@ -1497,6 +1500,11 @@ const StudentDashboard = () => {
         </div>
       )}
     </div>
+    <div className=''>
+      <FooterSection></FooterSection>
+    </div>
+    </div>
+    
   );
 };
 
