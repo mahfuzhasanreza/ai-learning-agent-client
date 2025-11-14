@@ -4,6 +4,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import * as Chart from 'chart.js';
 import Navigation from "../../components/LandingPage/components/Navigation";
+import ApiService from '../../services/apiService';
 import {
   useStudentPerformance,
   useCoursePerformance,
@@ -84,6 +85,12 @@ const StudentDashboard = () => {
     max_marks: 100,
     feedback: ''
   });
+
+  // State for available courses
+  const [availableCourses, setAvailableCourses] = useState([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [coursesError, setCoursesError] = useState(null);
+  const [showCoursesModal, setShowCoursesModal] = useState(false);
 
   // Static data (fallback when API is not available)
   const [studentData, setStudentData] = useState({
@@ -257,6 +264,22 @@ const StudentDashboard = () => {
     }
   };
 
+  // Fetch available courses
+  const fetchCourses = async () => {
+    setLoadingCourses(true);
+    setCoursesError(null);
+    try {
+      const courses = await ApiService.getCourses();
+      setAvailableCourses(courses);
+      setShowCoursesModal(true);
+    } catch (error) {
+      setCoursesError(error.message || 'Failed to fetch courses');
+      console.error('Error fetching courses:', error);
+    } finally {
+      setLoadingCourses(false);
+    }
+  };
+
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
@@ -400,11 +423,15 @@ const StudentDashboard = () => {
             <div className="mb-4">
               {/* <h2 className="text-xl font-semibold mb-7">Courses</h2> */}
               <button
-                onClick={() => setShowAddAssessmentForm(!showAddAssessmentForm)}
-                className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600"
+                onClick={fetchCourses}
+                disabled={loadingCourses}
+                className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                + Add Courses
+                {loadingCourses ? 'Loading...' : '+ Add Courses'}
               </button>
+              {coursesError && (
+                <p className="mt-2 text-sm text-red-500">⚠️ {coursesError}</p>
+              )}
             </div>
 
             {/* Add Assessment Form */}
@@ -1155,6 +1182,82 @@ const StudentDashboard = () => {
                 alert(`Quiz completed! Score: ${results.score}/${results.total} (${results.percentage}%)`);
               }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Courses Modal */}
+      {showCoursesModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-white">Available Courses</h2>
+              <button
+                onClick={() => setShowCoursesModal(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Close"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 overflow-y-auto flex-1">
+              {availableCourses.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {availableCourses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors border border-gray-600"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-white mb-1">
+                            {course.code}
+                          </h3>
+                          <p className="text-gray-300 text-sm mb-2">
+                            {course.title}
+                          </p>
+                        </div>
+                        <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2">
+                          {course.credit} Credits
+                        </span>
+                      </div>
+                      
+                      <div className="text-xs text-gray-400 space-y-1">
+                        <div>Created: {new Date(course.created_at).toLocaleDateString()}</div>
+                        {course.updated_at !== course.created_at && (
+                          <div>Updated: {new Date(course.updated_at).toLocaleDateString()}</div>
+                        )}
+                      </div>
+
+                      {/* Optional: Add action buttons */}
+                      <div className="mt-3 pt-3 border-t border-gray-600">
+                        <button className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-sm font-medium">
+                          Select Course
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-gray-400 py-8">
+                  <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>No courses available</p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-700 bg-gray-750">
+              <button
+                onClick={() => setShowCoursesModal(false)}
+                className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

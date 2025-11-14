@@ -261,6 +261,32 @@ class ApiService {
       throw error;
     }
   }
+
+  // Get all available courses
+  static async getCourses() {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/performance/courses`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('=== COURSES API RESPONSE ===');
+      console.log('Full Response:', JSON.stringify(data, null, 2));
+      console.log('Total Courses:', data.length);
+      console.log('===========================');
+      return data;
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      throw error;
+    }
+  }
 }
 
 export default ApiService;
