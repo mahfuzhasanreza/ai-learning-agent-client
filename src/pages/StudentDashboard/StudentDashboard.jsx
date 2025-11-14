@@ -1463,31 +1463,31 @@ const StudentDashboard = () => {
                 {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
                   fetchedAssessments.map((assessment, index) => (
                     <div key={index} className="flex mb-2 justify-between items-center group bg-gray-700/30 hover:bg-gray-700/50 rounded-lg p-2 transition-all">
-                      <div className="flex-1">
-                        <span className="font-medium">
-                          {assessment.assessment_type.toUpperCase()}
-                          {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
-                          {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
+                      <span className="font-medium">
+                        {assessment.assessment_type.toUpperCase()}
+                        {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
+                        {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-gray-300 min-w-[80px] text-right">
+                          {assessment.marks} out of {assessment.full_marks}
                         </span>
-                        <span className="text-gray-300 ml-3">
-                          {assessment.marks}/{assessment.full_marks}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handleEditAssessment(assessment)}
-                          className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 transition-all"
-                          title="Edit Assessment"
-                        >
-                          <Edit className="w-4 h-4 text-blue-400" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteAssessment(assessment)}
-                          className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all"
-                          title="Delete Assessment"
-                        >
-                          <X className="w-4 h-4 text-red-400" />
-                        </button>
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleEditAssessment(assessment)}
+                            className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 transition-all"
+                            title="Edit Assessment"
+                          >
+                            <Edit className="w-4 h-4 text-blue-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAssessment(assessment)}
+                            className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all"
+                            title="Delete Assessment"
+                          >
+                            <X className="w-4 h-4 text-red-400" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))
