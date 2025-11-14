@@ -287,6 +287,37 @@ class ApiService {
       throw error;
     }
   }
+
+  // Add student course
+  static async addStudentCourse(courseData) {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/performance/student-courses`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(courseData)
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('=== ADD STUDENT COURSE API RESPONSE ===');
+      console.log('Full Response:', JSON.stringify(data, null, 2));
+      console.log('Student ID:', courseData.student_id);
+      console.log('Course ID:', courseData.course_id);
+      console.log('Trimester:', courseData.trimester);
+      console.log('Section:', courseData.section);
+      console.log('Faculty:', courseData.faculty);
+      console.log('===========================');
+      return data;
+    } catch (error) {
+      console.error('Error adding student course:', error);
+      throw error;
+    }
+  }
 }
 
 export default ApiService;
