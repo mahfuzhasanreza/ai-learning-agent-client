@@ -101,6 +101,22 @@ const StudentDashboard = () => {
   });
   const [addingCourse, setAddingCourse] = useState(false);
 
+  // State for trimester selection and enrolled courses
+  const [selectedTrimester, setSelectedTrimester] = useState('Summer25');
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [loadingEnrolledCourses, setLoadingEnrolledCourses] = useState(false);
+  const [enrolledCoursesError, setEnrolledCoursesError] = useState(null);
+
+  // Available trimesters
+  const availableTrimesters = [
+    { value: 'Spring25', label: 'Spring 25' },
+    { value: 'Summer25', label: 'Summer 25' },
+    { value: 'Fall25', label: 'Fall 25' },
+    { value: 'Spring26', label: 'Spring 26' },
+    { value: 'Summer26', label: 'Summer 26' },
+    { value: 'Fall26', label: 'Fall 26' }
+  ];
+
   // Static data (fallback when API is not available)
   const [studentData, setStudentData] = useState({
     name: "Sadik",
@@ -289,6 +305,41 @@ const StudentDashboard = () => {
     }
   };
 
+  // Fetch enrolled courses for selected trimester
+  const fetchEnrolledCourses = async (trimester) => {
+    setLoadingEnrolledCourses(true);
+    setEnrolledCoursesError(null);
+    try {
+      // TODO: Replace with actual student_id from auth context
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      
+      const response = await fetch(`${baseUrl}/api/v1/student/${STUDENT_ID}/courses/${trimester}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setEnrolledCourses(data);
+    } catch (error) {
+      setEnrolledCoursesError(error.message || 'Failed to fetch enrolled courses');
+      console.error('Error fetching enrolled courses:', error);
+    } finally {
+      setLoadingEnrolledCourses(false);
+    }
+  };
+
+  // Fetch enrolled courses when trimester changes
+  useEffect(() => {
+    fetchEnrolledCourses(selectedTrimester);
+  }, [selectedTrimester]);
+
   // Handle adding a student course
   const handleAddCourse = async (e) => {
     e.preventDefault();
@@ -475,8 +526,24 @@ const StudentDashboard = () => {
           <div className="bg-gray-800 rounded-lg p-4 sm:p-6">
             <div className='mb-4 sm:mb-5'>
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Current Trimester</h2>
+              
+              {/* Trimester Dropdown */}
+              <div className="mb-4">
+                <select
+                  value={selectedTrimester}
+                  onChange={(e) => setSelectedTrimester(e.target.value)}
+                  className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors text-sm sm:text-base"
+                >
+                  {availableTrimesters.map((trimester) => (
+                    <option key={trimester.value} value={trimester.value}>
+                      {trimester.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="text-gray-300 text-sm sm:text-base">
-                <div>{studentData.currentTrimester}</div>
+                <div>{availableTrimesters.find(t => t.value === selectedTrimester)?.label}</div>
                 <div>{studentData.trimesterCredits} credits</div>
               </div>
             </div>
@@ -565,28 +632,75 @@ const StudentDashboard = () => {
             )}
 
             <div className="space-y-4">
-              {studentData.courses.map((course) => (
-                <div key={course.id} className="rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{course.code}</div>
-                      <div className="text-sm text-gray-400">{course.credits} credits</div>
-                      <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${course.difficulty === 'LOW'
-                        ? 'bg-green-600 text-green-100'
-                        : 'bg-yellow-600 text-yellow-100'
-                        }`}>
-                        {course.difficulty}
-                      </div>
-                    </div>
-                    <CircularProgress
-                      percentage={course.progress}
-                      color={course.color}
-                      size={50}
-                    />
-                  </div>
-                  <hr className='my-3 text-gray-700' />
+              {/* Loading state */}
+              {loadingEnrolledCourses && (
+                <div className="text-center py-4">
+                  <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
+                  <p className="text-sm text-gray-400">Loading courses...</p>
                 </div>
-              ))}
+              )}
+
+              {/* Error state */}
+              {enrolledCoursesError && (
+                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
+                  ⚠️ {enrolledCoursesError}
+                </div>
+              )}
+
+              {/* Enrolled courses from API */}
+              {!loadingEnrolledCourses && !enrolledCoursesError && enrolledCourses.length > 0 ? (
+                enrolledCourses.map((course) => (
+                  <div key={course.course_id} className="rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{course.code}</div>
+                        <div className="text-sm text-gray-400">{course.title}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          Section: {course.section} | Faculty: {course.faculty_name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          CT: {course.ct_count} | Assignments: {course.assignment_count}
+                        </div>
+                        <div className="text-sm text-gray-400 mt-1">{course.credits} credits</div>
+                      </div>
+                      <CircularProgress
+                        percentage={Math.floor(Math.random() * 100)} // Replace with actual progress when available
+                        color="primary"
+                        size={50}
+                      />
+                    </div>
+                    <hr className='my-3 text-gray-700' />
+                  </div>
+                ))
+              ) : (
+                // Fallback to static data when no enrolled courses
+                !loadingEnrolledCourses && !enrolledCoursesError && enrolledCourses.length === 0 && (
+                  <>
+                    {studentData.courses.map((course) => (
+                      <div key={course.id} className="rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-semibold">{course.code}</div>
+                            <div className="text-sm text-gray-400">{course.credits} credits</div>
+                            <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${course.difficulty === 'LOW'
+                              ? 'bg-green-600 text-green-100'
+                              : 'bg-yellow-600 text-yellow-100'
+                              }`}>
+                              {course.difficulty}
+                            </div>
+                          </div>
+                          <CircularProgress
+                            percentage={course.progress}
+                            color={course.color}
+                            size={50}
+                          />
+                        </div>
+                        <hr className='my-3 text-gray-700' />
+                      </div>
+                    ))}
+                  </>
+                )
+              )}
             </div>
           </div>
         </div>}
