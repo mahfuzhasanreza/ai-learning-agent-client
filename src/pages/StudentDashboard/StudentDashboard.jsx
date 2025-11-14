@@ -899,6 +899,44 @@ const StudentDashboard = () => {
     }
   }, [selectedCourse, fetchAssessments]);
 
+  // Fetch course topics for selected course
+  const fetchCourseTopics = async (courseId) => {
+    if (!courseId) return;
+
+    setLoadingCourseTopics(true);
+    setCourseTopicsError(null);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(
+        `${baseUrl}/api/v1/performance/course-topics`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            course_id: courseId
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setCourseTopics(data.topics || []);
+
+    } catch (error) {
+      console.error('Error fetching course topics:', error);
+      setCourseTopicsError(error.message || 'Failed to fetch course topics');
+      setCourseTopics([]);
+    } finally {
+      setLoadingCourseTopics(false);
+    }
+  };
+
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
@@ -986,6 +1024,9 @@ const StudentDashboard = () => {
   const [showAddTopicQuiz, setShowAddTopicQuiz] = useState(false);
   const [selectedQuizTopic, setSelectedQuizTopic] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
+  const [courseTopics, setCourseTopics] = useState([]);
+  const [loadingCourseTopics, setLoadingCourseTopics] = useState(false);
+  const [courseTopicsError, setCourseTopicsError] = useState(null);
 
   // Course deletion state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -1062,6 +1103,13 @@ const StudentDashboard = () => {
   const [showDeleteAssessmentConfirm, setShowDeleteAssessmentConfirm] = useState(false);
   const [assessmentToDelete, setAssessmentToDelete] = useState(null);
   const [deletingAssessment, setDeletingAssessment] = useState(false);
+
+  // Fetch course topics when Add Topic button is clicked
+  useEffect(() => {
+    if (showAddTopicQuiz && selectedCourse?.course_id) {
+      fetchCourseTopics(selectedCourse.course_id);
+    }
+  }, [showAddTopicQuiz, selectedCourse]);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1569,16 +1617,31 @@ const StudentDashboard = () => {
                 <div className="bg-gray-700 rounded-lg p-3 sm:p-4 mb-4 space-y-3 sm:space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Select Quiz Topic</label>
-                    <select
-                      value={selectedQuizTopic}
-                      onChange={(e) => setSelectedQuizTopic(e.target.value)}
-                      className="w-full p-2 bg-gray-600 rounded text-white mb-2"
-                    >
-                      <option value="">Choose a topic...</option>
-                      {studentData.selectedCourse.topics.map((topic, index) => (
-                        <option key={index} value={topic.name}>{topic.name}</option>
-                      ))}
-                    </select>
+                    
+                    {loadingCourseTopics ? (
+                      <div className="w-full p-2 bg-gray-600 rounded text-white mb-2 text-center">
+                        <RefreshCw className="w-4 h-4 animate-spin inline-block mr-2" />
+                        Loading topics...
+                      </div>
+                    ) : courseTopicsError ? (
+                      <div className="w-full p-2 bg-red-500/20 border border-red-500/50 rounded text-red-300 mb-2 text-sm">
+                        ⚠️ {courseTopicsError}
+                      </div>
+                    ) : (
+                      <select
+                        value={selectedQuizTopic}
+                        onChange={(e) => setSelectedQuizTopic(e.target.value)}
+                        className="w-full p-2 bg-gray-600 rounded text-white mb-2"
+                        disabled={courseTopics.length === 0}
+                      >
+                        <option value="">
+                          {courseTopics.length === 0 ? 'No topics available' : 'Choose a topic...'}
+                        </option>
+                        {courseTopics.map((topic) => (
+                          <option key={topic.id} value={topic.name}>{topic.name}</option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                   <button
                     onClick={() => {
@@ -1588,7 +1651,8 @@ const StudentDashboard = () => {
                         alert('Please select a topic first');
                       }
                     }}
-                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm"
+                    disabled={loadingCourseTopics || courseTopics.length === 0}
+                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Take Quiz
                   </button>
