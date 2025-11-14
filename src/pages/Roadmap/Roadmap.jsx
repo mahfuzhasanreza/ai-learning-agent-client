@@ -12,7 +12,6 @@ const Roadmap = () => {
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [completedItems, setCompletedItems] = useState(new Set());
-  const [activeTab, setActiveTab] = useState("details"); // "details" or "chatbot"
   
   // Get auth token
   const { getToken } = UserAuth();
@@ -558,7 +557,85 @@ const Roadmap = () => {
       <Navigation></Navigation>
 
       {/* Main Content */}
-      <div className="flex gap-4 h-full overflow-hidden  mt-20 ">
+      <div className="flex gap-4 h-full overflow-hidden p-4 mt-20 pb-20">
+        
+        {/* Left Side Panel - Details */}
+        {selectedNode && (
+          <div className="w-96 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+            {/* Header with Close Button */}
+            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
+              <h3 className="text-lg font-bold bg-gradient-to-r from-[#FF4B00] to-[#a200ff] bg-clip-text text-transparent">
+                Details
+              </h3>
+              <button
+                onClick={() => setSelectedNode(null)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                title="Close"
+              >
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="px-6 py-4 flex-1 overflow-y-auto">
+              <h4 className="text-xl font-bold text-white mb-4 leading-tight">
+                {selectedNode.name}
+              </h4>
+
+              {/* Difficulty + Time + Completed */}
+              {selectedNode.type === "item" && (
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md
+                    ${selectedNode.difficulty === "Easy" && "bg-green-500/20 text-green-300 border border-green-500/30"}
+                    ${selectedNode.difficulty === "Medium" && "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"}
+                    ${selectedNode.difficulty === "Hard" && "bg-red-500/20 text-red-300 border border-red-500/30"}
+                  `}>
+                    {selectedNode.difficulty}
+                  </span>
+
+                  <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#a200ff]/10 text-[#a200ff] border border-[#a200ff]/30">
+                    ⏱ {selectedNode.timeCommitment}
+                  </span>
+
+                  {completedItems.has(selectedNode.id) && (
+                    <span className="px-3 py-1.5 bg-green-500/20 text-green-300 rounded-lg text-xs font-semibold border border-green-500/30 flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Completed
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="text-sm leading-relaxed text-gray-300 bg-[#0f0f0f]/50 rounded-xl p-4 border border-white/5">
+                {selectedNode.description.split("\n").map((line, index) => (
+                  <p key={index} className="mb-2 last:mb-0">{line}</p>
+                ))}
+              </div>
+
+              {/* Complete / Incomplete Button */}
+              {selectedNode.type === "item" && (
+                <button
+                  onClick={() => toggleCompletion(selectedNode.id)}
+                  className={`mt-6 w-full px-4 py-3 rounded-xl font-semibold transition-all shadow-lg transform hover:scale-105
+                    ${completedItems.has(selectedNode.id)
+                      ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
+                      : "bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] hover:from-[#e04600] hover:to-[#ff5520] text-white"
+                    }`}
+                >
+                  {completedItems.has(selectedNode.id)
+                    ? "✓ Mark as Incomplete"
+                    : "Mark as Complete"}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Tree visualization */}
         <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden">
           {roadmapData ? (
@@ -591,96 +668,21 @@ const Roadmap = () => {
           )}
         </div>
 
-        {/* Side panel */}
-        {/* Side panel */}
+        {/* Right Side panel - AI Chatbot */}
         {selectedNode && (
-         <div className="w-120 bg-[#1a1926] rounded-2xl shadow-lg overflow-y-auto flex flex-col border border-[#2a2938]">
+          <div className="w-120 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+            {/* Header with Title */}
+            <div className="px-6 py-4 border-b border-[#2a2938] bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
+              <h3 className="text-lg font-bold bg-gradient-to-r from-[#a200ff] to-[#FF4B00] bg-clip-text text-transparent">
+                AI Chatbot Insights
+              </h3>
+            </div>
 
-  {/* Tabs */}
-  <div className="px-4 flex border-b border-[#2a2938] mb-4">
-    <button
-      className={`flex-1 py-2 text-center font-medium transition-all 
-      ${activeTab === "details"
-        ? "text-[#FF4B00] border-b-2 border-[#FF4B00]"
-        : "text-gray-400 hover:text-gray-200"
-      }`}
-      onClick={() => setActiveTab("details")}
-    >
-      Details
-    </button>
-
-    <button
-      className={`flex-1 py-2 text-center font-medium transition-all 
-      ${activeTab === "chatbot"
-        ? "text-[#FF4B00] border-b-2 border-[#FF4B00]"
-        : "text-gray-400 hover:text-gray-200"
-      }`}
-      onClick={() => setActiveTab("chatbot")}
-    >
-      AI Chatbot Insights
-    </button>
-  </div>
-
-  {/* Tab Content */}
-  {activeTab === "details" && (
-    <div className="px-4 flex-1 text-gray-300">
-      <h3 className="text-xl font-bold text-white mb-3">
-        {selectedNode.name}
-      </h3>
-
-      {/* Difficulty + Time + Completed */}
-      {selectedNode.type === "item" && (
-        <div className="mb-4 flex items-center gap-3">
-          <span className={`px-2 py-1 rounded text-xs font-medium 
-          ${selectedNode.difficulty === "Easy" && "bg-green-900/30 text-green-300"}
-          ${selectedNode.difficulty === "Medium" && "bg-yellow-900/30 text-yellow-300"}
-          ${selectedNode.difficulty === "Hard" && "bg-red-900/30 text-red-300"}
-          `}>
-            {selectedNode.difficulty}
-          </span>
-
-          <span className="text-sm text-gray-400">
-            {selectedNode.timeCommitment}
-          </span>
-
-          {completedItems.has(selectedNode.id) && (
-            <span className="px-2 py-1 bg-green-900/40 text-green-300 rounded text-xs font-medium">
-              ✓ Completed
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Description */}
-      <div className="text-sm leading-relaxed text-gray-300">
-        {selectedNode.description.split("\n").map((line, index) => (
-          <p key={index} className="mb-2">{line}</p>
-        ))}
-      </div>
-
-      {/* Complete / Incomplete Button */}
-      {selectedNode.type === "item" && (
-        <button
-          onClick={() => toggleCompletion(selectedNode.id)}
-          className={`mt-5 w-full px-4 py-2 rounded-lg font-medium transition-all
-          ${completedItems.has(selectedNode.id)
-            ? "bg-green-600 hover:bg-green-700 text-white"
-            : "bg-[#FF4B00] hover:bg-[#e04600] text-white"
-          }`}
-        >
-          {completedItems.has(selectedNode.id)
-            ? "Mark as Incomplete"
-            : "Mark as Complete"}
-        </button>
-      )}
-    </div>
-  )}
-
-  {activeTab === "chatbot" && (
-    <ChatBotPanel topic={selectedNode.name} threadId={threadId} />
-  )}
-</div>
-
+            {/* ChatBot Panel */}
+            <div className="flex-1 overflow-hidden">
+              <ChatBotPanel topic={selectedNode.name} threadId={threadId} />
+            </div>
+          </div>
         )}
 
 
