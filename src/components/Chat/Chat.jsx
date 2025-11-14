@@ -8,6 +8,7 @@ import { GrAttachment } from "react-icons/gr";
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
 import { FaCog } from "react-icons/fa";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import ListenButton from '../ListenButton/ListenButton';
 import TTSSettings from '../TTSSettings/TTSSettings';
 import Navigation from '../LandingPage/components/Navigation';
@@ -22,6 +23,7 @@ const Chat = () => {
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     const [agents, setAgents] = useState([]);
     const [loadingAgents, setLoadingAgents] = useState(false);
+    const [isQuestionsExpanded, setIsQuestionsExpanded] = useState(true); // State for questions dropdown
     const resultEndRef = useRef(null);
 
 
@@ -228,11 +230,26 @@ const Chat = () => {
                                     {/* Display Questions if available - only on the last message */}
                                     {questions && questions.length > 0 && index === conversation.length - 1 && (
                                         <div className="questions-container mt-6 text-gray-200">
-                                            <h3 className="text-2xl font-bold mb-6 text-white">
-                                                Questions Found: <span className="text-[#FF4B00]">{questions.length}</span>
-                                            </h3>
+                                            {/* Collapsible Header */}
+                                            <div 
+                                                className="flex items-center justify-between mb-6 cursor-pointer p-4 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10 rounded-xl border border-white/10 hover:border-[#FF4B00]/50 transition-all duration-300"
+                                                onClick={() => setIsQuestionsExpanded(!isQuestionsExpanded)}
+                                            >
+                                                <h3 className="text-2xl font-bold text-white">
+                                                    Questions Found: <span className="text-[#FF4B00]">{questions.length}</span>
+                                                </h3>
+                                                <button className="p-2 rounded-lg hover:bg-white/10 transition-all duration-200">
+                                                    {isQuestionsExpanded ? (
+                                                        <ChevronUp className="w-6 h-6 text-[#FF4B00]" />
+                                                    ) : (
+                                                        <ChevronDown className="w-6 h-6 text-[#FF4B00]" />
+                                                    )}
+                                                </button>
+                                            </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            {/* Collapsible Content */}
+                                            {isQuestionsExpanded && (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-fadeIn">
                                                 {questions.map((question, qIndex) => (
                                                     <div
                                                         key={question.id || qIndex}
@@ -359,7 +376,8 @@ const Chat = () => {
                                                         </div>
                                                     </div>
                                                 ))}
-                                            </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
