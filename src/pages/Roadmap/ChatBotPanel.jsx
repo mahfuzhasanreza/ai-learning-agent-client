@@ -194,6 +194,106 @@ const ChatBotPanel = ({ topic, threadId }) => {
       }
     }, [topic, threadId, sendMessage]);
   
+    // Format bot message with markdown-like rendering
+    const formatBotMessage = (text) => {
+      const lines = text.split('\n');
+      const elements = [];
+      let inCodeBlock = false;
+      let codeLines = [];
+      let inList = false;
+      
+      lines.forEach((line, idx) => {
+        // Handle code blocks
+        if (line.startsWith('```')) {
+          if (inCodeBlock) {
+            // End code block
+            elements.push(
+              <pre key={idx} className="bg-gray-800 text-green-400 p-3 rounded-md my-2 overflow-x-auto text-xs">
+                <code>{codeLines.join('\n')}</code>
+              </pre>
+            );
+            codeLines = [];
+            inCodeBlock = false;
+          } else {
+            // Start code block
+            inCodeBlock = true;
+          }
+          return;
+        }
+        
+        if (inCodeBlock) {
+          codeLines.push(line);
+          return;
+        }
+        
+        // Handle headers
+        if (line.startsWith('### ')) {
+          elements.push(<h3 key={idx} className="text-base font-bold mt-3 mb-2 text-gray-900">{line.replace('### ', '')}</h3>);
+        } else if (line.startsWith('#### ')) {
+          elements.push(<h4 key={idx} className="text-sm font-semibold mt-2 mb-1 text-gray-800">{line.replace('#### ', '')}</h4>);
+        }
+        // Handle bullet points
+        else if (line.trim().startsWith('- ')) {
+          if (!inList) {
+            inList = true;
+          }
+          elements.push(<li key={idx} className="ml-4 mb-1">{renderInlineFormatting(line.replace(/^-\s*/, ''))}</li>);
+        }
+        // Handle numbered lists
+        else if (/^\d+\.\s/.test(line.trim())) {
+          elements.push(<li key={idx} className="ml-4 mb-1">{renderInlineFormatting(line.replace(/^\d+\.\s*/, ''))}</li>);
+        }
+        // Regular paragraph
+        else if (line.trim()) {
+          if (inList && !line.startsWith('- ')) {
+            inList = false;
+          }
+          elements.push(<p key={idx} className="mb-2 leading-relaxed">{renderInlineFormatting(line)}</p>);
+        } else {
+          elements.push(<br key={idx} />);
+        }
+      });
+      
+      return elements;
+    };
+    
+    // Render inline formatting (bold, code, etc.)
+    const renderInlineFormatting = (text) => {
+      const parts = [];
+      let currentText = text;
+      let key = 0;
+      
+      // Handle bold **text**
+      const boldRegex = /\*\*(.*?)\*\*/g;
+      let lastIndex = 0;
+      let match;
+      
+      while ((match = boldRegex.exec(currentText)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(currentText.substring(lastIndex, match.index));
+        }
+        parts.push(<strong key={`bold-${key++}`}>{match[1]}</strong>);
+        lastIndex = boldRegex.lastIndex;
+      }
+      
+      if (lastIndex < currentText.length) {
+        parts.push(currentText.substring(lastIndex));
+      }
+      
+      // Handle inline code `text`
+      return parts.map((part, idx) => {
+        if (typeof part === 'string') {
+          const codeParts = part.split('`');
+          return codeParts.map((codePart, codeIdx) => 
+            codeIdx % 2 === 1 
+              ? <code key={`code-${idx}-${codeIdx}`} className="bg-gray-100 px-1 rounded text-xs text-red-600 font-mono">{codePart}</code>
+              : codePart
+          );
+        }
+        return part;
+      });
+    };
+  
     const handleKeyPress = (e) => {
       if (e.key === "Enter") {
         sendMessage(input);
@@ -202,11 +302,21 @@ const ChatBotPanel = ({ topic, threadId }) => {
   
     return (
       <div className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto mb-4 p-2 border rounded bg-gray-50">
+        <div className="flex-1 overflow-y-auto mb-4 p-3 border rounded bg-gray-50">
           {messages.map((msg, i) => (
-            <div key={i} className={`mb-2 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`px-3 py-1 rounded ${msg.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}>
-                {msg.text}
+            <div key={i} className={`mb-3 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[85%] px-4 py-2 rounded-lg ${
+                msg.sender === "user" 
+                  ? "bg-blue-500 text-white" 
+                  : "bg-white border border-gray-200 text-gray-800 shadow-sm"
+              }`}>
+                {msg.sender === "bot" ? (
+                  <div className="prose prose-sm max-w-none text-sm">
+                    {formatBotMessage(msg.text)}
+                  </div>
+                ) : (
+                  <span>{msg.text}</span>
+                )}
               </div>
             </div>
           ))}
