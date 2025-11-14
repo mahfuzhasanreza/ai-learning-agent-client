@@ -1491,20 +1491,7 @@ const StudentDashboard = () => {
               )}
             </div>
 
-            {/* CT Methods */}
-            {!editingScores &&
-              <div className="bg-gray-800 rounded-b-lg p-4 sm:p-6">
-                <h3 className="text-lg sm:text-xl font-semibold mb-4">CT Methods</h3>
-                <div className="w-full grid grid-cols-3 gap-2 sm:gap-3 text-sm sm:text-base">
-                  <div>Course</div>
-                  <div>Marks</div>
-                  <div>Best Count</div>
-
-                  <div className='text-xs sm:text-sm text-gray-400'>SPL</div>
-                  <div className='text-xs sm:text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.marks}</div>
-                  <div className='text-xs sm:text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
-                </div>
-              </div>}
+            
           </div>
 
           {/* Third Column - Topic Mastery */}
