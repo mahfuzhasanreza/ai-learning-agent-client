@@ -397,7 +397,26 @@ const StudentDashboard = () => {
       
     } catch (error) {
       console.error('Error adding course:', error);
-      alert(error.message || 'Failed to add course. Please try again.');
+      
+      // Extract error message
+      let errorMessage = 'Failed to add course. Please try again.';
+      
+      if (error.message) {
+        // Check if it's the "already enrolled" error
+        if (error.message.includes('already enrolled')) {
+          errorMessage = 'You are already enrolled in this course for this trimester.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      // Show failure notification
+      setAddFailureMessage(errorMessage);
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000); // Show error for 5 seconds
+      
     } finally {
       setAddingCourse(false);
     }
@@ -455,7 +474,117 @@ const StudentDashboard = () => {
     } finally {
       setDeletingCourse(false);
     }
-  };  // Components
+  };
+
+  // Update CT Count
+  const updateCTCount = async (count) => {
+    if (!selectedCourse || count === null || count === undefined) return;
+
+    setUpdatingCounts(true);
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/ct-count`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_id: STUDENT_ID,
+          course_id: selectedCourse.course_id,
+          best_count: parseInt(count)
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update local state
+      setSelectedCourse({
+        ...selectedCourse,
+        ct_count: parseInt(count)
+      });
+
+      // Show success notification
+      setCountUpdateMessage('CT count updated successfully');
+      setShowCountUpdateSuccess(true);
+      setTimeout(() => {
+        setShowCountUpdateSuccess(false);
+      }, 3000);
+
+      // Refresh enrolled courses to get updated data
+      fetchEnrolledCourses(selectedTrimester);
+
+    } catch (error) {
+      console.error('Error updating CT count:', error);
+      setAddFailureMessage('Failed to update CT count. Please try again.');
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000);
+    } finally {
+      setUpdatingCounts(false);
+      setEditingCTCount(false);
+    }
+  };
+
+  // Update Assignment Count
+  const updateAssignmentCount = async (count) => {
+    if (!selectedCourse || count === null || count === undefined) return;
+
+    setUpdatingCounts(true);
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/assignment-count`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_id: STUDENT_ID,
+          course_id: selectedCourse.course_id,
+          best_count: parseInt(count)
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update local state
+      setSelectedCourse({
+        ...selectedCourse,
+        assignment_count: parseInt(count)
+      });
+
+      // Show success notification
+      setCountUpdateMessage('Assignment count updated successfully');
+      setShowCountUpdateSuccess(true);
+      setTimeout(() => {
+        setShowCountUpdateSuccess(false);
+      }, 3000);
+
+      // Refresh enrolled courses to get updated data
+      fetchEnrolledCourses(selectedTrimester);
+
+    } catch (error) {
+      console.error('Error updating assignment count:', error);
+      setAddFailureMessage('Failed to update assignment count. Please try again.');
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000);
+    } finally {
+      setUpdatingCounts(false);
+      setEditingAssignmentCount(false);
+    }
+  };
+
+  // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
@@ -553,6 +682,19 @@ const StudentDashboard = () => {
   
   // Course addition success state
   const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(false);
+  
+  // Course addition failure state
+  const [showAddFailureNotification, setShowAddFailureNotification] = useState(false);
+  const [addFailureMessage, setAddFailureMessage] = useState('');
+
+  // CT and Assignment count update states
+  const [editingCTCount, setEditingCTCount] = useState(false);
+  const [editingAssignmentCount, setEditingAssignmentCount] = useState(false);
+  const [tempCTCount, setTempCTCount] = useState(null);
+  const [tempAssignmentCount, setTempAssignmentCount] = useState(null);
+  const [updatingCounts, setUpdatingCounts] = useState(false);
+  const [showCountUpdateSuccess, setShowCountUpdateSuccess] = useState(false);
+  const [countUpdateMessage, setCountUpdateMessage] = useState('');
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -806,8 +948,104 @@ const StudentDashboard = () => {
                   <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base space-y-1">
                     <div><span className="font-semibold">Section:</span> {selectedCourse.section}</div>
                     <div><span className="font-semibold">Faculty:</span> {selectedCourse.faculty_name}</div>
-                    <div><span className="font-semibold">CT Count:</span> {selectedCourse.ct_count}</div>
-                    <div><span className="font-semibold">Assignment Count:</span> {selectedCourse.assignment_count}</div>
+                    
+                    {/* Editable CT Count */}
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">CT Count:</span>
+                      {editingCTCount ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            value={tempCTCount !== null ? tempCTCount : selectedCourse.ct_count}
+                            onChange={(e) => setTempCTCount(e.target.value)}
+                            className="w-20 px-2 py-1 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-[#FF4B00]"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => {
+                              updateCTCount(tempCTCount !== null ? tempCTCount : selectedCourse.ct_count);
+                            }}
+                            disabled={updatingCounts}
+                            className="px-3 py-1 bg-[#FF4B00] hover:bg-[#E04300] text-white text-xs rounded transition-colors disabled:opacity-50"
+                          >
+                            {updatingCounts ? 'Saving...' : 'Save'}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingCTCount(false);
+                              setTempCTCount(null);
+                            }}
+                            className="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span>{selectedCourse.ct_count}</span>
+                          <button
+                            onClick={() => {
+                              setEditingCTCount(true);
+                              setTempCTCount(selectedCourse.ct_count);
+                            }}
+                            className="text-[#FF4B00] hover:text-[#E04300] transition-colors"
+                            title="Edit CT Count"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Editable Assignment Count */}
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Assignment Count:</span>
+                      {editingAssignmentCount ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            value={tempAssignmentCount !== null ? tempAssignmentCount : selectedCourse.assignment_count}
+                            onChange={(e) => setTempAssignmentCount(e.target.value)}
+                            className="w-20 px-2 py-1 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-[#FF4B00]"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => {
+                              updateAssignmentCount(tempAssignmentCount !== null ? tempAssignmentCount : selectedCourse.assignment_count);
+                            }}
+                            disabled={updatingCounts}
+                            className="px-3 py-1 bg-[#FF4B00] hover:bg-[#E04300] text-white text-xs rounded transition-colors disabled:opacity-50"
+                          >
+                            {updatingCounts ? 'Saving...' : 'Save'}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingAssignmentCount(false);
+                              setTempAssignmentCount(null);
+                            }}
+                            className="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span>{selectedCourse.assignment_count}</span>
+                          <button
+                            onClick={() => {
+                              setEditingAssignmentCount(true);
+                              setTempAssignmentCount(selectedCourse.assignment_count);
+                            }}
+                            className="text-[#FF4B00] hover:text-[#E04300] transition-colors"
+                            title="Edit Assignment Count"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </>
               ) : (
@@ -1811,6 +2049,52 @@ const StudentDashboard = () => {
               </div>
               <button
                 onClick={() => setShowAddSuccessNotification(false)}
+                className="ml-auto flex-shrink-0 hover:bg-green-700 p-1 rounded transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Course Addition Failure Notification */}
+        {showAddFailureNotification && (
+          <div className="fixed bottom-4 left-4 z-50">
+            <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold">Failed to Add Course</p>
+                <p className="text-sm text-red-100">{addFailureMessage}</p>
+              </div>
+              <button
+                onClick={() => setShowAddFailureNotification(false)}
+                className="ml-auto flex-shrink-0 hover:bg-red-700 p-1 rounded transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Count Update Success Notification */}
+        {showCountUpdateSuccess && (
+          <div className="fixed bottom-4 left-4 z-50">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold">Update Successful</p>
+                <p className="text-sm text-green-100">{countUpdateMessage}</p>
+              </div>
+              <button
+                onClick={() => setShowCountUpdateSuccess(false)}
                 className="ml-auto flex-shrink-0 hover:bg-green-700 p-1 rounded transition-colors"
               >
                 <X className="w-5 h-5" />
