@@ -553,108 +553,12 @@ const Roadmap = () => {
   const progressPercent = totalItems > 0 ? Math.round((completionPercentage / totalItems) * 100) : 0;
 
   return (
-    <div className=" min-w-[1585px] h-screen bg-gray-900 flex flex-col">
+    <div className=" min-w-[1585px] w-full h-screen bg-gray-900 flex flex-col">
       {/* Header with Input Section */}
       <Navigation></Navigation>
-      
-      <div className="mt-20 bg-gray-800 border-b border-gray-700 p-4 shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          
-          
-          {/* Input Form */}
-          <form onSubmit={handleSubmit} className="flex items-center gap-3">
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Enter a topic (e.g., 'Learn Python', 'Machine Learning Basics')..."
-                className="w-full px-4 py-3 pr-12 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-yellow-500 transition-colors"
-                disabled={isLoading}
-              />
-              
-              {/* Voice Input Button */}
-              <button
-                type="button"
-                onClick={toggleVoiceInput}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all ${
-                  isListening 
-                    ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
-                    : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
-                }`}
-                disabled={isLoading}
-                title={isListening ? 'Stop listening' : 'Use voice input'}
-              >
-                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </button>
-            </div>
-            
-            {/* Generate Button */}
-            <button
-              type="submit"
-              disabled={isLoading || !query.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold rounded-lg hover:from-yellow-600 hover:to-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <Loader className="w-5 h-5 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Send className="w-5 h-5" />
-                  Generate
-                </>
-              )}
-            </button>
-            
-            {/* Reset Button */}
-            {roadmapData && (
-              <button
-                type="button"
-                onClick={() => {
-                  setRoadmapData(null);
-                  setQuery('');
-                  setSelectedNode(null);
-                  setCompletedItems(new Set());
-                  setError(null);
-                  setThreadId(null);
-                }}
-                className="px-4 py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors flex items-center gap-2"
-                title="Reset and create new roadmap"
-              >
-                <RefreshCw className="w-5 h-5" />
-              </button>
-            )}
-          </form>
-          
-          {/* Error Message */}
-          {error && (
-            <div className="mt-3 p-3 bg-red-500/10 border border-red-500 rounded-lg text-red-400 text-sm">
-              {error}
-            </div>
-          )}
-          
-          {/* Progress Bar */}
-          {roadmapData && (
-            <div className="mt-4">
-              <div className="flex justify-between text-sm text-gray-400 mb-2">
-                <span>Progress: {completionPercentage} / {totalItems} items</span>
-                <span>{progressPercent}% Complete</span>
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
-                <div
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${progressPercent}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Main Content */}
-      <div className="flex gap-4 h-full overflow-hidden p-4">
+      <div className="flex gap-4 h-full overflow-hidden  mt-20 ">
         {/* Tree visualization */}
         <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden">
           {roadmapData ? (
@@ -662,7 +566,7 @@ const Roadmap = () => {
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
-                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
+                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] rounded-full flex items-center justify-center shadow-lg shadow-[#FF4B00]/30">
                   <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
@@ -671,9 +575,9 @@ const Roadmap = () => {
                   Welcome to AI Roadmap Generator
                 </h2>
                 <p className="text-gray-400 mb-6">
-                  Enter a topic above to generate a personalized learning roadmap. You can type your query or use voice input to get started.
+                  Enter a topic in the bottom input to generate a personalized learning roadmap. You can type your query or use voice input to get started.
                 </p>
-                <div className="bg-gray-800 rounded-lg p-4 text-left">
+                <div className="bg-[#1e1e1e]/50 backdrop-blur-sm rounded-xl p-4 text-left border border-white/10">
                   <p className="text-sm text-gray-300 font-semibold mb-2">Example topics:</p>
                   <ul className="text-sm text-gray-400 space-y-1">
                     <li>• Learn Python Programming</li>
@@ -780,6 +684,89 @@ const Roadmap = () => {
         )}
 
 
+      </div>
+
+      {/* Minimal Fixed Bottom Input Section */}
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <div className="max-w-3xl mx-auto px-4 py-3">
+          
+          {/* Error Message */}
+          {error && (
+            <div className="mb-2 p-2 bg-[#FF4B00]/20 border border-[#FF4B00]/50 rounded-lg text-[#FF4B00] text-xs">
+              <span className="font-medium">⚠ {error}</span>
+            </div>
+          )}
+          
+          {/* Input Form */}
+          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <div className="flex-1 relative group">
+              {/* Subtle Glow Effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-lg opacity-0 group-hover:opacity-20 group-focus-within:opacity-20 blur transition duration-300"></div>
+              
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Enter your learning topic..."
+                className="relative w-full px-4 py-2.5 pr-11 bg-[#1e1e1e]/70 backdrop-blur-sm text-white text-sm rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent placeholder-gray-500 transition-all"
+                disabled={isLoading}
+              />
+              
+              {/* Voice Input Button */}
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md transition-all ${
+                  isListening 
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse' 
+                    : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white'
+                }`}
+                disabled={isLoading}
+                title={isListening ? 'Stop listening' : 'Use voice input'}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            </div>
+            
+            {/* Generate Button */}
+            <button
+              type="submit"
+              disabled={isLoading || !query.trim()}
+              className="px-5 py-2.5 bg-gradient-to-r from-[#a200ff] to-[#c240ff] text-white text-sm font-semibold rounded-lg hover:from-[#b520ff] hover:to-[#d050ff] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 hover:scale-105"
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  Generate
+                </>
+              )}
+            </button>
+            
+            {/* Reset Button */}
+            {roadmapData && (
+              <button
+                type="button"
+                onClick={() => {
+                  setRoadmapData(null);
+                  setQuery('');
+                  setSelectedNode(null);
+                  setCompletedItems(new Set());
+                  setError(null);
+                  setThreadId(null);
+                }}
+                className="p-2.5 bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] hover:from-[#e04600] hover:to-[#ff5520] text-white rounded-lg transition-all hover:scale-105"
+                title="Reset and create new roadmap"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );
