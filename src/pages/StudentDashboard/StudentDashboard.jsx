@@ -1469,9 +1469,7 @@ const StudentDashboard = () => {
                         {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
                       </span>
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-300 min-w-[80px] text-right">
-                          {assessment.marks} out of {assessment.full_marks}
-                        </span>
+                        
                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => handleEditAssessment(assessment)}
@@ -1488,6 +1486,9 @@ const StudentDashboard = () => {
                             <X className="w-4 h-4 text-red-400" />
                           </button>
                         </div>
+                        <span className="text-gray-300 min-w-[80px] text-right">
+                          {assessment.marks} out of {assessment.full_marks}
+                        </span>
                       </div>
                     </div>
                   ))
