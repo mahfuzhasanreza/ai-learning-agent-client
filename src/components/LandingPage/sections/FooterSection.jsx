@@ -186,36 +186,7 @@ const FooterSection = () => {
           </motion.div>
         </motion.div>
 
-        <motion.div
-          className="footer-contact"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          <div className="contact-info">
-            <div className="contact-item">
-              <FaEnvelope className="contact-icon" />
-              <div className="contact-details">
-                <h5>Email</h5>
-                <p>hello@ailearningagent.com</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <FaPhone className="contact-icon" />
-              <div className="contact-details">
-                <h5>Phone</h5>
-                <p>+1 (555) 123-4567</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <FaMapMarkerAlt className="contact-icon" />
-              <div className="contact-details">
-                <h5>Address</h5>
-                <p>123 Innovation Drive<br />San Francisco, CA 94105</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        
 
         <motion.div
           className="footer-bottom"
@@ -226,8 +197,7 @@ const FooterSection = () => {
           <div className="footer-bottom-content">
             <div className="footer-copyright">
               <p>
-                © 2024 AI Learning Agent. All rights reserved. Made with{' '}
-                <FaHeart className="heart-icon" /> for developers worldwide.
+                © 2025 COSMOS-ITS. All rights reserved.
               </p>
             </div>
             <div className="footer-legal">

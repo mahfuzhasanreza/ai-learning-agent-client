@@ -434,14 +434,14 @@ const StudentDashboard = () => {
   return (
 
     <div className="flex flex-col min-h-screen">
-    <div className="bg-gray-900 text-white p-6 pb-20 min-w-[1585px]">
+    <div className="bg-gray-900 text-white p-3 sm:p-4 md:p-6 pb-20 w-full overflow-x-hidden">
       {/* Header */}
 
-      <div className="mb-20">
+      <div className="mb-10 sm:mb-12 md:mb-20">
         <Navigation></Navigation>
       </div>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
 
 
         <Breadcrumbs
@@ -468,14 +468,14 @@ const StudentDashboard = () => {
         </div>
       )}
 
-      <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
+      <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4 sm:gap-6`}>
         {/* Left Column */}
-        {!editingScores && <div className="space-y-6">
+        {!editingScores && <div className="space-y-4 sm:space-y-6">
           {/* Current Trimester */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <div className='mb-5'>
-              <h2 className="text-xl font-semibold mb-4">Current Trimester</h2>
-              <div className="text-gray-300">
+          <div className="bg-gray-800 rounded-lg p-4 sm:p-6">
+            <div className='mb-4 sm:mb-5'>
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Current Trimester</h2>
+              <div className="text-gray-300 text-sm sm:text-base">
                 <div>{studentData.currentTrimester}</div>
                 <div>{studentData.trimesterCredits} credits</div>
               </div>
@@ -486,7 +486,7 @@ const StudentDashboard = () => {
               <button
                 onClick={fetchCourses}
                 disabled={loadingCourses}
-                className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-base sm:text-lg font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingCourses ? 'Loading...' : '+ Add Courses'}
               </button>
@@ -592,16 +592,16 @@ const StudentDashboard = () => {
         </div>}
 
         {/* Center Column - Course Details */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Course Header */}
-          <div className="bg-gray-800 rounded-t-lg p-6">
-            <h2 className="text-2xl font-semibold mb-2">
+          <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-2">
               {studentData.selectedCourse.title}
             </h2>
-            <div className="text-gray-400 mb-4">
+            <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
               ({studentData.selectedCourse.code})
             </div>
-            <div className="text-gray-300 mb-6">
+            <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
               {studentData.selectedCourse.instructor}<br />
               {studentData.selectedCourse.credits} credits
             </div>
@@ -611,12 +611,12 @@ const StudentDashboard = () => {
             <></>            
             :
             (<div className="flex items-center justify-center">
-              <div className="flex items-center justify-between w-full text-center">
-                <div className="text-sm font-semibold mb-2">Course progress</div>
+              <div className="flex flex-col sm:flex-row items-center justify-between w-full text-center gap-3 sm:gap-0">
+                <div className="text-sm font-semibold mb-0 sm:mb-2">Course progress</div>
                 <div>
                   <CircularProgress
                     percentage={coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress}
-                    size={120}
+                    size={100}
                     strokeWidth={8}
                   />
                 </div>
@@ -627,20 +627,20 @@ const StudentDashboard = () => {
           </div>
 
           {/* Scores */}
-          <div className="bg-gray-800 p-6">
+          <div className="bg-gray-800 p-4 sm:p-6">
             <div className={`flex items-center justify-between mb-4`}>
-              <h3 className="text-xl font-semibold">
+              <h3 className="text-lg sm:text-xl font-semibold">
                 {editingScores ? 'Recent Scores' : 'All Scores'}
               </h3>
               <button
                 onClick={() => setEditingScores(prev => !prev)}
                 aria-expanded={editingScores}
                 aria-controls="scores-editor"
-                className={`flex items-center space-x-2 px-3 py-1 rounded ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
                 title="Edit Scores"
               >
                 <Edit className="w-4 h-4" />
-                <span className="text-sm">{editingScores ? 'Close' : 'Edit'}</span>
+                <span className="hidden sm:inline text-sm">{editingScores ? 'Close' : 'Edit'}</span>
               </button>
             </div>
             
@@ -843,26 +843,26 @@ const StudentDashboard = () => {
 
           {/* CT Methods */}
           {!editingScores && 
-          <div className="bg-gray-800 rounded-b-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">CT Methods</h3>
-            <div className="w-full grid grid-cols-3 gap-3 gap-x-18">
+          <div className="bg-gray-800 rounded-b-lg p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold mb-4">CT Methods</h3>
+            <div className="w-full grid grid-cols-3 gap-2 sm:gap-3 text-sm sm:text-base">
               <div>Course</div>
               <div>Marks</div>
               <div>Best Count</div>
 
-              <div className='text-sm text-gray-400'>SPL</div>
-              <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.marks}</div>
-              <div className='text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
+              <div className='text-xs sm:text-sm text-gray-400'>SPL</div>
+              <div className='text-xs sm:text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.marks}</div>
+              <div className='text-xs sm:text-sm text-gray-400'>{studentData.selectedCourse.ctMethods.spl.bestCount}</div>
             </div>
           </div>}
         </div>
 
         {/* Third Column - Topic Mastery */}
-        {!editingScores && <div className="space-y-6">
+        {!editingScores && <div className="space-y-4 sm:space-y-6">
           {/* Topic Mastery */}
-          <div className="bg-gray-800 rounded-t-lg p-6">
+          <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Topic Mastery</h3>
+              <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
               <div className="flex items-center">
                 {/* <CircularProgress
                   percentage={studentData.selectedCourse.topicMastery}
@@ -871,11 +871,11 @@ const StudentDashboard = () => {
 
                 <button
                   onClick={() => setShowAddTopicQuiz(!showAddTopicQuiz)}
-                  className="flex items-center space-x-2 px-3 py-1 rounded bg-gray-700 hover:bg-gray-600"
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm"
                   title="Add New Topic"
                 >
-                  <Plus className="w-4 h-4" />
-                  <span className="text-sm">{showAddTopicQuiz ? 'Close' : 'Add Topic'}</span>
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm">{showAddTopicQuiz ? 'Close' : 'Add Topic'}</span>
                 </button>
 
               </div>
@@ -883,7 +883,7 @@ const StudentDashboard = () => {
 
             {/* Quiz Section - Shown when Add Topic is clicked */}
             {showAddTopicQuiz && (
-              <div className="bg-gray-700 rounded-lg p-4 mb-4 space-y-4">
+              <div className="bg-gray-700 rounded-lg p-3 sm:p-4 mb-4 space-y-3 sm:space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Select Quiz Topic</label>
                   <select
@@ -928,11 +928,11 @@ const StudentDashboard = () => {
                 </div>
 
                 <div className="mt-7">
-                  <div className="flex items-center justify-between p-2">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-2 p-2">
                     
                     <button 
                       onClick={() => setShowAllTopics(!showAllTopics)}
-                      className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                      className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
                     >
                       <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
                     </button>
@@ -941,7 +941,7 @@ const StudentDashboard = () => {
                       onClick={() => {
                         setShowAddTopicQuiz(true);
                       }}
-                      className="flex px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                      className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
                     >
                       <span className="text-sm">Quiz</span>
                       <Edit className="w-3 h-3" />
@@ -993,12 +993,12 @@ const StudentDashboard = () => {
             </div>
           </div> */}
 
-           {!showAllTopics && <div className="bg-gray-800 rounded-b-lg p-6 space-y-6">
+           {!showAllTopics && <div className="bg-gray-800 rounded-b-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Course Assessment */}
           <div className="bg-gray-800 rounded-t-lg">
-            <h3 className="text-xl font-semibold mb-4">Course Assessment</h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-4">Course Assessment</h3>
             <div className="space-y-2">
-              <div className="grid grid-cols-3 gap-4 text-md font-semibold text-center border-b border-gray-600 pb-2">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-center border-b border-gray-600 pb-2">
                 <span>Assessment</span>
                 <span>Marks</span>
                 <span>Obtained</span>
@@ -1007,7 +1007,7 @@ const StudentDashboard = () => {
               {/* Display API assessment data if available */}
               {assessments && assessments.length > 0 ? (
                 assessments.map((assessment, index) => (
-                  <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
+                  <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
                     <span>{assessment.assessment_type}</span>
                     <span className='text-gray-400'>{assessment.max_marks || 100}</span>
                     <span className='text-gray-400'>{assessment.score}</span>
@@ -1022,7 +1022,7 @@ const StudentDashboard = () => {
                   { type: "MID", marks: 30, obtained: 30 },
                   { type: "Final", marks: 40, obtained: 40 }
                 ].map((assessment, index) => (
-                  <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
+                  <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
                     <span>{assessment.type}</span>
                     <span className='text-gray-400'>{assessment.marks}</span>
                     <span className='text-gray-400'>{assessment.obtained}</span>
@@ -1033,13 +1033,13 @@ const StudentDashboard = () => {
           </div>
 
           {/* Performance Insights */}
-          <div className="bg-gray-800 rounded-b-lg pt-6">
+          <div className="bg-gray-800 rounded-b-lg pt-4 sm:pt-6">
             <div className="rounded-lg text-sm">
               {/* Display insights based on API data */}
               {coursePerformance && (
                 <div className="mb-4">
-                  <div className="text-lg font-semibold mb-2">Performance Summary</div>
-                  <div className="space-y-1 text-gray-300">
+                  <div className="text-base sm:text-lg font-semibold mb-2">Performance Summary</div>
+                  <div className="space-y-1 text-gray-300 text-sm sm:text-base">
                     <div>Average Score: {coursePerformance.average}%</div>
                     <div>Highest Score: {coursePerformance.highest}%</div>
                     <div>Lowest Score: {coursePerformance.lowest}%</div>
@@ -1051,17 +1051,17 @@ const StudentDashboard = () => {
               {/* Weakness insight based on weakest course from API */}
               {studentSummary && studentSummary.weakestCourse && (
                 <div className="mb-4 p-3 bg-yellow-600 rounded-lg">
-                  <div className="text-lg font-semibold mb-2">
+                  <div className="text-base sm:text-lg font-semibold mb-2">
                     Area for Improvement
                   </div>
-                  <div className="text-yellow-100">
+                  <div className="text-yellow-100 text-sm sm:text-base">
                     Your weakest course is {studentSummary.weakestCourse}.
                     Focus on improving performance in this area.
                   </div>
                 </div>
               )}
 
-              <div className="mb-7 text-lg font-semibold">
+              <div className="mb-5 sm:mb-7 text-base sm:text-lg font-semibold">
                 You have lost 4 marks on CT1 that consists loops.
                 Max possibilities in CT (avg best) ÷ 3
               </div>
@@ -1092,30 +1092,30 @@ const StudentDashboard = () => {
 
       {/* Additional Data Section */}
       {studentSummary && (
-        <div className="mt-8 bg-gray-800 rounded-lg p-6">
+        <div className="mt-6 sm:mt-8 bg-gray-800 rounded-lg p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold">All Courses Summary</h3>
+            <h3 className="text-lg sm:text-xl font-semibold">All Courses Summary</h3>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setEditingCourses(prev => !prev)}
                 aria-expanded={editingCourses}
                 aria-controls="all-courses-editor"
-                className={`flex items-center space-x-2 px-3 py-1 rounded ${editingCourses ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 rounded text-sm ${editingCourses ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
                 title="Edit All Courses"
               >
-                <Edit className="w-4 h-4" />
-                <span className="text-sm">{editingCourses ? 'Close' : 'Edit'}</span>
+                <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline text-sm">{editingCourses ? 'Close' : 'Edit'}</span>
               </button>
             </div>
           </div>
 
           {editingCourses ? (
-            <div id="all-courses-editor" className="bg-gray-700 rounded-md p-6">
-              <div className="space-y-4">
+            <div id="all-courses-editor" className="bg-gray-700 rounded-md p-3 sm:p-4 md:p-6">
+              <div className="space-y-3 sm:space-y-4">
                 <button
                   type="button"
                   onClick={() => setCourseEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
-                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded text-sm sm:text-base"
                 >
                   Add Another CT
                 </button>
@@ -1123,55 +1123,55 @@ const StudentDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setCourseEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
-                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded"
+                  className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded text-sm sm:text-base"
                 >
                   Add Assignment/ project
                 </button>
 
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <div className="col-span-2">
-                    <div className="text-sm font-semibold mb-1">CT Count</div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-start sm:items-center">
+                  <div className="sm:col-span-2">
+                    <div className="text-xs sm:text-sm font-semibold mb-1">CT Count</div>
                     <input
                       type="number"
                       min={0}
                       value={courseEditForm.ctCount}
                       onChange={(e) => setCourseEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
-                      className="w-full p-2 bg-gray-600 rounded text-white"
+                      className="w-full p-2 bg-gray-600 rounded text-white text-sm sm:text-base"
                     />
                   </div>
-                  <div className="flex items-center justify-center">
-                    <div className="text-sm">{courseEditForm.ctCount}</div>
+                  <div className="flex items-center justify-start sm:justify-center">
+                    <div className="text-sm sm:text-base">{courseEditForm.ctCount}</div>
                   </div>
 
-                  <div className="col-span-2">
-                    <div className="text-sm font-semibold mb-1">Assignment Count</div>
+                  <div className="sm:col-span-2">
+                    <div className="text-xs sm:text-sm font-semibold mb-1">Assignment Count</div>
                     <input
                       type="number"
                       min={0}
                       value={courseEditForm.assignmentCount}
                       onChange={(e) => setCourseEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
-                      className="w-full p-2 bg-gray-600 rounded text-white"
+                      className="w-full p-2 bg-gray-600 rounded text-white text-sm sm:text-base"
                     />
                   </div>
-                  <div className="flex items-center justify-center">
-                    <div className="text-sm">{courseEditForm.assignmentCount}</div>
+                  <div className="flex items-center justify-start sm:justify-center">
+                    <div className="text-sm sm:text-base">{courseEditForm.assignmentCount}</div>
                   </div>
                 </div>
 
-                <div className="flex space-x-3 pt-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 pt-3 sm:pt-4">
                   <button
                     onClick={() => {
                       // for now just log and close
                       console.log('Saved course edits', courseEditForm);
                       setEditingCourses(false);
                     }}
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 py-2 rounded text-white"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 py-2 rounded text-white text-sm sm:text-base"
                   >
                     Save
                   </button>
                   <button
                     onClick={() => setEditingCourses(false)}
-                    className="flex-1 bg-gray-600 hover:bg-gray-500 py-2 rounded text-white"
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 py-2 rounded text-white text-sm sm:text-base"
                   >
                     Cancel
                   </button>
@@ -1179,19 +1179,19 @@ const StudentDashboard = () => {
 
                 {/* preview of added items */}
                 {(courseEditForm.addedCTs.length > 0 || courseEditForm.addedAssignments.length > 0) && (
-                  <div className="mt-4">
+                  <div className="mt-3 sm:mt-4">
                     {courseEditForm.addedCTs.length > 0 && (
                       <div className="mb-2">
-                        <div className="text-sm font-semibold mb-1">Added CTs</div>
-                        <ul className="list-disc ml-5 text-sm">
+                        <div className="text-xs sm:text-sm font-semibold mb-1">Added CTs</div>
+                        <ul className="list-disc ml-4 sm:ml-5 text-xs sm:text-sm">
                           {courseEditForm.addedCTs.map((ct, idx) => <li key={idx}>{ct}</li>)}
                         </ul>
                       </div>
                     )}
                     {courseEditForm.addedAssignments.length > 0 && (
                       <div>
-                        <div className="text-sm font-semibold mb-1">Added Assignments</div>
-                        <ul className="list-disc ml-5 text-sm">
+                        <div className="text-xs sm:text-sm font-semibold mb-1">Added Assignments</div>
+                        <ul className="list-disc ml-4 sm:ml-5 text-xs sm:text-sm">
                           {courseEditForm.addedAssignments.map((a, idx) => <li key={idx}>{a}</li>)}
                         </ul>
                       </div>
@@ -1201,11 +1201,11 @@ const StudentDashboard = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {studentSummary.courses.map((course, index) => (
-                <div key={index} className="bg-gray-700 rounded-lg p-4">
-                  <div className="font-semibold mb-2">{course.courseId}</div>
-                  <div className="text-sm space-y-1">
+                <div key={index} className="bg-gray-700 rounded-lg p-3 sm:p-4">
+                  <div className="font-semibold mb-2 text-sm sm:text-base">{course.courseId}</div>
+                  <div className="text-xs sm:text-sm space-y-1">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Average:</span>
                       <span>{course.average || 'N/A'}%</span>
@@ -1228,7 +1228,7 @@ const StudentDashboard = () => {
 
       {/* Quiz Modal */}
       {showQuiz && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
           <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <Quiz
               topic={selectedQuizTopic}
@@ -1249,12 +1249,12 @@ const StudentDashboard = () => {
 
       {/* Courses Modal */}
       {showCoursesModal && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="p-6 border-b border-gray-700">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-white">
+            <div className="p-4 sm:p-5 md:p-6 border-b border-gray-700">
+              <div className="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   {selectedCourseToAdd ? 'Add Course Details' : 'Available Courses'}
                 </h2>
                 <button
@@ -1271,7 +1271,7 @@ const StudentDashboard = () => {
                   className="text-gray-400 hover:text-white transition-colors"
                   title="Close"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
 
@@ -1283,10 +1283,10 @@ const StudentDashboard = () => {
                     value={courseSearchQuery}
                     onChange={(e) => setCourseSearchQuery(e.target.value)}
                     placeholder="Search courses by code or title..."
-                    className="w-full p-3 pl-10 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                    className="w-full p-2.5 sm:p-3 pl-9 sm:pl-10 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
                   />
                   <svg
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                    className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1303,16 +1303,16 @@ const StudentDashboard = () => {
             </div>
 
             {/* Content */}
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-4 sm:p-5 md:p-6 overflow-y-auto flex-1">
               {selectedCourseToAdd ? (
                 /* Add Course Form */
-                <form onSubmit={handleAddCourse} className="space-y-4">
+                <form onSubmit={handleAddCourse} className="space-y-3 sm:space-y-4">
                   {/* Selected Course Info */}
-                  <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-lg font-semibold text-white mb-2">
+                  <div className="bg-gray-700 rounded-lg p-3 sm:p-4 border border-gray-600">
+                    <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">
                       {selectedCourseToAdd.code}
                     </h3>
-                    <p className="text-gray-300 text-sm mb-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mb-2">
                       {selectedCourseToAdd.title}
                     </p>
                     <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
@@ -1321,9 +1321,9 @@ const StudentDashboard = () => {
                   </div>
 
                   {/* Form Fields */}
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-white mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
                         Trimester <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1332,12 +1332,12 @@ const StudentDashboard = () => {
                         onChange={(e) => setAddCourseForm({ ...addCourseForm, trimester: e.target.value })}
                         placeholder="e.g., 263"
                         required
-                        className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                        className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-white mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
                         Section <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1346,12 +1346,12 @@ const StudentDashboard = () => {
                         onChange={(e) => setAddCourseForm({ ...addCourseForm, section: e.target.value })}
                         placeholder="e.g., A"
                         required
-                        className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                        className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-white mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
                         Faculty <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1360,13 +1360,13 @@ const StudentDashboard = () => {
                         onChange={(e) => setAddCourseForm({ ...addCourseForm, faculty: e.target.value })}
                         placeholder="e.g., Dr. Mahfuz"
                         required
-                        className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                        className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
                       />
                     </div>
                   </div>
 
                   {/* Form Actions */}
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
                     <button
                       type="button"
                       onClick={() => {
@@ -1377,14 +1377,14 @@ const StudentDashboard = () => {
                           faculty: ''
                         });
                       }}
-                      className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-3 rounded-lg transition-colors"
+                      className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
                       disabled={addingCourse}
-                      className="flex-1 bg-[#FF4B00] hover:bg-[#E04300] text-white py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 bg-[#FF4B00] hover:bg-[#E04300] text-white py-2.5 sm:py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                     >
                       {addingCourse ? 'Adding...' : 'Add Course'}
                     </button>
@@ -1400,37 +1400,37 @@ const StudentDashboard = () => {
 
                   if (filteredCourses.length > 0) {
                     return (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         {filteredCourses.map((course) => (
                           <div
                             key={course.id}
-                            className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors border border-gray-600"
+                            className="bg-gray-700 rounded-lg p-3 sm:p-4 hover:bg-gray-600 transition-colors border border-gray-600"
                           >
                             <div className="flex justify-between items-start mb-2">
                               <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-white mb-1">
+                                <h3 className="text-base sm:text-lg font-semibold text-white mb-1">
                                   {course.code}
                                 </h3>
-                                <p className="text-gray-300 text-sm mb-2">
+                                <p className="text-gray-300 text-xs sm:text-sm mb-2">
                                   {course.title}
                                 </p>
                               </div>
-                              <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2">
+                              <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2 whitespace-nowrap">
                                 {course.credit} Credits
                               </span>
                             </div>
                             
-                            <div className="text-xs text-gray-400 space-y-1 mb-3">
+                            <div className="text-xs text-gray-400 space-y-1 mb-2 sm:mb-3">
                               <div>Created: {new Date(course.created_at).toLocaleDateString()}</div>
                               {course.updated_at !== course.created_at && (
                                 <div>Updated: {new Date(course.updated_at).toLocaleDateString()}</div>
                               )}
                             </div>
 
-                            <div className="pt-3 border-t border-gray-600">
+                            <div className="pt-2 sm:pt-3 border-t border-gray-600">
                               <button 
                                 onClick={() => setSelectedCourseToAdd(course)}
-                                className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-sm font-medium"
+                                className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-xs sm:text-sm font-medium"
                               >
                                 Select Course
                               </button>
@@ -1441,9 +1441,9 @@ const StudentDashboard = () => {
                     );
                   } else if (courseSearchQuery && filteredCourses.length === 0) {
                     return (
-                      <div className="text-center text-gray-400 py-8">
+                      <div className="text-center text-gray-400 py-6 sm:py-8">
                         <svg
-                          className="w-16 h-16 mx-auto mb-4 opacity-50"
+                          className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 opacity-50"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1455,15 +1455,15 @@ const StudentDashboard = () => {
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                           />
                         </svg>
-                        <p className="text-lg font-semibold mb-1">No courses found</p>
-                        <p className="text-sm">Try searching with different keywords</p>
+                        <p className="text-base sm:text-lg font-semibold mb-1">No courses found</p>
+                        <p className="text-xs sm:text-sm">Try searching with different keywords</p>
                       </div>
                     );
                   } else {
                     return (
-                      <div className="text-center text-gray-400 py-8">
-                        <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                        <p>No courses available</p>
+                      <div className="text-center text-gray-400 py-6 sm:py-8">
+                        <BookOpen className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 opacity-50" />
+                        <p className="text-sm sm:text-base">No courses available</p>
                       </div>
                     );
                   }
@@ -1473,8 +1473,8 @@ const StudentDashboard = () => {
 
             {/* Footer - Only show when not in add form */}
             {!selectedCourseToAdd && (
-              <div className="p-4 border-t border-gray-700 bg-gray-750 flex justify-between items-center">
-                <p className="text-sm text-gray-400">
+              <div className="p-3 sm:p-4 border-t border-gray-700 bg-gray-750 flex justify-between items-center">
+                <p className="text-xs sm:text-sm text-gray-400">
                   {(() => {
                     const filteredCount = availableCourses.filter(course => 
                       course.code.toLowerCase().includes(courseSearchQuery.toLowerCase()) ||
@@ -1490,7 +1490,7 @@ const StudentDashboard = () => {
                     setShowCoursesModal(false);
                     setCourseSearchQuery('');
                   }}
-                  className="bg-gray-600 hover:bg-gray-500 text-white px-6 py-2 rounded transition-colors"
+                  className="bg-gray-600 hover:bg-gray-500 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded transition-colors text-xs sm:text-sm"
                 >
                   Close
                 </button>
