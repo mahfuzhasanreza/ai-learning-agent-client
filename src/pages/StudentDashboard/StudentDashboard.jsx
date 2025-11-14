@@ -91,6 +91,7 @@ const StudentDashboard = () => {
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [coursesError, setCoursesError] = useState(null);
   const [showCoursesModal, setShowCoursesModal] = useState(false);
+  const [courseSearchQuery, setCourseSearchQuery] = useState('');
 
   // Static data (fallback when API is not available)
   const [studentData, setStudentData] = useState({
@@ -1188,72 +1189,146 @@ const StudentDashboard = () => {
 
       {/* Courses Modal */}
       {showCoursesModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="p-6 border-b border-gray-700 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Available Courses</h2>
-              <button
-                onClick={() => setShowCoursesModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-                title="Close"
-              >
-                <X className="w-6 h-6" />
-              </button>
+            <div className="p-6 border-b border-gray-700">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-white">Available Courses</h2>
+                <button
+                  onClick={() => {
+                    setShowCoursesModal(false);
+                    setCourseSearchQuery('');
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors"
+                  title="Close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={courseSearchQuery}
+                  onChange={(e) => setCourseSearchQuery(e.target.value)}
+                  placeholder="Search courses by code or title..."
+                  className="w-full p-3 pl-10 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
             </div>
 
             {/* Content */}
             <div className="p-6 overflow-y-auto flex-1">
-              {availableCourses.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {availableCourses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors border border-gray-600"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-white mb-1">
-                            {course.code}
-                          </h3>
-                          <p className="text-gray-300 text-sm mb-2">
-                            {course.title}
-                          </p>
-                        </div>
-                        <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2">
-                          {course.credit} Credits
-                        </span>
-                      </div>
-                      
-                      <div className="text-xs text-gray-400 space-y-1">
-                        <div>Created: {new Date(course.created_at).toLocaleDateString()}</div>
-                        {course.updated_at !== course.created_at && (
-                          <div>Updated: {new Date(course.updated_at).toLocaleDateString()}</div>
-                        )}
-                      </div>
+              {(() => {
+                const filteredCourses = availableCourses.filter(course => 
+                  course.code.toLowerCase().includes(courseSearchQuery.toLowerCase()) ||
+                  course.title.toLowerCase().includes(courseSearchQuery.toLowerCase())
+                );
 
-                      {/* Optional: Add action buttons */}
-                      <div className="mt-3 pt-3 border-t border-gray-600">
-                        <button className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-sm font-medium">
-                          Select Course
-                        </button>
-                      </div>
+                if (filteredCourses.length > 0) {
+                  return (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {filteredCourses.map((course) => (
+                        <div
+                          key={course.id}
+                          className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors border border-gray-600"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-semibold text-white mb-1">
+                                {course.code}
+                              </h3>
+                              <p className="text-gray-300 text-sm mb-2">
+                                {course.title}
+                              </p>
+                            </div>
+                            <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2">
+                              {course.credit} Credits
+                            </span>
+                          </div>
+                          
+                          <div className="text-xs text-gray-400 space-y-1">
+                            <div>Created: {new Date(course.created_at).toLocaleDateString()}</div>
+                            {course.updated_at !== course.created_at && (
+                              <div>Updated: {new Date(course.updated_at).toLocaleDateString()}</div>
+                            )}
+                          </div>
+
+                          {/* Optional: Add action buttons */}
+                          <div className="mt-3 pt-3 border-t border-gray-600">
+                            <button className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-sm font-medium">
+                              Select Course
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center text-gray-400 py-8">
-                  <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p>No courses available</p>
-                </div>
-              )}
+                  );
+                } else if (courseSearchQuery && filteredCourses.length === 0) {
+                  return (
+                    <div className="text-center text-gray-400 py-8">
+                      <svg
+                        className="w-16 h-16 mx-auto mb-4 opacity-50"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                      <p className="text-lg font-semibold mb-1">No courses found</p>
+                      <p className="text-sm">Try searching with different keywords</p>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="text-center text-gray-400 py-8">
+                      <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p>No courses available</p>
+                    </div>
+                  );
+                }
+              })()}
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-700 bg-gray-750">
+            <div className="p-4 border-t border-gray-700 bg-gray-750 flex justify-between items-center">
+              <p className="text-sm text-gray-400">
+                {(() => {
+                  const filteredCount = availableCourses.filter(course => 
+                    course.code.toLowerCase().includes(courseSearchQuery.toLowerCase()) ||
+                    course.title.toLowerCase().includes(courseSearchQuery.toLowerCase())
+                  ).length;
+                  return courseSearchQuery 
+                    ? `Showing ${filteredCount} of ${availableCourses.length} courses`
+                    : `Total ${availableCourses.length} courses`;
+                })()}
+              </p>
               <button
-                onClick={() => setShowCoursesModal(false)}
-                className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded transition-colors"
+                onClick={() => {
+                  setShowCoursesModal(false);
+                  setCourseSearchQuery('');
+                }}
+                className="bg-gray-600 hover:bg-gray-500 text-white px-6 py-2 rounded transition-colors"
               >
                 Close
               </button>
