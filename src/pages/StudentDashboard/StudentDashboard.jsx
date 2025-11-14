@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -1025,6 +1025,27 @@ const StudentDashboard = () => {
   const [loadingFetchedAssessments, setLoadingFetchedAssessments] = useState(false);
   const [fetchedAssessmentsError, setFetchedAssessmentsError] = useState(null);
 
+  // Calculate course progress percentage from assessments
+  const courseProgressPercentage = useMemo(() => {
+    if (fetchedAssessments.length === 0) {
+      return coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress;
+    }
+
+    let grandTotalMarks = 0;
+    let grandTotalObtained = 0;
+
+    fetchedAssessments.forEach(assessment => {
+      grandTotalMarks += parseFloat(assessment.full_marks || 0);
+      grandTotalObtained += parseFloat(assessment.marks || 0);
+    });
+
+    if (grandTotalMarks === 0) {
+      return coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress;
+    }
+
+    return Math.round((grandTotalObtained / grandTotalMarks) * 100);
+  }, [fetchedAssessments, coursePerformance, studentData.selectedCourse.progress]);
+
   // Update assessment modal states
   const [showUpdateAssessmentModal, setShowUpdateAssessmentModal] = useState(false);
   const [assessmentToUpdate, setAssessmentToUpdate] = useState(null);
@@ -1334,7 +1355,7 @@ const StudentDashboard = () => {
                               setEditingCTCount(true);
                               setTempCTCount(selectedCourse.ct_count);
                             }}
-                            className="text-[#FF4B00] hover:text-[#E04300] transition-colors"
+                            className="text-gray-400 hover:text-[#FF4B00] transition-colors"
                             title="Edit CT Count"
                           >
                             <Edit className="w-4 h-4" />
@@ -1383,7 +1404,7 @@ const StudentDashboard = () => {
                               setEditingAssignmentCount(true);
                               setTempAssignmentCount(selectedCourse.assignment_count);
                             }}
-                            className="text-[#FF4B00] hover:text-[#E04300] transition-colors"
+                            className="text-gray-400 hover:text-[#FF4B00] transition-colors"
                             title="Edit Assignment Count"
                           >
                             <Edit className="w-4 h-4" />
@@ -1413,7 +1434,7 @@ const StudentDashboard = () => {
                   <div className="text-sm font-semibold mb-0 sm:mb-2">Course progress</div>
                   <div>
                     <CircularProgress
-                      percentage={coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress}
+                      percentage={courseProgressPercentage}
                       size={100}
                       strokeWidth={8}
                     />
@@ -1425,7 +1446,7 @@ const StudentDashboard = () => {
             </div>
 
             {/* Scores */}
-            <div className="bg-gray-800 p-4 sm:p-6">
+            <div className="bg-gray-800 p-4 sm:p-6 rounded-b-lg">
               <div className={`flex items-center justify-between mb-4`}>
                 <h3 className="text-lg sm:text-xl font-semibold">
                   All Scores
@@ -1448,7 +1469,7 @@ const StudentDashboard = () => {
                 {loadingFetchedAssessments && (
                   <div className="text-center py-4">
                     <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
-                    <p className="text-sm text-gray-400">Loading assessments...</p>
+                    <p className="text-sm text-gray-400">Loading scores...</p>
                   </div>
                 )}
 
@@ -1656,11 +1677,13 @@ const StudentDashboard = () => {
                               <span className='text-gray-400'>{totals.totalObtained.toFixed(2)}</span>
                             </div>
                           ))}
-                          {/* Grand Total Row */}
+                          {/* Grand Total Row with Percentage */}
                           <div className="grid grid-cols-3 text-center text-xs sm:text-sm mt-3 pt-3 border-t border-gray-600 font-bold">
                             <span className="text-[#FF4B00]">TOTAL</span>
                             <span className='text-[#FF4B00]'>{grandTotalMarks.toFixed(2)}</span>
-                            <span className='text-[#FF4B00]'>{grandTotalObtained.toFixed(2)}</span>
+                            <span className='text-[#FF4B00]'>
+                              {grandTotalObtained.toFixed(2)} ({grandTotalMarks > 0 ? ((grandTotalObtained / grandTotalMarks) * 100).toFixed(2) : 0}%)
+                            </span>
                           </div>
                         </>
                       );
@@ -1668,7 +1691,10 @@ const StudentDashboard = () => {
                   ) : (
                     // Fallback to static data
                     <>
-                     
+                     <div className="text-center py-4">
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
+                    <p className="text-sm text-gray-400">Loading assessments...</p>
+                  </div>
                     </>
                   )}
                 </div>
