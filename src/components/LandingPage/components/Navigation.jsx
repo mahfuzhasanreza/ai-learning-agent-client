@@ -60,7 +60,7 @@ const Navigation = () => {
     { name: 'Study Plan', href: '/study-plan', id: 'features' },
     { name: 'Roadmap', href: '/roadmap', id: 'quick-start' },
     { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
-    { name: 'AI Chat', href: '/chat', id: 'chat' }
+    { name: 'AI Chat', href: '/cosmos-chatbot', id: 'chat' }
   ];
 
   const scrollToSection = (href) => {
@@ -123,7 +123,7 @@ const Navigation = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className={`${isSidebarOpen ? 'ml-120' : ''} max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+      <div className={`${isSidebarOpen && isChatPage ? 'ml-120' : ''} max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
           <motion.div
