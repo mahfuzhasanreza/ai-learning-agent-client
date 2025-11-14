@@ -1621,34 +1621,73 @@ const StudentDashboard = () => {
                 <div className="space-y-2">
                   <div className="grid grid-cols-3 gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-center border-b border-gray-600 pb-2">
                     <span>Assessment</span>
-                    <span>Marks</span>
-                    <span>Obtained</span>
+                    <span>Total Marks</span>
+                    <span>Total Obtained</span>
                   </div>
 
-                  {/* Display API assessment data if available */}
-                  {assessments && assessments.length > 0 ? (
-                    assessments.map((assessment, index) => (
-                      <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
-                        <span>{assessment.assessment_type}</span>
-                        <span className='text-gray-400'>{assessment.max_marks || 100}</span>
-                        <span className='text-gray-400'>{assessment.score}</span>
-                      </div>
-                    ))
+                  {/* Display fetched assessments grouped by type */}
+                  {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
+                    (() => {
+                      // Group assessments by type and calculate totals
+                      const assessmentGroups = {};
+                      let grandTotalMarks = 0;
+                      let grandTotalObtained = 0;
+
+                      fetchedAssessments.forEach(assessment => {
+                        const type = assessment.assessment_type.toUpperCase();
+                        if (!assessmentGroups[type]) {
+                          assessmentGroups[type] = {
+                            totalMarks: 0,
+                            totalObtained: 0
+                          };
+                        }
+                        assessmentGroups[type].totalMarks += parseFloat(assessment.full_marks || 0);
+                        assessmentGroups[type].totalObtained += parseFloat(assessment.marks || 0);
+                        grandTotalMarks += parseFloat(assessment.full_marks || 0);
+                        grandTotalObtained += parseFloat(assessment.marks || 0);
+                      });
+
+                      return (
+                        <>
+                          {Object.entries(assessmentGroups).map(([type, totals], index) => (
+                            <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
+                              <span>{type}</span>
+                              <span className='text-gray-400'>{totals.totalMarks.toFixed(2)}</span>
+                              <span className='text-gray-400'>{totals.totalObtained.toFixed(2)}</span>
+                            </div>
+                          ))}
+                          {/* Grand Total Row */}
+                          <div className="grid grid-cols-3 text-center text-xs sm:text-sm mt-3 pt-3 border-t border-gray-600 font-bold">
+                            <span className="text-[#FF4B00]">TOTAL</span>
+                            <span className='text-[#FF4B00]'>{grandTotalMarks.toFixed(2)}</span>
+                            <span className='text-[#FF4B00]'>{grandTotalObtained.toFixed(2)}</span>
+                          </div>
+                        </>
+                      );
+                    })()
                   ) : (
                     // Fallback to static data
-                    [
-                      { type: "CT", marks: 20, obtained: 20 },
-                      { type: "Assignment", marks: 5, obtained: 5 },
-                      { type: "Attendance", marks: 5, obtained: 5 },
-                      { type: "MID", marks: 30, obtained: 30 },
-                      { type: "Final", marks: 40, obtained: 40 }
-                    ].map((assessment, index) => (
-                      <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
-                        <span>{assessment.type}</span>
-                        <span className='text-gray-400'>{assessment.marks}</span>
-                        <span className='text-gray-400'>{assessment.obtained}</span>
+                    <>
+                      {[
+                        { type: "CT", marks: 20, obtained: 20 },
+                        { type: "Assignment", marks: 5, obtained: 5 },
+                        { type: "Attendance", marks: 5, obtained: 5 },
+                        { type: "MID", marks: 30, obtained: 30 },
+                        { type: "Final", marks: 40, obtained: 40 }
+                      ].map((assessment, index) => (
+                        <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
+                          <span>{assessment.type}</span>
+                          <span className='text-gray-400'>{assessment.marks}</span>
+                          <span className='text-gray-400'>{assessment.obtained}</span>
+                        </div>
+                      ))}
+                      {/* Grand Total Row for static data */}
+                      <div className="grid grid-cols-3 text-center text-xs sm:text-sm mt-3 pt-3 border-t border-gray-600 font-bold">
+                        <span className="text-[#FF4B00]">TOTAL</span>
+                        <span className='text-[#FF4B00]'>100</span>
+                        <span className='text-[#FF4B00]'>100</span>
                       </div>
-                    ))
+                    </>
                   )}
                 </div>
               </div>
@@ -1708,7 +1747,7 @@ const StudentDashboard = () => {
               </div>
             </div>}
 
-          </div>}
+          </div>
         </div>
 
         {/* Additional Data Section */}
