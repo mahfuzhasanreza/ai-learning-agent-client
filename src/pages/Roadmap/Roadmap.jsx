@@ -12,6 +12,8 @@ const Roadmap = () => {
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [completedItems, setCompletedItems] = useState(new Set());
+  const [showDetails, setShowDetails] = useState(true);
+  const [showChatbot, setShowChatbot] = useState(true);
   
   // Get auth token
   const { getToken } = UserAuth();
@@ -360,6 +362,9 @@ const Roadmap = () => {
     nodes.on("click", (event, d) => {
       event.stopPropagation();
       setSelectedNode(d.data);
+      // Reset panel visibility when selecting new node
+      setShowDetails(true);
+      setShowChatbot(true);
       if (d.data.type === "item") {
         toggleCompletion(d.data.id);
       }
@@ -560,7 +565,7 @@ const Roadmap = () => {
       <div className="flex gap-4 h-full overflow-hidden p-4 mt-20 pb-20">
         
         {/* Left Side Panel - Details */}
-        {selectedNode && (
+        {selectedNode && showDetails && (
           <div className="w-96 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
             {/* Header with Close Button */}
             <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
@@ -568,9 +573,9 @@ const Roadmap = () => {
                 Details
               </h3>
               <button
-                onClick={() => setSelectedNode(null)}
+                onClick={() => setShowDetails(false)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-all group"
-                title="Close"
+                title="Close Details"
               >
                 <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -669,13 +674,22 @@ const Roadmap = () => {
         </div>
 
         {/* Right Side panel - AI Chatbot */}
-        {selectedNode && (
+        {selectedNode && showChatbot && (
           <div className="w-120 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
-            {/* Header with Title */}
-            <div className="px-6 py-4 border-b border-[#2a2938] bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
+            {/* Header with Close Button */}
+            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
               <h3 className="text-lg font-bold bg-gradient-to-r from-[#a200ff] to-[#FF4B00] bg-clip-text text-transparent">
                 AI Chatbot Insights
               </h3>
+              <button
+                onClick={() => setShowChatbot(false)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                title="Close Chatbot"
+              >
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
             {/* ChatBot Panel */}
