@@ -350,6 +350,24 @@ const ChatBotPanel = ({ topic, threadId }) => {
             </div>
           )}
           
+          {/* COSMOS AI is typing indicator */}
+          {loading && !streamingMessage && (
+            <div className="mb-3">
+              <div className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-[#1e1e1e] to-[#252525] border border-[#a200ff]/30 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 bg-[#a200ff] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-[#FF4B00] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-[#a200ff] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  </div>
+                  <span className="text-sm font-medium bg-gradient-to-r from-[#a200ff] to-[#FF4B00] bg-clip-text text-transparent">
+                    COSMOS-ITS is typing
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
   
@@ -372,7 +390,6 @@ const ChatBotPanel = ({ topic, threadId }) => {
           </button>
         </div>
   
-        {loading && <p className="text-xs text-[#a200ff] mt-2 px-2 animate-pulse">AI is typing...</p>}
         {!threadId && <p className="text-xs text-[#FF4B00] mt-2 px-2">Please generate a roadmap to start chatting.</p>}
       </div>
     );
