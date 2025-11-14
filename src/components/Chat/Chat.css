@@ -718,6 +718,7 @@
 .send-icon {
     width: 35px !important;
     filter: drop-shadow(0 0 5px #FF4B00);
+    color: #FF4B00;
 }
 
 /* Input Text */

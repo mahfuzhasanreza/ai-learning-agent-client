@@ -452,7 +452,7 @@ const Chat = () => {
                             }}
                         />
 
-                        <img src={assets.gallery_icon} alt="" />
+                        {/* <img src={assets.gallery_icon} alt="" /> */}
 
                         {
                             listening ?
@@ -526,13 +526,25 @@ const Chat = () => {
                             )}
                         </div>
 
-                        {input || listening ? <img onClick={() => {
-                            onSent();
-                            if (listening) {
-                                SpeechRecognition.stopListening();
-                                resetTranscript();
-                            }
-                        }} className='send-icon' src={assets.send_icon} alt="" /> : null}
+                        {/* Send icon - always visible, disabled when no input */}
+                        <img 
+                            onClick={() => {
+                                if (input || listening) {
+                                    onSent();
+                                    if (listening) {
+                                        SpeechRecognition.stopListening();
+                                        resetTranscript();
+                                    }
+                                }
+                            }} 
+                            className={`send-icon ${!(input || listening) ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                            style={{ 
+                                filter: !(input || listening) ? 'grayscale(100%)' : 'none',
+                                pointerEvents: !(input || listening) ? 'none' : 'auto'
+                            }}
+                            src={assets.send_icon} 
+                            alt="" 
+                        />
                     </div>
                     <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
