@@ -54,7 +54,7 @@ const Navigation = () => {
   const navItems = [
     { name: 'Features', href: '#features', id: 'features' },
     { name: 'Learning Tools', href: '#quick-start', id: 'quick-start' },
-    { name: 'Success Metrics', href: '#stats', id: 'stats' },
+    { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
     { name: 'AI Chat', href: '/chat', id: 'chat' }
   ];
 

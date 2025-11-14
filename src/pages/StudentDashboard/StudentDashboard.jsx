@@ -3,6 +3,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import * as Chart from 'chart.js';
+import Navigation from "../../components/LandingPage/components/Navigation";
 import {
   useStudentPerformance,
   useCoursePerformance,
@@ -352,6 +353,10 @@ const StudentDashboard = () => {
     <div className="bg-gray-900 text-white p-6 min-w-[1585px]">
       {/* Header */}
 
+      <div className="mb-20">
+        <Navigation></Navigation>
+      </div>
+
       <div className="flex items-center justify-between mb-8">
 
 
@@ -369,53 +374,6 @@ const StudentDashboard = () => {
           <Link underline="hover" color="inherit" href="/">Home</Link>
           <Typography sx={{ color: `${isDark ? 'white' : 'text.primary'}` }}>Performance Tracking</Typography>
         </Breadcrumbs>
-
-
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
-            <User className="w-6 h-6" />
-          </div>
-          <h1 className="text-2xl font-bold ml-2">{studentData.name}</h1>
-
-          {/* API Connection Status */}
-          <div className="flex items-center space-x-2">
-            {connectionLoading ? (
-              <RefreshCw className="w-4 h-4 animate-spin text-yellow-400" />
-            ) : isConnected ? (
-              <Wifi className="w-4 h-4 text-green-400" />
-            ) : (
-              <WifiOff className="w-4 h-4 text-red-400" />
-            )}
-            <span className="text-xs text-gray-400">
-              {connectionLoading ? 'Connecting...' : isConnected ? 'API Connected' : 'API Offline'}
-            </span>
-          </div>
-          <button
-            onClick={refreshAllData}
-            className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
-            title="Refresh Data"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* <div className="flex items-center space-x-6 gap-7">
-          <div className="text-center flex justify-center items-center gap-4">
-            <div className="text-sm text-gray-400">Completed Credits</div>
-            <div className="text-xl font-bold">{studentData.completedCredits}</div>
-          </div>
-          <div className="text-center flex justify-center items-center gap-4">
-            <div className="text-sm text-gray-400">CGPA</div>
-            <div className="text-xl font-bold">{studentData.cgpa}</div>
-          </div>
-          {studentSummary && (
-            <div className="text-center flex justify-center items-center gap-4">
-              <div className="text-sm text-gray-400">Overall Average</div>
-              <div className="text-xl font-bold">{studentSummary.overallAverage}%</div>
-            </div>
-          )}
-          
-        </div> */}
       </div>
 
       {/* Loading Indicator */}
@@ -423,17 +381,6 @@ const StudentDashboard = () => {
         <div className="mb-4 p-4 bg-primary-color rounded-lg text-center">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
           Loading data...
-        </div>
-      )}
-
-      {/* Error Messages */}
-      {(summaryError || courseError || trendsError || assessmentsError) && (
-        <div className="mb-4 p-4 bg-red-600 rounded-lg">
-          <strong>Errors:</strong>
-          {summaryError && <div>Summary: {summaryError}</div>}
-          {courseError && <div>Course: {courseError}</div>}
-          {trendsError && <div>Trends: {trendsError}</div>}
-          {assessmentsError && <div>Assessments: {assessmentsError}</div>}
         </div>
       )}
 
@@ -1188,39 +1135,6 @@ const StudentDashboard = () => {
               ))}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Debug Section (Remove in production) */}
-  {import.meta && import.meta.env && import.meta.env.DEV && (
-        <div className="mt-8 bg-gray-800 rounded-lg p-4">
-          <h3 className="text-lg font-semibold mb-4">API Data Debug</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div>
-              <h4 className="font-semibold mb-2">Summary Data:</h4>
-              <pre className="bg-gray-700 p-2 rounded overflow-auto max-h-40">
-                {JSON.stringify(studentSummary, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Course Performance:</h4>
-              <pre className="bg-gray-700 p-2 rounded overflow-auto max-h-40">
-                {JSON.stringify(coursePerformance, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Trends:</h4>
-              <pre className="bg-gray-700 p-2 rounded overflow-auto max-h-40">
-                {JSON.stringify(trends, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Assessments:</h4>
-              <pre className="bg-gray-700 p-2 rounded overflow-auto max-h-40">
-                {JSON.stringify(assessments, null, 2)}
-              </pre>
-            </div>
-          </div>
         </div>
       )}
 
