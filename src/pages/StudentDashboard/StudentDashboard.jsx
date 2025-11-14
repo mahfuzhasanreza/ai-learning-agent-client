@@ -541,11 +541,6 @@ const StudentDashboard = () => {
                   ))}
                 </select>
               </div>
-
-              <div className="text-gray-300 text-sm sm:text-base">
-                <div>{availableTrimesters.find(t => t.value === selectedTrimester)?.label}</div>
-                <div>{studentData.trimesterCredits} credits</div>
-              </div>
             </div>
 
             <div className="mb-4">
@@ -663,11 +658,11 @@ const StudentDashboard = () => {
                         </div>
                         <div className="text-sm text-gray-400 mt-1">{course.credits} credits</div>
                       </div>
-                      <CircularProgress
+                      {/* <CircularProgress
                         percentage={Math.floor(Math.random() * 100)} // Replace with actual progress when available
                         color="primary"
                         size={50}
-                      />
+                      /> */}
                     </div>
                     <hr className='my-3 text-gray-700' />
                   </div>
