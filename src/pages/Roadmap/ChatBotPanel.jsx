@@ -34,22 +34,34 @@ const ChatBotPanel = ({ topic, threadId }) => {
         const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
         const token = getToken();
         
+        console.log('=== Sending Chat Request ===');
+        console.log('Base URL:', baseUrl);
+        console.log('Thread ID:', threadId);
+        console.log('Question:', text);
+        
         const headers = {
           'Content-Type': 'application/json',
         };
         
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
+          console.log('Auth token present:', token.substring(0, 20) + '...');
         }
+        
+        const requestBody = { 
+          thread_id: threadId,
+          question: text.trim()
+        };
+        console.log('Request body:', requestBody);
         
         const response = await fetch(`${baseUrl}/api/v1/roadmap/chat`, {
           method: 'POST',
           headers: headers,
-          body: JSON.stringify({ 
-            thread_id: threadId,
-            question: text.trim()
-          }),
+          body: JSON.stringify(requestBody),
         });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,6 +72,9 @@ const ChatBotPanel = ({ topic, threadId }) => {
         let buffer = '';
         let currentEvent = null;
         let botResponse = '';
+        let fullResponseLog = [];
+
+        console.log('=== Starting SSE Response Stream ===');
 
         while (true) {
           const { done, value } = await reader.read();
@@ -70,27 +85,56 @@ const ChatBotPanel = ({ topic, threadId }) => {
           buffer = lines.pop() || '';
 
           for (const line of lines) {
+            // Log every line received
+            console.log('SSE Line:', line);
+            fullResponseLog.push(line);
+            
             if (!line.trim()) continue;
             
             if (line.startsWith('event: ')) {
               currentEvent = line.slice(7).trim();
+              console.log('Event type:', currentEvent);
               continue;
             }
             
             if (line.startsWith('data: ')) {
               try {
                 let jsonString = line.slice(6).trim();
+                console.log('Raw data string:', jsonString);
                 
-                if (!jsonString) continue;
-                if (jsonString.startsWith('event:')) continue;
-                if (jsonString.startsWith('data: ')) {
-                  jsonString = jsonString.slice(6).trim();
+                if (!jsonString) {
+                  console.log('Empty data, skipping');
+                  continue;
                 }
                 
-                const jsonData = JSON.parse(jsonString);
+                if (jsonString.startsWith('event:')) {
+                  console.log('Data starts with "event:", skipping');
+                  continue;
+                }
+                
+                // Handle duplicate "data: " prefix
+                if (jsonString.startsWith('data: ')) {
+                  console.log('Found duplicate "data:" prefix, stripping it');
+                  jsonString = jsonString.slice(6).trim();
+                  console.log('After stripping:', jsonString);
+                }
+                
+                // Try to parse as JSON
+                let jsonData;
+                try {
+                  jsonData = JSON.parse(jsonString);
+                  console.log('Parsed JSON:', jsonData);
+                } catch (parseError) {
+                  console.warn('Not JSON, treating as plain text:', jsonString);
+                  // If not JSON, treat as plain text (might be thread_id)
+                  jsonData = { raw: jsonString };
+                }
                 
                 if (currentEvent === 'explanation' && jsonData.content) {
+                  console.log('Got explanation content:', jsonData.content.substring(0, 100) + '...');
                   botResponse = jsonData.content;
+                } else if (currentEvent === 'thread_id') {
+                  console.log('Got thread_id:', jsonData);
                 }
                 
                 currentEvent = null;
@@ -100,6 +144,11 @@ const ChatBotPanel = ({ topic, threadId }) => {
             }
           }
         }
+
+        console.log('=== Full SSE Response Log ===');
+        console.log(fullResponseLog.join('\n'));
+        console.log('=== End SSE Response ===');
+        console.log('Final bot response length:', botResponse.length);
 
         if (botResponse) {
           setMessages(prev => [...prev, { sender: "bot", text: botResponse }]);
