@@ -6,6 +6,7 @@ const ChatBotPanel = ({ topic, threadId }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [streamingMessage, setStreamingMessage] = useState(""); // For typing effect
     const messagesEndRef = useRef(null);
     const { getToken } = UserAuth();
     const hasInitialized = useRef(false);
@@ -76,6 +77,9 @@ const ChatBotPanel = ({ topic, threadId }) => {
         let fullResponseLog = [];
 
         console.log('=== Starting SSE Response Stream ===');
+        
+        // Start showing streaming message
+        setStreamingMessage("");
 
         while (true) {
           const { done, value } = await reader.read();
@@ -140,6 +144,8 @@ const ChatBotPanel = ({ topic, threadId }) => {
                   if (jsonData.content) {
                     console.log('Got explanation content, length:', jsonData.content.length);
                     botResponse = jsonData.content;
+                    // Update streaming message for typing effect
+                    setStreamingMessage(jsonData.content);
                   }
                 } else if (currentEvent === 'thread_id') {
                   console.log('Got thread_id:', jsonData);
@@ -158,6 +164,8 @@ const ChatBotPanel = ({ topic, threadId }) => {
         console.log('=== End SSE Response ===');
         console.log('Final bot response length:', botResponse.length);
 
+        // Clear streaming message and add final message
+        setStreamingMessage("");
         if (botResponse) {
           setMessages(prev => [...prev, { sender: "bot", text: botResponse }]);
         } else {
@@ -165,6 +173,7 @@ const ChatBotPanel = ({ topic, threadId }) => {
         }
       } catch (err) {
         console.error('Chatbot API error:', err);
+        setStreamingMessage("");
         setMessages(prev => [...prev, { sender: "bot", text: "Error: Could not get response from the AI. Please try again." }]);
       } finally {
         setLoading(false);
@@ -309,14 +318,14 @@ const ChatBotPanel = ({ topic, threadId }) => {
     };
   
     return (
-      <div className="flex flex-col h-full bg-[#1a1a1a] rounded-lg">
+      <div className="mb-2 flex flex-col h-full bg-[#1a1a1a] rounded-lg">
         <div className="flex-1 overflow-y-auto mb-4 p-4 border border-gray-700 rounded-lg bg-[#0f0f0f]">
           {messages.map((msg, i) => (
-            <div key={i} className={`mb-3 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] px-4 py-3 rounded-lg ${
+            <div key={i} className={`mb-3 ${msg.sender === "user" ? "flex justify-end" : ""}`}>
+              <div className={`px-4 py-3 rounded-lg ${
                 msg.sender === "user" 
-                  ? "bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] text-white shadow-lg" 
-                  : "bg-[#1e1e1e] border border-gray-700 text-gray-100 shadow-md"
+                  ? "max-w-[85%] bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] text-white shadow-lg" 
+                  : "w-full bg-[#1e1e1e] border border-gray-700 text-gray-100 shadow-md"
               }`}>
                 {msg.sender === "bot" ? (
                   <div className="prose prose-sm max-w-none text-sm prose-invert">
@@ -328,6 +337,19 @@ const ChatBotPanel = ({ topic, threadId }) => {
               </div>
             </div>
           ))}
+          
+          {/* Streaming message with typing effect */}
+          {streamingMessage && (
+            <div className="mb-3">
+              <div className="w-full px-4 py-3 rounded-lg bg-[#1e1e1e] border border-gray-700 text-gray-100 shadow-md">
+                <div className="prose prose-sm max-w-none text-sm prose-invert">
+                  {formatBotMessage(streamingMessage)}
+                  <span className="inline-block w-1 h-4 ml-1 bg-[#a200ff] animate-pulse"></span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
   
