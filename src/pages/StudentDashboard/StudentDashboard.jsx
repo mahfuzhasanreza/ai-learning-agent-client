@@ -1481,7 +1481,7 @@ const StudentDashboard = () => {
 
                   {/* Display fetched assessments from API */}
                   {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
-                    fetchedAssessments.slice(-5).map((assessment, index) => (
+                    fetchedAssessments.map((assessment, index) => (
                       <div key={index} className="flex mb-1 justify-between items-center">
                         <span className="font-medium">
                           {assessment.assessment_type.toUpperCase()}
@@ -1495,7 +1495,7 @@ const StudentDashboard = () => {
                     ))
                   ) : trends && trends.length > 0 ? (
                     // Fallback to trends data
-                    trends.slice(-5).map((trend, index) => (
+                    trends.map((trend, index) => (
                       <div key={index} className="flex mb-1 justify-between items-center">
                         <span className="font-medium">{trend.assessment_type}</span>
                         <span className="text-gray-300">
@@ -1507,19 +1507,9 @@ const StudentDashboard = () => {
                     // Fallback to static data
                     !loadingFetchedAssessments && !fetchedAssessmentsError && (
                       <>
-                        {[
-                          { name: "CT1", score: 16, total: 20 },
-                          { name: "CT2", score: 16, total: 20 },
-                          { name: "MID", score: 30, total: 30 },
-                          { name: "Final", score: 40, total: 40 }
-                        ].map((score, index) => (
-                          <div key={index} className="flex mb-1 justify-between items-center">
-                            <span className="font-medium">{score.name}</span>
-                            <span className="text-gray-300">
-                              {score.score} out of {score.total}
-                            </span>
-                          </div>
-                        ))}
+                        <div>
+                          <p>No assessments available.</p>
+                        </div>
                       </>
                     )
                   )}
