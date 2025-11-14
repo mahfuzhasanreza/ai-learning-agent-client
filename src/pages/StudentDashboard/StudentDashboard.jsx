@@ -701,6 +701,152 @@ const StudentDashboard = () => {
     }
   };
 
+  // Handle edit assessment - open modal with pre-filled data
+  const handleEditAssessment = (assessment) => {
+    setAssessmentToUpdate(assessment);
+    setUpdateAssessmentForm({
+      assessment_type: assessment.assessment_type,
+      ct_no: assessment.ct_no || '',
+      assignment_no: assessment.assignment_no || '',
+      marks: assessment.marks,
+      full_marks: assessment.full_marks
+    });
+    setShowUpdateAssessmentModal(true);
+  };
+
+  // Handle update assessment submit
+  const handleUpdateAssessmentSubmit = async () => {
+    if (!assessmentToUpdate) return;
+
+    // Validation
+    if (!updateAssessmentForm.marks || !updateAssessmentForm.full_marks) {
+      setAddFailureMessage('Please fill in all required fields');
+      setShowAddFailureNotification(true);
+      setTimeout(() => setShowAddFailureNotification(false), 5000);
+      return;
+    }
+
+    if ((updateAssessmentForm.assessment_type === 'ct' || updateAssessmentForm.assessment_type === 'assignment') && 
+        !(updateAssessmentForm.ct_no || updateAssessmentForm.assignment_no)) {
+      setAddFailureMessage(`Please enter ${updateAssessmentForm.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`);
+      setShowAddFailureNotification(true);
+      setTimeout(() => setShowAddFailureNotification(false), 5000);
+      return;
+    }
+
+    setUpdatingAssessment(true);
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const requestBody = {
+        student_id: STUDENT_ID,
+        assessment_type: updateAssessmentForm.assessment_type,
+        marks: parseFloat(updateAssessmentForm.marks),
+        full_marks: parseFloat(updateAssessmentForm.full_marks)
+      };
+
+      // Add ct_no or assignment_no if applicable
+      if (updateAssessmentForm.assessment_type === 'ct') {
+        requestBody.ct_no = parseInt(updateAssessmentForm.ct_no);
+      } else if (updateAssessmentForm.assessment_type === 'assignment') {
+        requestBody.assignment_no = parseInt(updateAssessmentForm.assignment_no);
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/assessments/${assessmentToUpdate.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      // Close modal
+      setShowUpdateAssessmentModal(false);
+      setAssessmentToUpdate(null);
+
+      // Show success notification
+      setCountUpdateMessage('Assessment updated successfully');
+      setShowCountUpdateSuccess(true);
+      setTimeout(() => {
+        setShowCountUpdateSuccess(false);
+      }, 3000);
+
+      // Refresh assessments
+      if (selectedCourse?.course_id) {
+        fetchAssessments(selectedCourse.course_id);
+      }
+
+    } catch (error) {
+      console.error('Error updating assessment:', error);
+      setAddFailureMessage(error.message || 'Failed to update assessment. Please try again.');
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000);
+    } finally {
+      setUpdatingAssessment(false);
+    }
+  };
+
+  // Handle delete assessment - open confirmation modal
+  const handleDeleteAssessment = (assessment) => {
+    setAssessmentToDelete(assessment);
+    setShowDeleteAssessmentConfirm(true);
+  };
+
+  // Confirm and delete assessment
+  const confirmDeleteAssessment = async () => {
+    if (!assessmentToDelete) return;
+
+    setDeletingAssessment(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/assessments/${assessmentToDelete.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Close confirmation modal
+      setShowDeleteAssessmentConfirm(false);
+      setAssessmentToDelete(null);
+
+      // Show success notification
+      setCountUpdateMessage('Assessment deleted successfully');
+      setShowCountUpdateSuccess(true);
+      setTimeout(() => {
+        setShowCountUpdateSuccess(false);
+      }, 3000);
+
+      // Refresh assessments
+      if (selectedCourse?.course_id) {
+        fetchAssessments(selectedCourse.course_id);
+      }
+
+    } catch (error) {
+      console.error('Error deleting assessment:', error);
+      setAddFailureMessage(error.message || 'Failed to delete assessment. Please try again.');
+      setShowAddFailureNotification(true);
+      setTimeout(() => {
+        setShowAddFailureNotification(false);
+      }, 5000);
+    } finally {
+      setDeletingAssessment(false);
+    }
+  };
+
   // Fetch assessments for selected course with retry logic
   const fetchAssessments = useCallback(async (courseId, retryCount = 0) => {
     if (!courseId) return;
@@ -880,6 +1026,23 @@ const StudentDashboard = () => {
   const [fetchedAssessments, setFetchedAssessments] = useState([]);
   const [loadingFetchedAssessments, setLoadingFetchedAssessments] = useState(false);
   const [fetchedAssessmentsError, setFetchedAssessmentsError] = useState(null);
+
+  // Update assessment modal states
+  const [showUpdateAssessmentModal, setShowUpdateAssessmentModal] = useState(false);
+  const [assessmentToUpdate, setAssessmentToUpdate] = useState(null);
+  const [updateAssessmentForm, setUpdateAssessmentForm] = useState({
+    assessment_type: '',
+    ct_no: '',
+    assignment_no: '',
+    marks: '',
+    full_marks: ''
+  });
+  const [updatingAssessment, setUpdatingAssessment] = useState(false);
+
+  // Delete assessment modal states
+  const [showDeleteAssessmentConfirm, setShowDeleteAssessmentConfirm] = useState(false);
+  const [assessmentToDelete, setAssessmentToDelete] = useState(null);
+  const [deletingAssessment, setDeletingAssessment] = useState(false);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1482,15 +1645,33 @@ const StudentDashboard = () => {
                   {/* Display fetched assessments from API */}
                   {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
                     fetchedAssessments.map((assessment, index) => (
-                      <div key={index} className="flex mb-1 justify-between items-center">
-                        <span className="font-medium">
-                          {assessment.assessment_type.toUpperCase()}
-                          {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
-                          {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
-                        </span>
-                        <span className="text-gray-300">
-                          {assessment.marks}/{assessment.full_marks}
-                        </span>
+                      <div key={index} className="flex mb-2 justify-between items-center group bg-gray-700/30 hover:bg-gray-700/50 rounded-lg p-2 transition-all">
+                        <div className="flex-1">
+                          <span className="font-medium">
+                            {assessment.assessment_type.toUpperCase()}
+                            {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
+                            {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
+                          </span>
+                          <span className="text-gray-300 ml-3">
+                            {assessment.marks}/{assessment.full_marks}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleEditAssessment(assessment)}
+                            className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 transition-all"
+                            title="Edit Assessment"
+                          >
+                            <Edit className="w-4 h-4 text-blue-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAssessment(assessment)}
+                            className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all"
+                            title="Delete Assessment"
+                          >
+                            <X className="w-4 h-4 text-red-400" />
+                          </button>
+                        </div>
                       </div>
                     ))
                   ) : trends && trends.length > 0 ? (
@@ -2290,6 +2471,194 @@ const StudentDashboard = () => {
                       </>
                     ) : (
                       'Add Assessment'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Update Assessment Modal */}
+        {showUpdateAssessmentModal && assessmentToUpdate && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Update Assessment</h3>
+                  <button
+                    onClick={() => {
+                      setShowUpdateAssessmentModal(false);
+                      setAssessmentToUpdate(null);
+                    }}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Assessment Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Assessment Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={updateAssessmentForm.assessment_type}
+                      onChange={(e) => {
+                        setUpdateAssessmentForm({
+                          ...updateAssessmentForm,
+                          assessment_type: e.target.value,
+                          ct_no: e.target.value === 'ct' ? updateAssessmentForm.ct_no : '',
+                          assignment_no: e.target.value === 'assignment' ? updateAssessmentForm.assignment_no : ''
+                        });
+                      }}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#FF4B00] focus:ring-1 focus:ring-[#FF4B00]"
+                    >
+                      <option value="ct">CT</option>
+                      <option value="assignment">Assignment</option>
+                      <option value="mid">Mid</option>
+                      <option value="final">Final</option>
+                    </select>
+                  </div>
+
+                  {/* CT/Assignment Number */}
+                  {(updateAssessmentForm.assessment_type === 'ct' || updateAssessmentForm.assessment_type === 'assignment') && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        {updateAssessmentForm.assessment_type === 'ct' ? 'CT Number' : 'Assignment Number'} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={updateAssessmentForm.assessment_type === 'ct' ? updateAssessmentForm.ct_no : updateAssessmentForm.assignment_no}
+                        onChange={(e) => {
+                          if (updateAssessmentForm.assessment_type === 'ct') {
+                            setUpdateAssessmentForm({ ...updateAssessmentForm, ct_no: e.target.value });
+                          } else {
+                            setUpdateAssessmentForm({ ...updateAssessmentForm, assignment_no: e.target.value });
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#FF4B00] focus:ring-1 focus:ring-[#FF4B00]"
+                        placeholder={`Enter ${updateAssessmentForm.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`}
+                      />
+                    </div>
+                  )}
+
+                  {/* Marks Obtained */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Marks Obtained <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={updateAssessmentForm.marks}
+                      onChange={(e) => setUpdateAssessmentForm({ ...updateAssessmentForm, marks: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#FF4B00] focus:ring-1 focus:ring-[#FF4B00]"
+                      placeholder="Enter marks obtained"
+                    />
+                  </div>
+
+                  {/* Full Marks */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Full Marks <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={updateAssessmentForm.full_marks}
+                      onChange={(e) => setUpdateAssessmentForm({ ...updateAssessmentForm, full_marks: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#FF4B00] focus:ring-1 focus:ring-[#FF4B00]"
+                      placeholder="Enter full marks"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => {
+                      setShowUpdateAssessmentModal(false);
+                      setAssessmentToUpdate(null);
+                    }}
+                    disabled={updatingAssessment}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateAssessmentSubmit}
+                    disabled={updatingAssessment}
+                    className="flex-1 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {updatingAssessment ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      'Update Assessment'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Assessment Confirmation Modal */}
+        {showDeleteAssessmentConfirm && assessmentToDelete && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                
+                <h3 className="text-xl font-bold text-white text-center mb-2">
+                  Delete Assessment
+                </h3>
+                
+                <p className="text-gray-300 text-center mb-4">
+                  Are you sure you want to delete <span className="font-semibold text-white">
+                    {assessmentToDelete.assessment_type.toUpperCase()}
+                    {assessmentToDelete.ct_no ? ` ${assessmentToDelete.ct_no}` : ''}
+                    {assessmentToDelete.assignment_no ? ` ${assessmentToDelete.assignment_no}` : ''}
+                  </span>?
+                </p>
+                
+                <p className="text-sm text-gray-400 text-center mb-6">
+                  This action cannot be undone. The assessment record will be permanently removed.
+                </p>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowDeleteAssessmentConfirm(false);
+                      setAssessmentToDelete(null);
+                    }}
+                    disabled={deletingAssessment}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDeleteAssessment}
+                    disabled={deletingAssessment}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {deletingAssessment ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Delete'
                     )}
                   </button>
                 </div>
