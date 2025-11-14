@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { UserAuth } from "../../context/AuthContext";
+import CodeBlock from "../../components/CodeBlock/CodeBlock";
 
 const ChatBotPanel = ({ topic, threadId }) => {
     const [messages, setMessages] = useState([]);
@@ -200,23 +201,30 @@ const ChatBotPanel = ({ topic, threadId }) => {
       const elements = [];
       let inCodeBlock = false;
       let codeLines = [];
+      let codeLanguage = 'javascript'; // default language
       let inList = false;
       
       lines.forEach((line, idx) => {
         // Handle code blocks
         if (line.startsWith('```')) {
           if (inCodeBlock) {
-            // End code block
+            // End code block - use CodeBlock component
             elements.push(
-              <pre key={idx} className="bg-gray-800 text-green-400 p-3 rounded-md my-2 overflow-x-auto text-xs">
-                <code>{codeLines.join('\n')}</code>
-              </pre>
+              <CodeBlock key={idx} language={codeLanguage}>
+                {codeLines.join('\n')}
+              </CodeBlock>
             );
             codeLines = [];
             inCodeBlock = false;
+            codeLanguage = 'javascript';
           } else {
             // Start code block
             inCodeBlock = true;
+            // Extract language if specified (e.g., ```c or ```javascript)
+            const langMatch = line.match(/```(\w+)/);
+            if (langMatch) {
+              codeLanguage = langMatch[1];
+            }
           }
           return;
         }
