@@ -664,6 +664,11 @@ const StudentDashboard = () => {
       // Refresh enrolled courses
       fetchEnrolledCourses(selectedTrimester);
 
+      // Refresh assessments
+      if (selectedCourse?.course_id) {
+        fetchAssessments(selectedCourse.course_id);
+      }
+
     } catch (error) {
       console.error('Error adding assessment:', error);
       setAddFailureMessage(error.message || 'Failed to add assessment. Please try again.');
@@ -675,6 +680,42 @@ const StudentDashboard = () => {
       setAddingAssessment(false);
     }
   };
+
+  // Fetch assessments for selected course
+  const fetchAssessments = async (courseId) => {
+    if (!courseId) return;
+
+    setLoadingFetchedAssessments(true);
+    setFetchedAssessmentsError(null);
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/assessments/student/${STUDENT_ID}/course/${courseId}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setFetchedAssessments(data);
+
+    } catch (error) {
+      console.error('Error fetching assessments:', error);
+      setFetchedAssessmentsError(error.message || 'Failed to fetch assessments');
+    } finally {
+      setLoadingFetchedAssessments(false);
+    }
+  };
+
+  // Fetch assessments when course changes
+  useEffect(() => {
+    if (selectedCourse?.course_id) {
+      fetchAssessments(selectedCourse.course_id);
+    } else {
+      setFetchedAssessments([]);
+    }
+  }, [selectedCourse]);
 
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
@@ -798,6 +839,11 @@ const StudentDashboard = () => {
     full_marks: ''
   });
   const [addingAssessment, setAddingAssessment] = useState(false);
+
+  // Fetched assessments from API
+  const [fetchedAssessments, setFetchedAssessments] = useState([]);
+  const [loadingFetchedAssessments, setLoadingFetchedAssessments] = useState(false);
+  const [fetchedAssessmentsError, setFetchedAssessmentsError] = useState(null);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1382,7 +1428,37 @@ const StudentDashboard = () => {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {trends && trends.length > 0 ? (
+                  {/* Loading state */}
+                  {loadingFetchedAssessments && (
+                    <div className="text-center py-4">
+                      <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
+                      <p className="text-sm text-gray-400">Loading assessments...</p>
+                    </div>
+                  )}
+
+                  {/* Error state */}
+                  {fetchedAssessmentsError && (
+                    <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
+                      ⚠️ {fetchedAssessmentsError}
+                    </div>
+                  )}
+
+                  {/* Display fetched assessments from API */}
+                  {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
+                    fetchedAssessments.slice(-5).map((assessment, index) => (
+                      <div key={index} className="flex mb-1 justify-between items-center">
+                        <span className="font-medium">
+                          {assessment.assessment_type.toUpperCase()}
+                          {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
+                          {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
+                        </span>
+                        <span className="text-gray-300">
+                          {assessment.marks}/{assessment.full_marks}
+                        </span>
+                      </div>
+                    ))
+                  ) : trends && trends.length > 0 ? (
+                    // Fallback to trends data
                     trends.slice(-5).map((trend, index) => (
                       <div key={index} className="flex mb-1 justify-between items-center">
                         <span className="font-medium">{trend.assessment_type}</span>
@@ -1393,19 +1469,23 @@ const StudentDashboard = () => {
                     ))
                   ) : (
                     // Fallback to static data
-                    [
-                      { name: "CT1", score: 16, total: 20 },
-                      { name: "CT2", score: 16, total: 20 },
-                      { name: "MID", score: 30, total: 30 },
-                      { name: "Final", score: 40, total: 40 }
-                    ].map((score, index) => (
-                      <div key={index} className="flex mb-1 justify-between items-center">
-                        <span className="font-medium">{score.name}</span>
-                        <span className="text-gray-300">
-                          {score.score} out of {score.total}
-                        </span>
-                      </div>
-                    ))
+                    !loadingFetchedAssessments && !fetchedAssessmentsError && (
+                      <>
+                        {[
+                          { name: "CT1", score: 16, total: 20 },
+                          { name: "CT2", score: 16, total: 20 },
+                          { name: "MID", score: 30, total: 30 },
+                          { name: "Final", score: 40, total: 40 }
+                        ].map((score, index) => (
+                          <div key={index} className="flex mb-1 justify-between items-center">
+                            <span className="font-medium">{score.name}</span>
+                            <span className="text-gray-300">
+                              {score.score} out of {score.total}
+                            </span>
+                          </div>
+                        ))}
+                      </>
+                    )
                   )}
                 </div>
               )}
