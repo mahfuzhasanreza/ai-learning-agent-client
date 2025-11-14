@@ -386,7 +386,11 @@ const StudentDashboard = () => {
       setShowCoursesModal(false);
       setCourseSearchQuery('');
 
-      alert('Course added successfully!');
+      // Show success notification
+      setShowAddSuccessNotification(true);
+      setTimeout(() => {
+        setShowAddSuccessNotification(false);
+      }, 3000);
       
       // Refresh enrolled courses
       fetchEnrolledCourses(selectedTrimester);
@@ -546,6 +550,9 @@ const StudentDashboard = () => {
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [deletingCourse, setDeletingCourse] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  
+  // Course addition success state
+  const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(false);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1781,6 +1788,29 @@ const StudentDashboard = () => {
               </div>
               <button
                 onClick={() => setShowSuccessNotification(false)}
+                className="ml-auto flex-shrink-0 hover:bg-green-700 p-1 rounded transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Course Addition Success Notification */}
+        {showAddSuccessNotification && (
+          <div className="fixed bottom-4 left-4 z-50">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold">Course Added Successfully</p>
+                <p className="text-sm text-green-100">The course has been enrolled.</p>
+              </div>
+              <button
+                onClick={() => setShowAddSuccessNotification(false)}
                 className="ml-auto flex-shrink-0 hover:bg-green-700 p-1 rounded transition-colors"
               >
                 <X className="w-5 h-5" />
