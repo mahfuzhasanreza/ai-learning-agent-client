@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -306,8 +306,8 @@ const StudentDashboard = () => {
     }
   };
 
-  // Fetch enrolled courses for selected trimester
-  const fetchEnrolledCourses = async (trimester) => {
+  // Fetch enrolled courses for selected trimester with retry logic
+  const fetchEnrolledCourses = useCallback(async (trimester, retryCount = 0) => {
     setLoadingEnrolledCourses(true);
     setEnrolledCoursesError(null);
     try {
@@ -315,12 +315,21 @@ const StudentDashboard = () => {
       const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-      const response = await fetch(`${baseUrl}/api/v1/student/${STUDENT_ID}/courses/${trimester}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(
+        `${baseUrl}/api/v1/student/${STUDENT_ID}/courses/${trimester}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal
         }
-      });
+      );
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -336,18 +345,26 @@ const StudentDashboard = () => {
         setSelectedCourse(null);
       }
     } catch (error) {
-      setEnrolledCoursesError(error.message || 'Failed to fetch enrolled courses');
       console.error('Error fetching enrolled courses:', error);
+      
+      // Retry logic for network errors
+      if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
+        console.log(`Retrying fetchEnrolledCourses... Attempt ${retryCount + 1}`);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+        return fetchEnrolledCourses(trimester, retryCount + 1);
+      }
+      
+      setEnrolledCoursesError(error.message || 'Failed to fetch enrolled courses');
       setSelectedCourse(null);
     } finally {
       setLoadingEnrolledCourses(false);
     }
-  };
+  }, []);
 
   // Fetch enrolled courses when trimester changes
   useEffect(() => {
     fetchEnrolledCourses(selectedTrimester);
-  }, [selectedTrimester]);
+  }, [selectedTrimester, fetchEnrolledCourses]);
 
   // Handle adding a student course
   const handleAddCourse = async (e) => {
@@ -465,8 +482,10 @@ const StudentDashboard = () => {
         setShowSuccessNotification(false);
       }, 3000);
 
-      // Refresh the enrolled courses list
-      fetchEnrolledCourses(selectedTrimester);
+      // Refresh the enrolled courses list (with delay to avoid race condition)
+      setTimeout(() => {
+        fetchEnrolledCourses(selectedTrimester);
+      }, 300);
 
     } catch (error) {
       console.error('Error deleting course:', error);
@@ -514,8 +533,10 @@ const StudentDashboard = () => {
         setShowCountUpdateSuccess(false);
       }, 3000);
 
-      // Refresh enrolled courses to get updated data
-      fetchEnrolledCourses(selectedTrimester);
+      // Refresh enrolled courses to get updated data (with delay to avoid race condition)
+      setTimeout(() => {
+        fetchEnrolledCourses(selectedTrimester);
+      }, 300);
 
     } catch (error) {
       console.error('Error updating CT count:', error);
@@ -568,8 +589,10 @@ const StudentDashboard = () => {
         setShowCountUpdateSuccess(false);
       }, 3000);
 
-      // Refresh enrolled courses to get updated data
-      fetchEnrolledCourses(selectedTrimester);
+      // Refresh enrolled courses to get updated data (with delay to avoid race condition)
+      setTimeout(() => {
+        fetchEnrolledCourses(selectedTrimester);
+      }, 300);
 
     } catch (error) {
       console.error('Error updating assignment count:', error);
@@ -661,10 +684,7 @@ const StudentDashboard = () => {
         setShowCountUpdateSuccess(false);
       }, 3000);
 
-      // Refresh enrolled courses
-      fetchEnrolledCourses(selectedTrimester);
-
-      // Refresh assessments
+      // Only refresh assessments, not the course section
       if (selectedCourse?.course_id) {
         fetchAssessments(selectedCourse.course_id);
       }
@@ -681,8 +701,8 @@ const StudentDashboard = () => {
     }
   };
 
-  // Fetch assessments for selected course
-  const fetchAssessments = async (courseId) => {
+  // Fetch assessments for selected course with retry logic
+  const fetchAssessments = useCallback(async (courseId, retryCount = 0) => {
     if (!courseId) return;
 
     setLoadingFetchedAssessments(true);
@@ -691,7 +711,15 @@ const StudentDashboard = () => {
       const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-      const response = await fetch(`${baseUrl}/api/v1/performance/assessments/student/${STUDENT_ID}/course/${courseId}`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(
+        `${baseUrl}/api/v1/performance/assessments/student/${STUDENT_ID}/course/${courseId}`,
+        { signal: controller.signal }
+      );
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -702,11 +730,19 @@ const StudentDashboard = () => {
 
     } catch (error) {
       console.error('Error fetching assessments:', error);
+      
+      // Retry logic for network errors
+      if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
+        console.log(`Retrying fetchAssessments... Attempt ${retryCount + 1}`);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+        return fetchAssessments(courseId, retryCount + 1);
+      }
+      
       setFetchedAssessmentsError(error.message || 'Failed to fetch assessments');
     } finally {
       setLoadingFetchedAssessments(false);
     }
-  };
+  }, []);
 
   // Fetch assessments when course changes
   useEffect(() => {
@@ -715,7 +751,7 @@ const StudentDashboard = () => {
     } else {
       setFetchedAssessments([]);
     }
-  }, [selectedCourse]);
+  }, [selectedCourse, fetchAssessments]);
 
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
