@@ -106,6 +106,7 @@ const StudentDashboard = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loadingEnrolledCourses, setLoadingEnrolledCourses] = useState(false);
   const [enrolledCoursesError, setEnrolledCoursesError] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   // Available trimesters
   const availableTrimesters = [
@@ -327,9 +328,17 @@ const StudentDashboard = () => {
 
       const data = await response.json();
       setEnrolledCourses(data);
+      
+      // Automatically select the first course
+      if (data.length > 0) {
+        setSelectedCourse(data[0]);
+      } else {
+        setSelectedCourse(null);
+      }
     } catch (error) {
       setEnrolledCoursesError(error.message || 'Failed to fetch enrolled courses');
       console.error('Error fetching enrolled courses:', error);
+      setSelectedCourse(null);
     } finally {
       setLoadingEnrolledCourses(false);
     }
@@ -642,30 +651,21 @@ const StudentDashboard = () => {
                 </div>
               )}
 
-              {/* Enrolled courses from API */}
+              {/* Enrolled courses from API - Only show code and name */}
               {!loadingEnrolledCourses && !enrolledCoursesError && enrolledCourses.length > 0 ? (
                 enrolledCourses.map((course) => (
-                  <div key={course.course_id} className="rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-semibold">{course.code}</div>
-                        <div className="text-sm text-gray-400">{course.title}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          Section: {course.section} | Faculty: {course.faculty_name}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          CT: {course.ct_count} | Assignments: {course.assignment_count}
-                        </div>
-                        <div className="text-sm text-gray-400 mt-1">{course.credits} credits</div>
-                      </div>
-                      {/* <CircularProgress
-                        percentage={Math.floor(Math.random() * 100)} // Replace with actual progress when available
-                        color="primary"
-                        size={50}
-                      /> */}
-                    </div>
-                    <hr className='my-3 text-gray-700' />
-                  </div>
+                  <button
+                    key={course.course_id}
+                    onClick={() => setSelectedCourse(course)}
+                    className={`mb-4 w-full text-left rounded-lg p-3 transition-all ${
+                      selectedCourse?.course_id === course.course_id
+                        ? 'bg-[#FF4B00] text-white shadow-lg'
+                        : 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm">{course.code}</div>
+                    <div className="text-xs mt-1 opacity-90">{course.title}</div>
+                  </button>
                 ))
               ) : (
                 // Fallback to static data when no enrolled courses
@@ -704,16 +704,37 @@ const StudentDashboard = () => {
         <div className="space-y-4 sm:space-y-6">
           {/* Course Header */}
           <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2">
-              {studentData.selectedCourse.title}
-            </h2>
-            <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
-              ({studentData.selectedCourse.code})
-            </div>
-            <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
-              {studentData.selectedCourse.instructor}<br />
-              {studentData.selectedCourse.credits} credits
-            </div>
+            {selectedCourse ? (
+              <>
+                <h2 className="text-xl sm:text-2xl font-semibold mb-2">
+                  {selectedCourse.title}
+                </h2>
+                <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                  ({selectedCourse.code})
+                </div>
+                <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base space-y-1">
+                  <div><span className="font-semibold">Section:</span> {selectedCourse.section}</div>
+                  <div><span className="font-semibold">Faculty:</span> {selectedCourse.faculty_name}</div>
+                  <div><span className="font-semibold">Credits:</span> {selectedCourse.credits}</div>
+                  <div><span className="font-semibold">Trimester:</span> {selectedCourse.trimester}</div>
+                  <div><span className="font-semibold">CT Count:</span> {selectedCourse.ct_count}</div>
+                  <div><span className="font-semibold">Assignment Count:</span> {selectedCourse.assignment_count}</div>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-xl sm:text-2xl font-semibold mb-2">
+                  {studentData.selectedCourse.title}
+                </h2>
+                <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                  ({studentData.selectedCourse.code})
+                </div>
+                <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
+                  {studentData.selectedCourse.instructor}<br />
+                  {studentData.selectedCourse.credits} credits
+                </div>
+              </>
+            )}
 
     
             {editingScores ? 
