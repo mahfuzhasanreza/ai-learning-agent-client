@@ -346,14 +346,14 @@ const StudentDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching enrolled courses:', error);
-      
+
       // Retry logic for network errors
       if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
         console.log(`Retrying fetchEnrolledCourses... Attempt ${retryCount + 1}`);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
         return fetchEnrolledCourses(trimester, retryCount + 1);
       }
-      
+
       setEnrolledCoursesError(error.message || 'Failed to fetch enrolled courses');
       setSelectedCourse(null);
     } finally {
@@ -369,7 +369,7 @@ const StudentDashboard = () => {
   // Handle adding a student course
   const handleAddCourse = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedCourseToAdd) {
       alert('Please select a course first');
       return;
@@ -384,7 +384,7 @@ const StudentDashboard = () => {
     try {
       // TODO: Replace with actual student_id from auth context
       const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
-      
+
       await ApiService.addStudentCourse({
         student_id: STUDENT_ID,
         course_id: selectedCourseToAdd.id,
@@ -408,16 +408,16 @@ const StudentDashboard = () => {
       setTimeout(() => {
         setShowAddSuccessNotification(false);
       }, 3000);
-      
+
       // Refresh enrolled courses
       fetchEnrolledCourses(selectedTrimester);
-      
+
     } catch (error) {
       console.error('Error adding course:', error);
-      
+
       // Extract error message
       let errorMessage = 'Failed to add course. Please try again.';
-      
+
       if (error.message) {
         // Check if it's the "already enrolled" error
         if (error.message.includes('already enrolled')) {
@@ -426,14 +426,14 @@ const StudentDashboard = () => {
           errorMessage = error.message;
         }
       }
-      
+
       // Show failure notification
       setAddFailureMessage(errorMessage);
       setShowAddFailureNotification(true);
       setTimeout(() => {
         setShowAddFailureNotification(false);
       }, 5000); // Show error for 5 seconds
-      
+
     } finally {
       setAddingCourse(false);
     }
@@ -476,7 +476,7 @@ const StudentDashboard = () => {
 
       // Show success notification
       setShowSuccessNotification(true);
-      
+
       // Auto-hide notification after 3 seconds
       setTimeout(() => {
         setShowSuccessNotification(false);
@@ -624,8 +624,8 @@ const StudentDashboard = () => {
       return;
     }
 
-    if ((newAssessment.assessment_type === 'ct' || newAssessment.assessment_type === 'assignment') && 
-        !(newAssessment.ct_no || newAssessment.assignment_no)) {
+    if ((newAssessment.assessment_type === 'ct' || newAssessment.assessment_type === 'assignment') &&
+      !(newAssessment.ct_no || newAssessment.assignment_no)) {
       setAddFailureMessage(`Please enter ${newAssessment.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`);
       setShowAddFailureNotification(true);
       setTimeout(() => setShowAddFailureNotification(false), 5000);
@@ -726,8 +726,8 @@ const StudentDashboard = () => {
       return;
     }
 
-    if ((updateAssessmentForm.assessment_type === 'ct' || updateAssessmentForm.assessment_type === 'assignment') && 
-        !(updateAssessmentForm.ct_no || updateAssessmentForm.assignment_no)) {
+    if ((updateAssessmentForm.assessment_type === 'ct' || updateAssessmentForm.assessment_type === 'assignment') &&
+      !(updateAssessmentForm.ct_no || updateAssessmentForm.assignment_no)) {
       setAddFailureMessage(`Please enter ${updateAssessmentForm.assessment_type === 'ct' ? 'CT' : 'Assignment'} number`);
       setShowAddFailureNotification(true);
       setTimeout(() => setShowAddFailureNotification(false), 5000);
@@ -876,14 +876,14 @@ const StudentDashboard = () => {
 
     } catch (error) {
       console.error('Error fetching assessments:', error);
-      
+
       // Retry logic for network errors
       if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
         console.log(`Retrying fetchAssessments... Attempt ${retryCount + 1}`);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
         return fetchAssessments(courseId, retryCount + 1);
       }
-      
+
       setFetchedAssessmentsError(error.message || 'Failed to fetch assessments');
     } finally {
       setLoadingFetchedAssessments(false);
@@ -974,8 +974,6 @@ const StudentDashboard = () => {
     addedAssignments: []
   });
 
-  // Edit Scores UI state
-  const [editingScores, setEditingScores] = useState(false);
   const [scoresEditForm, setScoresEditForm] = useState({
     ctCount: 2,
     assignmentCount: 2,
@@ -994,10 +992,10 @@ const StudentDashboard = () => {
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [deletingCourse, setDeletingCourse] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
-  
+
   // Course addition success state
   const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(false);
-  
+
   // Course addition failure state
   const [showAddFailureNotification, setShowAddFailureNotification] = useState(false);
   const [addFailureMessage, setAddFailureMessage] = useState('');
@@ -1083,9 +1081,9 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        <div className={`grid grid-cols-1 ${editingScores ? 'lg:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4 sm:gap-6`}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6`}>
           {/* Left Column */}
-          {!editingScores && <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Current Trimester */}
             <div className="bg-gray-800 rounded-lg p-4 sm:p-6">
               <div className='mb-4 sm:mb-5'>
@@ -1212,8 +1210,8 @@ const StudentDashboard = () => {
                     <div
                       key={course.course_id}
                       className={`mb-4 w-full rounded-lg transition-all ${selectedCourse?.course_id === course.course_id
-                          ? 'bg-[#FF4B00] text-white shadow-lg'
-                          : 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                        ? 'bg-[#FF4B00] text-white shadow-lg'
+                        : 'bg-gray-700 hover:bg-gray-600 text-gray-100'
                         }`}
                     >
                       <div className="flex items-center justify-between p-3">
@@ -1224,18 +1222,17 @@ const StudentDashboard = () => {
                           <div className="font-semibold text-sm">{course.code}</div>
                           <div className="text-xs mt-1 opacity-90">{course.title}</div>
                         </button>
-                        
+
                         {/* Delete Button */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCourse(course);
                           }}
-                          className={`ml-2 p-1.5 rounded hover:bg-red-600 transition-colors ${
-                            selectedCourse?.course_id === course.course_id
-                              ? 'text-white hover:bg-red-700'
-                              : 'text-gray-400 hover:text-white'
-                          }`}
+                          className={`ml-2 p-1.5 rounded hover:bg-red-600 transition-colors ${selectedCourse?.course_id === course.course_id
+                            ? 'text-white hover:bg-red-700'
+                            : 'text-gray-400 hover:text-white'
+                            }`}
                           title="Delete Course"
                         >
                           <X className="w-4 h-4" />
@@ -1274,7 +1271,7 @@ const StudentDashboard = () => {
                 )}
               </div>
             </div>
-          </div>}
+          </div>
 
           {/* Center Column - Course Details */}
           <div className="space-y-4 sm:space-y-6">
@@ -1296,7 +1293,7 @@ const StudentDashboard = () => {
                   <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base space-y-1">
                     <div><span className="font-semibold">Section:</span> {selectedCourse.section}</div>
                     <div><span className="font-semibold">Faculty:</span> {selectedCourse.faculty_name}</div>
-                    
+
                     {/* Editable CT Count */}
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">CT Count:</span>
@@ -1411,31 +1408,27 @@ const StudentDashboard = () => {
                 </>
               )}
 
-
-              {editingScores ?
-                <></>
-                :
-                (<div className="flex items-center justify-center">
-                  <div className="flex flex-col sm:flex-row items-center justify-between w-full text-center gap-3 sm:gap-0">
-                    <div className="text-sm font-semibold mb-0 sm:mb-2">Course progress</div>
-                    <div>
-                      <CircularProgress
-                        percentage={coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress}
-                        size={100}
-                        strokeWidth={8}
-                      />
-                    </div>
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col sm:flex-row items-center justify-between w-full text-center gap-3 sm:gap-0">
+                  <div className="text-sm font-semibold mb-0 sm:mb-2">Course progress</div>
+                  <div>
+                    <CircularProgress
+                      percentage={coursePerformance ? Math.round(coursePerformance.average) : studentData.selectedCourse.progress}
+                      size={100}
+                      strokeWidth={8}
+                    />
                   </div>
-                </div>)
+                </div>
+              </div>
 
-              }
+
             </div>
 
             {/* Scores */}
             <div className="bg-gray-800 p-4 sm:p-6">
               <div className={`flex items-center justify-between mb-4`}>
                 <h3 className="text-lg sm:text-xl font-semibold">
-                  {editingScores ? 'Recent Scores' : 'All Scores'}
+                  All Scores
                 </h3>
                 <div className="flex items-center gap-2">
                   <button
@@ -1446,263 +1439,87 @@ const StudentDashboard = () => {
                     <Plus className="w-4 h-4" />
                     <span className="hidden sm:inline text-sm">Add</span>
                   </button>
-                  <button
-                    onClick={() => setEditingScores(prev => !prev)}
-                    aria-expanded={editingScores}
-                    aria-controls="scores-editor"
-                    className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${editingScores ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
-                    title="Edit Scores"
-                  >
-                    <Edit className="w-4 h-4" />
-                    <span className="hidden sm:inline text-sm">{editingScores ? 'Close' : 'Edit'}</span>
-                  </button>
                 </div>
               </div>
 
-              {editingScores ? (
-                <div id="scores-editor" className="space-y-4">
-                  {/* Display existing scores */}
-                  <div className="mb-4 grid grid-cols-3 gap-4 text-sm font-semibold text-center border-b border-gray-600 pb-2">
-                    <span>Assessment</span>
-                    <span>Obtain</span>
-                    <span>Marks</span>
+
+              <div className="space-y-3">
+                {/* Loading state */}
+                {loadingFetchedAssessments && (
+                  <div className="text-center py-4">
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
+                    <p className="text-sm text-gray-400">Loading assessments...</p>
                   </div>
-                  {[
-                    { name: "CT1", obtain: 16, marks: 20 },
-                    { name: "CT1", obtain: 16, marks: 20 },
-                    { name: "CT1", obtain: 16, marks: 16 },
-                    { name: "Mid", obtain: 16, marks: 16 },
-                    { name: "Final", obtain: 16, marks: 16 }
-                  ].map((score, index) => (
-                    <div key={index} className="grid grid-cols-3 text-center text-sm mt-2">
-                      <span>{score.name}</span>
-                      <span className="text-gray-300">{score.obtain}</span>
-                      <span className="text-gray-300">{score.marks}</span>
-                    </div>
-                  ))}
+                )}
 
-                  {/* Add Another CT Section */}
-                  <div className="bg-gray-700 rounded-lg p-4 mt-10 mb-8">
-                    <h4 className="text-md font-semibold mb-3">Add Another CT</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">CT No</label>
-                        <input
-                          type="number"
-                          min="1"
-                          placeholder="Enter CT number"
-                          className="w-full p-2 bg-gray-600 rounded text-white"
-                          onKeyDown={(e) => {
-                            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
-                              e.preventDefault();
-                            }
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Mark Obtained</label>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.1"
-                          placeholder="Enter marks"
-                          className="w-full p-2 bg-gray-600 rounded text-white"
-                          onKeyDown={(e) => {
-                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
-                              e.preventDefault();
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-
+                {/* Error state */}
+                {fetchedAssessmentsError && (
+                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
+                    ⚠️ {fetchedAssessmentsError}
                   </div>
+                )}
 
-                  {/* Add Another Assignment/Project Section */}
-                  <div className="bg-gray-700 rounded-lg p-4 mt-4">
-                    <h4 className="text-md font-semibold mb-3">Add Another Assignment or Project</h4>
-                    <div className="space-y-3">
-                      <div className='mb-3'>
-                        <label className="block text-sm font-medium mb-1">Assignment or Project</label>
-                        <select
-                          className="w-full p-2 bg-gray-600 rounded text-white"
-                          onChange={(e) => {
-                            const isAssignment = e.target.value === 'assignment';
-                            // You can store this state if needed
-                          }}
-                        >
-                          <option value="assignment">Assignment</option>
-                          <option value="project">Project</option>
-                        </select>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Assignment Number</label>
-                          <input
-                            type="number"
-                            min="1"
-                            placeholder="Enter number"
-                            className="w-full p-2 bg-gray-600 rounded text-white"
-                            onKeyDown={(e) => {
-                              if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
-                                e.preventDefault();
-                              }
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Mark Obtained</label>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            placeholder="Enter marks"
-                            className="w-full p-2 bg-gray-600 rounded text-white"
-                            onKeyDown={(e) => {
-                              if (e.key === '-' || e.key === 'e' || e.key === 'E') {
-                                e.preventDefault();
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* CT and Assignment Count Section */}
-                  <div className="grid grid-cols-2 gap-4 items-center mt-4">
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm font-semibold">CT Count</label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={scoresEditForm.ctCount}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value || 0);
-                          if (value >= 0) {
-                            setScoresEditForm(prev => ({ ...prev, ctCount: value }));
-                          }
-                        }}
-                        className="w-20 p-2 bg-gray-600 rounded text-white text-center"
-                        onKeyDown={(e) => {
-                          if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '.') {
-                            e.preventDefault();
-                          }
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm font-semibold">Assignment Count</label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={scoresEditForm.assignmentCount}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value || 0);
-                          if (value >= 0) {
-                            setScoresEditForm(prev => ({ ...prev, assignmentCount: value }));
-                          }
-                        }}
-                        className="w-20 p-2 bg-gray-600 rounded text-white text-center"
-                        onKeyDown={(e) => {
-                          if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '.') {
-                            e.preventDefault();
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      console.log('Saved scores edits', scoresEditForm);
-                      setEditingScores(false);
-                    }}
-                    className="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded text-white mt-4"
-                  >
-                    Save
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {/* Loading state */}
-                  {loadingFetchedAssessments && (
-                    <div className="text-center py-4">
-                      <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
-                      <p className="text-sm text-gray-400">Loading assessments...</p>
-                    </div>
-                  )}
-
-                  {/* Error state */}
-                  {fetchedAssessmentsError && (
-                    <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
-                      ⚠️ {fetchedAssessmentsError}
-                    </div>
-                  )}
-
-                  {/* Display fetched assessments from API */}
-                  {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
-                    fetchedAssessments.map((assessment, index) => (
-                      <div key={index} className="flex mb-2 justify-between items-center group bg-gray-700/30 hover:bg-gray-700/50 rounded-lg p-2 transition-all">
-                        <div className="flex-1">
-                          <span className="font-medium">
-                            {assessment.assessment_type.toUpperCase()}
-                            {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
-                            {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
-                          </span>
-                          <span className="text-gray-300 ml-3">
-                            {assessment.marks}/{assessment.full_marks}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => handleEditAssessment(assessment)}
-                            className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 transition-all"
-                            title="Edit Assessment"
-                          >
-                            <Edit className="w-4 h-4 text-blue-400" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteAssessment(assessment)}
-                            className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all"
-                            title="Delete Assessment"
-                          >
-                            <X className="w-4 h-4 text-red-400" />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  ) : trends && trends.length > 0 ? (
-                    // Fallback to trends data
-                    trends.map((trend, index) => (
-                      <div key={index} className="flex mb-1 justify-between items-center">
-                        <span className="font-medium">{trend.assessment_type}</span>
-                        <span className="text-gray-300">
-                          {trend.score}/{100}
+                {/* Display fetched assessments from API */}
+                {!loadingFetchedAssessments && !fetchedAssessmentsError && fetchedAssessments.length > 0 ? (
+                  fetchedAssessments.map((assessment, index) => (
+                    <div key={index} className="flex mb-2 justify-between items-center group bg-gray-700/30 hover:bg-gray-700/50 rounded-lg p-2 transition-all">
+                      <div className="flex-1">
+                        <span className="font-medium">
+                          {assessment.assessment_type.toUpperCase()}
+                          {assessment.ct_no ? ` ${assessment.ct_no}` : ''}
+                          {assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}
+                        </span>
+                        <span className="text-gray-300 ml-3">
+                          {assessment.marks}/{assessment.full_marks}
                         </span>
                       </div>
-                    ))
-                  ) : (
-                    // Fallback to static data
-                    !loadingFetchedAssessments && !fetchedAssessmentsError && (
-                      <>
-                        <div>
-                          <p>No assessments available.</p>
-                        </div>
-                      </>
-                    )
-                  )}
-                </div>
-              )}
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleEditAssessment(assessment)}
+                          className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 transition-all"
+                          title="Edit Assessment"
+                        >
+                          <Edit className="w-4 h-4 text-blue-400" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAssessment(assessment)}
+                          className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all"
+                          title="Delete Assessment"
+                        >
+                          <X className="w-4 h-4 text-red-400" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : trends && trends.length > 0 ? (
+                  // Fallback to trends data
+                  trends.map((trend, index) => (
+                    <div key={index} className="flex mb-1 justify-between items-center">
+                      <span className="font-medium">{trend.assessment_type}</span>
+                      <span className="text-gray-300">
+                        {trend.score}/{100}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  // Fallback to static data
+                  !loadingFetchedAssessments && !fetchedAssessmentsError && (
+                    <>
+                      <div>
+                        <p>No assessments available.</p>
+                      </div>
+                    </>
+                  )
+                )}
+              </div>
+
             </div>
 
-            
+
           </div>
 
           {/* Third Column - Topic Mastery */}
-          {!editingScores && <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Topic Mastery */}
             <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
@@ -1795,47 +1612,6 @@ const StudentDashboard = () => {
                 </>
               )}
             </div>
-
-            {/* Detected Weakness */}
-            {/* <div className="bg-gray-800 rounded-b-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Detected Weakness In</h3>
-              <div className="bg-red-500 rounded-full w-6 h-6 flex items-center justify-center text-sm">
-                ?
-              </div>
-            </div>
-
-
-            <div className="bg-gray-800 rounded-lg p-6">
-              <div className="h-36 w-full">
-                <canvas ref={chartRef} />
-              </div>
-            </div>
-
-            <div className="space-y-3 mb-5">
-              {studentData.selectedCourse.weaknesses.map((weakness, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className={`text-sm`}>
-                    {weakness.topic}
-                  </span>
-                  <span className="text-sm">{weakness.severity}</span>
-                </div>
-              ))}
-            </div>
-
-            <button className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-lg font-bold hover:bg-gray-600 mb-7">
-              + Add Weakness
-            </button>
-
-            <div className="space-y-2">
-              {['Loops', 'Arrays', 'Recursion'].map((topic, index) => (
-                <div key={index} className="flex items-center justify-between p-2 rounded">
-                  <span className="text-sm">{topic}</span>
-                  <X className="w-6 h-6 px-1 text-white bg-red-600 rounded-full cursor-pointer" />
-                </div>
-              ))}
-            </div>
-          </div> */}
 
             {!showAllTopics && <div className="bg-gray-800 rounded-b-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Course Assessment */}
@@ -2619,11 +2395,11 @@ const StudentDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white text-center mb-2">
                   Delete Assessment
                 </h3>
-                
+
                 <p className="text-gray-300 text-center mb-4">
                   Are you sure you want to delete <span className="font-semibold text-white">
                     {assessmentToDelete.assessment_type.toUpperCase()}
@@ -2631,7 +2407,7 @@ const StudentDashboard = () => {
                     {assessmentToDelete.assignment_no ? ` ${assessmentToDelete.assignment_no}` : ''}
                   </span>?
                 </p>
-                
+
                 <p className="text-sm text-gray-400 text-center mb-6">
                   This action cannot be undone. The assessment record will be permanently removed.
                 </p>
@@ -2677,15 +2453,15 @@ const StudentDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white text-center mb-2">
                   Delete Course
                 </h3>
-                
+
                 <p className="text-gray-300 text-center mb-4">
                   Are you sure you want to delete <span className="font-semibold text-white">{courseToDelete.code}</span>?
                 </p>
-                
+
                 <p className="text-sm text-gray-400 text-center mb-6">
                   This action cannot be undone. All associated data will be permanently removed.
                 </p>
