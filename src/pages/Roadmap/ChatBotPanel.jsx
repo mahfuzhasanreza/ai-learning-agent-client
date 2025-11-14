@@ -236,27 +236,27 @@ const ChatBotPanel = ({ topic, threadId }) => {
         
         // Handle headers
         if (line.startsWith('### ')) {
-          elements.push(<h3 key={idx} className="text-base font-bold mt-3 mb-2 text-gray-900">{line.replace('### ', '')}</h3>);
+          elements.push(<h3 key={idx} className="text-base font-bold mt-3 mb-2 text-[#FF4B00]">{line.replace('### ', '')}</h3>);
         } else if (line.startsWith('#### ')) {
-          elements.push(<h4 key={idx} className="text-sm font-semibold mt-2 mb-1 text-gray-800">{line.replace('#### ', '')}</h4>);
+          elements.push(<h4 key={idx} className="text-sm font-semibold mt-2 mb-1 text-[#a200ff]">{line.replace('#### ', '')}</h4>);
         }
         // Handle bullet points
         else if (line.trim().startsWith('- ')) {
           if (!inList) {
             inList = true;
           }
-          elements.push(<li key={idx} className="ml-4 mb-1">{renderInlineFormatting(line.replace(/^-\s*/, ''))}</li>);
+          elements.push(<li key={idx} className="ml-4 mb-1 text-gray-300">{renderInlineFormatting(line.replace(/^-\s*/, ''))}</li>);
         }
         // Handle numbered lists
         else if (/^\d+\.\s/.test(line.trim())) {
-          elements.push(<li key={idx} className="ml-4 mb-1">{renderInlineFormatting(line.replace(/^\d+\.\s*/, ''))}</li>);
+          elements.push(<li key={idx} className="ml-4 mb-1 text-gray-300">{renderInlineFormatting(line.replace(/^\d+\.\s*/, ''))}</li>);
         }
         // Regular paragraph
         else if (line.trim()) {
           if (inList && !line.startsWith('- ')) {
             inList = false;
           }
-          elements.push(<p key={idx} className="mb-2 leading-relaxed">{renderInlineFormatting(line)}</p>);
+          elements.push(<p key={idx} className="mb-2 leading-relaxed text-gray-300">{renderInlineFormatting(line)}</p>);
         } else {
           elements.push(<br key={idx} />);
         }
@@ -294,7 +294,7 @@ const ChatBotPanel = ({ topic, threadId }) => {
           const codeParts = part.split('`');
           return codeParts.map((codePart, codeIdx) => 
             codeIdx % 2 === 1 
-              ? <code key={`code-${idx}-${codeIdx}`} className="bg-gray-100 px-1 rounded text-xs text-red-600 font-mono">{codePart}</code>
+              ? <code key={`code-${idx}-${codeIdx}`} className="bg-[#2a2a2a] px-1.5 py-0.5 rounded text-xs text-[#FF4B00] font-mono border border-gray-700">{codePart}</code>
               : codePart
           );
         }
@@ -309,21 +309,21 @@ const ChatBotPanel = ({ topic, threadId }) => {
     };
   
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto mb-4 p-3 border rounded bg-gray-50">
+      <div className="flex flex-col h-full bg-[#1a1a1a] rounded-lg">
+        <div className="flex-1 overflow-y-auto mb-4 p-4 border border-gray-700 rounded-lg bg-[#0f0f0f]">
           {messages.map((msg, i) => (
             <div key={i} className={`mb-3 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] px-4 py-2 rounded-lg ${
+              <div className={`max-w-[85%] px-4 py-3 rounded-lg ${
                 msg.sender === "user" 
-                  ? "bg-blue-500 text-white" 
-                  : "bg-white border border-gray-200 text-gray-800 shadow-sm"
+                  ? "bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] text-white shadow-lg" 
+                  : "bg-[#1e1e1e] border border-gray-700 text-gray-100 shadow-md"
               }`}>
                 {msg.sender === "bot" ? (
-                  <div className="prose prose-sm max-w-none text-sm">
+                  <div className="prose prose-sm max-w-none text-sm prose-invert">
                     {formatBotMessage(msg.text)}
                   </div>
                 ) : (
-                  <span>{msg.text}</span>
+                  <span className="text-sm">{msg.text}</span>
                 )}
               </div>
             </div>
@@ -331,27 +331,27 @@ const ChatBotPanel = ({ topic, threadId }) => {
           <div ref={messagesEndRef} />
         </div>
   
-        <div className="flex gap-2">
+        <div className="flex gap-2 px-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={threadId ? "Type your message..." : "Generate a roadmap first..."}
-            className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+            className="flex-1 px-4 py-3 bg-[#1e1e1e] border border-gray-700 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a200ff] focus:border-transparent placeholder-gray-500 transition-all"
             disabled={!threadId || loading}
           />
           <button
             onClick={() => sendMessage(input)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2 py-2 bg-gradient-to-r from-[#a200ff] to-[#c240ff] text-white rounded-lg font-medium hover:from-[#b520ff] hover:to-[#d050ff] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-[#a200ff]/50"
             disabled={!threadId || loading}
           >
             Send
           </button>
         </div>
   
-        {loading && <p className="text-xs text-gray-500 mt-1">AI is typing...</p>}
-        {!threadId && <p className="text-xs text-red-500 mt-1">Please generate a roadmap to start chatting.</p>}
+        {loading && <p className="text-xs text-[#a200ff] mt-2 px-2 animate-pulse">AI is typing...</p>}
+        {!threadId && <p className="text-xs text-[#FF4B00] mt-2 px-2">Please generate a roadmap to start chatting.</p>}
       </div>
     );
   };
