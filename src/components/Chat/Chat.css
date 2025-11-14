@@ -1099,6 +1099,12 @@ Enhanced result title and data layouts
     overflow: hidden;
 }
 
+/* Ensure images have no border-radius */
+.question-card img {
+    border-radius: 0 !important;
+    clip-path: none !important;
+}
+
 .question-card .whitespace-pre-line {
     white-space: pre-line;
     word-wrap: break-word;
