@@ -91,12 +91,14 @@ const ChatBotPanel = ({ topic, threadId }) => {
             
             if (!line.trim()) continue;
             
+            // Handle standard SSE event format
             if (line.startsWith('event: ')) {
               currentEvent = line.slice(7).trim();
-              console.log('Event type:', currentEvent);
+              console.log('Event type (standard):', currentEvent);
               continue;
             }
             
+            // Handle data lines
             if (line.startsWith('data: ')) {
               try {
                 let jsonString = line.slice(6).trim();
@@ -107,8 +109,10 @@ const ChatBotPanel = ({ topic, threadId }) => {
                   continue;
                 }
                 
-                if (jsonString.startsWith('event:')) {
-                  console.log('Data starts with "event:", skipping');
+                // Check if this is actually an event declaration inside data
+                if (jsonString.startsWith('event: ')) {
+                  currentEvent = jsonString.slice(7).trim();
+                  console.log('Event type (non-standard):', currentEvent);
                   continue;
                 }
                 
@@ -124,20 +128,23 @@ const ChatBotPanel = ({ topic, threadId }) => {
                 try {
                   jsonData = JSON.parse(jsonString);
                   console.log('Parsed JSON:', jsonData);
-                } catch (parseError) {
+                } catch (e) {
                   console.warn('Not JSON, treating as plain text:', jsonString);
                   // If not JSON, treat as plain text (might be thread_id)
                   jsonData = { raw: jsonString };
                 }
                 
-                if (currentEvent === 'explanation' && jsonData.content) {
-                  console.log('Got explanation content:', jsonData.content.substring(0, 100) + '...');
-                  botResponse = jsonData.content;
+                // Process based on current event type
+                if (currentEvent === 'explanation') {
+                  if (jsonData.content) {
+                    console.log('Got explanation content, length:', jsonData.content.length);
+                    botResponse = jsonData.content;
+                  }
                 } else if (currentEvent === 'thread_id') {
                   console.log('Got thread_id:', jsonData);
                 }
                 
-                currentEvent = null;
+                // Don't reset currentEvent here - keep it for next data line
               } catch (e) {
                 console.error('Error parsing SSE data:', e, 'Line:', line);
               }
