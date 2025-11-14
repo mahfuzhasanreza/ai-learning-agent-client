@@ -433,7 +433,7 @@ const StudentDashboard = () => {
 
   return (
 
-    <div className="flex flex-col min-h-screen">
+    <div className="w-full flex flex-col min-h-screen">
     <div className="bg-gray-900 text-white p-3 sm:p-4 md:p-6 pb-20 w-full overflow-x-hidden">
       {/* Header */}
 
