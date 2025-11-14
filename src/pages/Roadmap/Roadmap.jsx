@@ -23,6 +23,12 @@ const Roadmap = () => {
   const [error, setError] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [threadId, setThreadId] = useState(null);
+
+  // Debug: Log threadId changes
+  useEffect(() => {
+    console.log('Roadmap threadId updated:', threadId);
+  }, [threadId]);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -151,8 +157,14 @@ const Roadmap = () => {
                 setCompletedItems(new Set()); // Reset completed items
                 setSelectedNode(null); // Reset selected node
               } else if (currentEvent === 'thread_id') {
-                console.log('Thread ID:', jsonData);
-                // You can store thread_id if needed for chat functionality
+                console.log('Thread ID event received:', jsonData);
+                // Store thread_id for chat functionality
+                // Handle both {"thread_id": "xxx"} and direct string formats
+                const threadIdValue = jsonData.thread_id || jsonData;
+                console.log('Extracted thread_id:', threadIdValue);
+                if (threadIdValue) {
+                  setThreadId(threadIdValue);
+                }
               }
               
               // Reset current event after processing
@@ -595,6 +607,7 @@ const Roadmap = () => {
                   setSelectedNode(null);
                   setCompletedItems(new Set());
                   setError(null);
+                  setThreadId(null);
                 }}
                 className="px-4 py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors flex items-center gap-2"
                 title="Reset and create new roadmap"
@@ -726,7 +739,10 @@ const Roadmap = () => {
             )}
 
             {activeTab === "chatbot" && (
-              <ChatBotPanel topic={selectedNode.name} />
+              <>
+                {console.log('Rendering ChatBotPanel with:', { topic: selectedNode.name, threadId })}
+                <ChatBotPanel topic={selectedNode.name} threadId={threadId} />
+              </>
             )}
           </div>
         )}
