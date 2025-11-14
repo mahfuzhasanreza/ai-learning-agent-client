@@ -25,6 +25,7 @@ const ContextProvider = (props) => {
     const [selectedAgent, setSelectedAgent] = useState(null); // Selected agent name
     const [questions, setQuestions] = useState([]); // Questions array from API
     const [isTyping, setIsTyping] = useState(false); // Track if typewriter effect is active
+    const [chatHistoryRefresh, setChatHistoryRefresh] = useState(0); // Trigger for sidebar refresh
     
     // Dark Mode State
     const [isDark, setIsDark] = useState(() => {
@@ -68,8 +69,13 @@ const ContextProvider = (props) => {
         setIsTyping(false); // Reset typing state
     }
 
+    // Function to trigger chat history refresh in sidebar
+    const refreshChatHistory = () => {
+        setChatHistoryRefresh(prev => prev + 1);
+    }
+
     // Typewriter effect function
-    const typeWriterEffect = (text, callback) => {
+    const typeWriterEffect = (text, callback, onComplete) => {
         setIsTyping(true);
         let index = 0;
         const speed = 5; // milliseconds per character (faster for better UX)
@@ -84,6 +90,10 @@ const ContextProvider = (props) => {
                 setTimeout(type, speed);
             } else {
                 setIsTyping(false);
+                // Call completion callback to refresh sidebar
+                if (onComplete) {
+                    onComplete();
+                }
             }
         };
         
@@ -348,7 +358,7 @@ const ContextProvider = (props) => {
                 });
 
                 setResultData(formattedResponse);
-            });
+            }, refreshChatHistory); // Refresh sidebar when typing completes
         } catch (error) {
             console.error("Error in onSent:", error);
             setLoading(false);
@@ -389,6 +399,9 @@ const ContextProvider = (props) => {
         setSelectedAgent,
         questions,
         setQuestions,
+        // Chat history refresh
+        chatHistoryRefresh,
+        refreshChatHistory,
         // Dark Mode values
         isDark,
         setIsDark,

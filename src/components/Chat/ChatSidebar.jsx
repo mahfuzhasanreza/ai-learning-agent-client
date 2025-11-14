@@ -4,7 +4,7 @@ import ApiService from '../../services/apiService';
 import { Context } from '../../context/Context';
 
 export default function ChatSidebar({ isOpen, setIsOpen }) {
-  const { loadChatHistory, threadId, newChat } = useContext(Context);
+  const { loadChatHistory, threadId, newChat, chatHistoryRefresh } = useContext(Context);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({
     today: true,
@@ -117,7 +117,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
     if (isOpen) {
       fetchChatHistory();
     }
-  }, [isOpen, organizeChatsByTime]);
+  }, [isOpen, organizeChatsByTime, chatHistoryRefresh]); // Re-fetch when chatHistoryRefresh changes
 
   const sections = [
     { key: 'today', label: 'Today', icon: Clock },
