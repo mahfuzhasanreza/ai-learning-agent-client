@@ -1,18 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaRobot } from 'react-icons/fa';
+import { FaBars, FaTimes, FaRobot, FaUser, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
 import logo from '../../../../public/assets/logo.svg';
 import { Context } from '../../../context/Context';
+import { UserAuth } from '../../../context/AuthContext';
 import DarkModeToggle from '../../DarkModeToggle/DarkModeToggle';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const {isDark, isSidebarOpen} = useContext(Context);
+  const { user, isAuthenticated, signOut } = UserAuth();
 
   // Check if we're on the chat page
   const isChatPage = location.pathname === '/cosmos-chatbot';
@@ -73,6 +77,40 @@ const Navigation = () => {
 
   const isActive = (itemId) => {
     return activeSection === itemId;
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Handle logout
+  const handleLogout = async () => {
+    await signOut();
+    setShowUserDropdown(false);
+    navigate('/');
+  };
+
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!user) return 'U';
+    if (user.full_name) {
+      const names = user.full_name.split(' ');
+      return names.length > 1 
+        ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
+        : names[0][0].toUpperCase();
+    }
+    if (user.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
   };
 
   return (
@@ -149,6 +187,119 @@ const Navigation = () => {
               </motion.button>
             </div>
             <DarkModeToggle></DarkModeToggle>
+            
+            {/* User Profile Dropdown */}
+            {isAuthenticated() && user && (
+              <div className="relative ml-3" ref={dropdownRef}>
+                <motion.button
+                  className="flex items-center space-x-2 focus:outline-none"
+                  onClick={() => setShowUserDropdown(!showUserDropdown)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {/* User Avatar */}
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-semibold shadow-lg cursor-pointer">
+                    {user.profile_image ? (
+                      <img 
+                        src={user.profile_image} 
+                        alt={user.full_name || user.email} 
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span>{getUserInitials()}</span>
+                    )}
+                  </div>
+                  {/* <FaChevronDown 
+                    className={`w-3 h-3 transition-transform duration-200 ${
+                      showUserDropdown ? 'rotate-180' : ''
+                    } ${scrolled || isChatPage ? (isDark ? 'text-white' : 'text-gray-700') : 'text-white'}`}
+                  /> */}
+                </motion.button>
+
+                {/* Dropdown Menu */}
+                {showUserDropdown && (
+                  <motion.div
+                    className={`absolute right-0 mt-2 w-64 rounded-lg shadow-xl overflow-hidden ${
+                      isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+                    }`}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {/* User Info Section */}
+                    <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-semibold shadow-lg">
+                          {user.profile_image ? (
+                            <img 
+                              src={user.profile_image} 
+                              alt={user.full_name || user.email} 
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-lg">{getUserInitials()}</span>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-semibold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            {user.full_name || 'User'}
+                          </p>
+                          <p className={`text-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Additional User Info */}
+                      {user.student_id && (
+                        <div className={`mt-2 pt-2 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                          <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Student ID: <span className="font-medium">{user.student_id}</span>
+                          </p>
+                        </div>
+                      )}
+                      {user.university && (
+                        <div className="mt-1">
+                          <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            University: <span className="font-medium">{user.university}</span>
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="py-2">
+                      <button
+                        onClick={() => {
+                          navigate('/profile');
+                          setShowUserDropdown(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left text-sm flex items-center space-x-2 transition-colors ${
+                          isDark 
+                            ? 'text-gray-300 hover:bg-gray-700' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        <FaUser className="w-4 h-4" />
+                        <span>View Profile</span>
+                      </button>
+                      
+                      <button
+                        onClick={handleLogout}
+                        className={`w-full px-4 py-2 text-left text-sm flex items-center space-x-2 transition-colors ${
+                          isDark 
+                            ? 'text-red-400 hover:bg-gray-700' 
+                            : 'text-red-600 hover:bg-red-50'
+                        }`}
+                      >
+                        <FaSignOutAlt className="w-4 h-4" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Tablet Navigation */}
@@ -189,14 +340,46 @@ const Navigation = () => {
             >
               Start
             </motion.button>
+            
+            {/* User Profile for Tablet */}
+            {isAuthenticated() && user && (
+              <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-semibold shadow-lg cursor-pointer"
+                   onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                {user.profile_image ? (
+                  <img 
+                    src={user.profile_image} 
+                    alt={user.full_name || user.email} 
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm">{getUserInitials()}</span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            {/* User Profile for Mobile */}
+            {isAuthenticated() && user && (
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-semibold shadow-lg cursor-pointer"
+                   onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                {user.profile_image ? (
+                  <img 
+                    src={user.profile_image} 
+                    alt={user.full_name || user.email} 
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs">{getUserInitials()}</span>
+                )}
+              </div>
+            )}
+            
             <motion.button
               className={`p-2 rounded-lg transition-all duration-200 cursor-pointer ${
                 (scrolled || isChatPage)
-                  ? 'text-gray-700 hover:bg-gray-100/80' 
+                  ? `${isDark ? 'text-white hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100/80'}`
                   : 'text-white hover:bg-white/10'
               }`}
               onClick={() => setIsOpen(!isOpen)}
@@ -217,14 +400,45 @@ const Navigation = () => {
           }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
-          <div className="px-4 py-4 space-y-2 bg-white/95 backdrop-blur-md rounded-xl mt-2 shadow-xl border border-gray-200/20">
+          <div className={`px-4 py-4 space-y-2 rounded-xl mt-2 shadow-xl border ${
+            isDark 
+              ? 'bg-gray-800/95 backdrop-blur-md border-gray-700' 
+              : 'bg-white/95 backdrop-blur-md border-gray-200/20'
+          }`}>
+            {/* User Profile Section in Mobile Menu */}
+            {isAuthenticated() && user && (
+              <div className={`mb-3 pb-3 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                <div className="flex items-center space-x-3 px-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-semibold shadow-lg">
+                    {user.profile_image ? (
+                      <img 
+                        src={user.profile_image} 
+                        alt={user.full_name || user.email} 
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span>{getUserInitials()}</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {user.full_name || 'User'}
+                    </p>
+                    <p className={`text-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {navItems.map((item, index) => (
               <motion.button
                 key={item.name}
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isActive(item.id)
-                    ? 'text-amber-600 bg-yellow-50'
-                    : 'text-gray-700 hover:text-yellow-600'
+                    ? `${isDark ? 'text-amber-400 bg-gray-700' : 'text-amber-600 bg-yellow-50'}`
+                    : `${isDark ? 'text-gray-300 hover:text-yellow-400 hover:bg-gray-700' : 'text-gray-700 hover:text-yellow-600 hover:bg-gray-50'}`
                 }`}
                 onClick={() => scrollToSection(item.href)}
                 initial={{ opacity: 0, x: -20 }}
@@ -234,7 +448,7 @@ const Navigation = () => {
                 {item.name}
               </motion.button>
             ))}
-            <div className="pt-2 border-t border-gray-200/50">
+            <div className={`pt-2 border-t ${isDark ? 'border-gray-700' : 'border-gray-200/50'}`}>
               <motion.button
                 className={`block w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isActive('chat')
@@ -248,6 +462,24 @@ const Navigation = () => {
               >
                 Start Learning
               </motion.button>
+              
+              {/* Logout Button for Mobile */}
+              {isAuthenticated() && user && (
+                <motion.button
+                  className={`mt-2 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2 ${
+                    isDark 
+                      ? 'text-red-400 bg-gray-700 hover:bg-red-900/30' 
+                      : 'text-red-600 bg-red-50 hover:bg-red-100'
+                  }`}
+                  onClick={handleLogout}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <FaSignOutAlt className="w-4 h-4" />
+                  <span>Logout</span>
+                </motion.button>
+              )}
             </div>
           </div>
         </motion.div>
