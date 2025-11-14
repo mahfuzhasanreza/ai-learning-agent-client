@@ -153,9 +153,19 @@ const Roadmap = () => {
               // Only process roadmap events
               if (currentEvent === 'roadmap' || !currentEvent) {
                 console.log('Received roadmap data:', jsonData);
-                setRoadmapData(jsonData);
-                setCompletedItems(new Set()); // Reset completed items
-                setSelectedNode(null); // Reset selected node
+                
+                // Extract thread_id if present in the data
+                if (jsonData.thread_id) {
+                  console.log('Thread ID found in roadmap data:', jsonData.thread_id);
+                  setThreadId(jsonData.thread_id);
+                }
+                
+                // Only set roadmap data if it has stages (actual roadmap)
+                if (jsonData.stages) {
+                  setRoadmapData(jsonData);
+                  setCompletedItems(new Set()); // Reset completed items
+                  setSelectedNode(null); // Reset selected node
+                }
               } else if (currentEvent === 'thread_id') {
                 console.log('Thread ID event received:', jsonData);
                 // Store thread_id for chat functionality
