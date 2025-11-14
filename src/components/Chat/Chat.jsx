@@ -527,7 +527,7 @@ const Chat = () => {
                         </div>
 
                         {/* Send icon - always visible, disabled when no input */}
-                        <img 
+                        <button
                             onClick={() => {
                                 if (input || listening) {
                                     onSent();
@@ -537,14 +537,32 @@ const Chat = () => {
                                     }
                                 }
                             }} 
-                            className={`send-icon ${!(input || listening) ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                            className={`send-icon p-2 rounded-full transition-all duration-200 ${
+                                !(input || listening) 
+                                    ? 'opacity-60 cursor-not-allowed bg-gray-600/20' 
+                                    : 'cursor-pointer bg-[#ff4d00ab] hover:bg-[#FF4B00]/90'
+                            }`}
                             style={{ 
-                                filter: !(input || listening) ? 'grayscale(100%)' : 'none',
                                 pointerEvents: !(input || listening) ? 'none' : 'auto'
                             }}
-                            src={assets.send_icon} 
-                            alt="" 
-                        />
+                            disabled={!(input || listening)}
+                        >
+                            <svg 
+                                width="20" 
+                                height="20" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path 
+                                    d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" 
+                                    stroke={!(input || listening) ? '#6B7280' : '#FFFFFF'}
+                                    strokeWidth="2" 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </button>
                     </div>
                     <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
