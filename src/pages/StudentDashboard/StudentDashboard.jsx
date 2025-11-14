@@ -352,7 +352,7 @@ const StudentDashboard = () => {
   // Handle adding a student course
   const handleAddCourse = async (e) => {
     e.preventDefault();
-
+    
     if (!selectedCourseToAdd) {
       alert('Please select a course first');
       return;
@@ -367,7 +367,7 @@ const StudentDashboard = () => {
     try {
       // TODO: Replace with actual student_id from auth context
       const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
-
+      
       await ApiService.addStudentCourse({
         student_id: STUDENT_ID,
         course_id: selectedCourseToAdd.id,
@@ -387,10 +387,10 @@ const StudentDashboard = () => {
       setCourseSearchQuery('');
 
       alert('Course added successfully!');
-
-      // Optionally refresh data
-      // refetchSummary();
-
+      
+      // Refresh enrolled courses
+      fetchEnrolledCourses(selectedTrimester);
+      
     } catch (error) {
       console.error('Error adding course:', error);
       alert(error.message || 'Failed to add course. Please try again.');
@@ -399,7 +399,59 @@ const StudentDashboard = () => {
     }
   };
 
-  // Components
+  // Handle delete course confirmation
+  const handleDeleteCourse = (course) => {
+    setCourseToDelete(course);
+    setShowDeleteConfirm(true);
+  };
+
+  // Confirm and delete course
+  const confirmDeleteCourse = async () => {
+    if (!courseToDelete) return;
+
+    setDeletingCourse(true);
+    try {
+      // TODO: Replace with actual student_id from auth context
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(`${baseUrl}/api/v1/performance/student-courses`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_id: STUDENT_ID,
+          course_id: courseToDelete.course_id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Close confirmation modal
+      setShowDeleteConfirm(false);
+      setCourseToDelete(null);
+
+      // Show success notification
+      setShowSuccessNotification(true);
+      
+      // Auto-hide notification after 3 seconds
+      setTimeout(() => {
+        setShowSuccessNotification(false);
+      }, 3000);
+
+      // Refresh the enrolled courses list
+      fetchEnrolledCourses(selectedTrimester);
+
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      alert(error.message || 'Failed to delete course. Please try again.');
+    } finally {
+      setDeletingCourse(false);
+    }
+  };  // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
@@ -488,6 +540,12 @@ const StudentDashboard = () => {
   const [showAddTopicQuiz, setShowAddTopicQuiz] = useState(false);
   const [selectedQuizTopic, setSelectedQuizTopic] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
+
+  // Course deletion state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
+  const [deletingCourse, setDeletingCourse] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -654,17 +712,39 @@ const StudentDashboard = () => {
                 {/* Enrolled courses from API - Only show code and name */}
                 {!loadingEnrolledCourses && !enrolledCoursesError && enrolledCourses.length > 0 ? (
                   enrolledCourses.map((course) => (
-                    <button
+                    <div
                       key={course.course_id}
-                      onClick={() => setSelectedCourse(course)}
-                      className={`mb-4 w-full text-left rounded-lg p-3 transition-all ${selectedCourse?.course_id === course.course_id
+                      className={`mb-4 w-full rounded-lg transition-all ${selectedCourse?.course_id === course.course_id
                           ? 'bg-[#FF4B00] text-white shadow-lg'
                           : 'bg-gray-700 hover:bg-gray-600 text-gray-100'
                         }`}
                     >
-                      <div className="font-semibold text-sm">{course.code}</div>
-                      <div className="text-xs mt-1 opacity-90">{course.title}</div>
-                    </button>
+                      <div className="flex items-center justify-between p-3">
+                        <button
+                          onClick={() => setSelectedCourse(course)}
+                          className="flex-1 text-left"
+                        >
+                          <div className="font-semibold text-sm">{course.code}</div>
+                          <div className="text-xs mt-1 opacity-90">{course.title}</div>
+                        </button>
+                        
+                        {/* Delete Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCourse(course);
+                          }}
+                          className={`ml-2 p-1.5 rounded hover:bg-red-600 transition-colors ${
+                            selectedCourse?.course_id === course.course_id
+                              ? 'text-white hover:bg-red-700'
+                              : 'text-gray-400 hover:text-white'
+                          }`}
+                          title="Delete Course"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   ))
                 ) : (
                   // Fallback to static data when no enrolled courses
@@ -1628,6 +1708,83 @@ const StudentDashboard = () => {
                   </button>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && courseToDelete && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                
+                <h3 className="text-xl font-bold text-white text-center mb-2">
+                  Delete Course
+                </h3>
+                
+                <p className="text-gray-300 text-center mb-4">
+                  Are you sure you want to delete <span className="font-semibold text-white">{courseToDelete.code}</span>?
+                </p>
+                
+                <p className="text-sm text-gray-400 text-center mb-6">
+                  This action cannot be undone. All associated data will be permanently removed.
+                </p>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setCourseToDelete(null);
+                    }}
+                    disabled={deletingCourse}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDeleteCourse}
+                    disabled={deletingCourse}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {deletingCourse ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Delete'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Notification */}
+        {showSuccessNotification && (
+          <div className="fixed bottom-4 left-4 z-50">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold">Course Deleted Successfully</p>
+                <p className="text-sm text-green-100">The course has been removed.</p>
+              </div>
+              <button
+                onClick={() => setShowSuccessNotification(false)}
+                className="ml-auto flex-shrink-0 hover:bg-green-700 p-1 rounded transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
         )}
