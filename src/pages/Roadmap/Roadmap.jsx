@@ -1,44 +1,211 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import ChatBotPanel from './ChatBotPanel';
+import { Mic, MicOff, Send, Loader, RefreshCw } from 'lucide-react';
+import { UserAuth } from '../../context/AuthContext';
 
-import roadmapData from "../../../src/data/c_roadmap.json";
+// import roadmapData from "../../../src/data/c_roadmap.json";
 // import roadmapData from "../../../src/data/python_roadmap.json";
 
 const Roadmap = () => {
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [completedItems, setCompletedItems] = useState(new Set());
-
   const [activeTab, setActiveTab] = useState("details"); // "details" or "chatbot"
+  
+  // Get auth token
+  const { getToken } = UserAuth();
 
-  const sendMessageToAI = (topic) => {
-    // Example: you can replace this with real API call
-    console.log(`Sending message to AI Chatbot about: ${topic}`);
-    alert(`Message sent to AI Chatbot about: ${topic}`);
+  // New states for roadmap generation
+  const [roadmapData, setRoadmapData] = useState(null);
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'en-US';
+
+      recognitionInstance.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setQuery(transcript);
+        setIsListening(false);
+      };
+
+      recognitionInstance.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        setError('Speech recognition failed. Please try again.');
+      };
+
+      recognitionInstance.onend = () => {
+        setIsListening(false);
+      };
+
+      setRecognition(recognitionInstance);
+    }
+  }, []);
+
+  // Toggle voice input
+  const toggleVoiceInput = () => {
+    if (!recognition) {
+      setError('Speech recognition is not supported in your browser.');
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      setError(null);
+      recognition.start();
+      setIsListening(true);
+    }
   };
 
+  // Fetch roadmap from API
+  const generateRoadmap = async () => {
+    if (!query.trim()) {
+      setError('Please enter a topic or use voice input');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add Authorization header if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(`${baseUrl}/api/v1/roadmap`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ topic: query.trim() }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let currentEvent = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          // Skip empty lines
+          if (!line.trim()) continue;
+          
+          // Handle event type
+          if (line.startsWith('event: ')) {
+            currentEvent = line.slice(7).trim();
+            continue;
+          }
+          
+          // Handle data
+          if (line.startsWith('data: ')) {
+            try {
+              let jsonString = line.slice(6).trim();
+              
+              // Skip empty data lines
+              if (!jsonString) continue;
+              
+              // Skip non-JSON data lines (like "event: roadmap")
+              if (jsonString.startsWith('event:')) continue;
+              
+              // Handle duplicate "data: " prefix (e.g., "data: data: {...}")
+              if (jsonString.startsWith('data: ')) {
+                jsonString = jsonString.slice(6).trim();
+              }
+              
+              const jsonData = JSON.parse(jsonString);
+              
+              // Only process roadmap events
+              if (currentEvent === 'roadmap' || !currentEvent) {
+                console.log('Received roadmap data:', jsonData);
+                setRoadmapData(jsonData);
+                setCompletedItems(new Set()); // Reset completed items
+                setSelectedNode(null); // Reset selected node
+              } else if (currentEvent === 'thread_id') {
+                console.log('Thread ID:', jsonData);
+                // You can store thread_id if needed for chat functionality
+              }
+              
+              // Reset current event after processing
+              currentEvent = null;
+            } catch (e) {
+              console.error('Error parsing SSE data:', e, 'Line:', line);
+            }
+          }
+        }
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error generating roadmap:', err);
+      setError('Failed to generate roadmap. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    generateRoadmap();
+  };
 
   const transformDataForTree = (data) => {
+    // Validate data structure
+    if (!data || !data.stages || !Array.isArray(data.stages)) {
+      console.warn('Invalid roadmap data structure:', data);
+      return null;
+    }
+
     const root = {
-      name: data.topic,
+      name: data.topic || 'Roadmap',
       type: "root",
-      description: data.introduction,
+      description: data.introduction || '',
       children: data.stages.map((stage, stageIndex) => ({
-        name: stage.title,
+        name: stage.title || `Stage ${stageIndex + 1}`,
         type: "stage",
-        description: stage.description,
+        description: stage.description || '',
         stageIndex,
-        children: stage.items.map((item, itemIndex) => ({
-          name: item.name,
-          type: "item",
-          description: item.description,
-          difficulty: item.difficulty,
-          timeCommitment: item.timeCommitment,
-          id: `${stageIndex}-${itemIndex}`,
-          stageIndex,
-          itemIndex
-        }))
+        children: (stage.items && Array.isArray(stage.items)) 
+          ? stage.items.map((item, itemIndex) => ({
+              name: item.name || `Item ${itemIndex + 1}`,
+              type: "item",
+              description: item.description || '',
+              difficulty: item.difficulty || 'Medium',
+              timeCommitment: item.timeCommitment || 'Unknown',
+              id: `${stageIndex}-${itemIndex}`,
+              stageIndex,
+              itemIndex
+            }))
+          : []
       }))
     };
     return root;
@@ -53,12 +220,6 @@ const Roadmap = () => {
     return colors[difficulty] || "#6b7280";
   };
 
-  const getNodeColor = (d) => {
-    if (d.data.type === "root") return "#8b5cf6";
-    if (d.data.type === "stage") return "#3b82f6";
-    return getDifficultyColor(d.data.difficulty);
-  };
-
   const toggleCompletion = (nodeId) => {
     const newCompleted = new Set(completedItems);
     if (newCompleted.has(nodeId)) {
@@ -70,6 +231,10 @@ const Roadmap = () => {
   };
 
   useEffect(() => {
+    if (!roadmapData || !roadmapData.stages || !Array.isArray(roadmapData.stages)) {
+      return; // Don't render if no valid data
+    }
+    
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
@@ -90,7 +255,13 @@ const Roadmap = () => {
 
     svg.call(zoom);
 
-    const root = d3.hierarchy(transformDataForTree(roadmapData));
+    const transformedData = transformDataForTree(roadmapData);
+    if (!transformedData) {
+      console.error('Failed to transform roadmap data');
+      return;
+    }
+
+    const root = d3.hierarchy(transformedData);
 
     const treeLayout = d3.tree().size([width - 200, 500]); // width -> x, height -> y
 
@@ -210,7 +381,6 @@ const Roadmap = () => {
 
         text.text("");
         let line = [];
-        let lineNumber = 0;
         const lineHeight = 1;
         let lines = [];
 
@@ -221,7 +391,6 @@ const Roadmap = () => {
             line.pop();
             lines.push(line.join(" "));
             line = [word];
-            lineNumber++;
           }
         });
         if (line.length > 0) {
@@ -347,26 +516,151 @@ const Roadmap = () => {
       .translate(fullWidth / 2 - bounds.width * scale / 2, fullHeight / 2 - bounds.height * scale / 2)
       .scale(scale));
 
-  }, [completedItems]);
+  }, [completedItems, roadmapData]);
 
-  const completionPercentage = roadmapData.stages.reduce((total, stage) => {
+  // Calculate completion percentage safely
+  const completionPercentage = roadmapData?.stages ? roadmapData.stages.reduce((total, stage) => {
     const stageCompleted = stage.items.filter((item, itemIndex) =>
       completedItems.has(`${roadmapData.stages.indexOf(stage)}-${itemIndex}`)
     ).length;
     return total + stageCompleted;
-  }, 0);
+  }, 0) : 0;
 
-  const totalItems = roadmapData.stages.reduce((total, stage) => total + stage.items.length, 0);
-  const progressPercent = Math.round((completionPercentage / totalItems) * 100);
+  const totalItems = roadmapData?.stages ? roadmapData.stages.reduce((total, stage) => total + stage.items.length, 0) : 0;
+  const progressPercent = totalItems > 0 ? Math.round((completionPercentage / totalItems) * 100) : 0;
 
   return (
-    <div className="min-w-[1585px] h-screen bg-gray-900">
-      {/* Header */}
+    <div className="min-w-[1585px] h-screen bg-gray-900 flex flex-col">
+      {/* Header with Input Section */}
+      <div className="bg-gray-800 border-b border-gray-700 p-4 shadow-lg">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl font-bold text-white mb-4 text-center">
+            AI Learning Roadmap Generator
+          </h1>
+          
+          {/* Input Form */}
+          <form onSubmit={handleSubmit} className="flex items-center gap-3">
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Enter a topic (e.g., 'Learn Python', 'Machine Learning Basics')..."
+                className="w-full px-4 py-3 pr-12 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-yellow-500 transition-colors"
+                disabled={isLoading}
+              />
+              
+              {/* Voice Input Button */}
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all ${
+                  isListening 
+                    ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
+                    : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
+                }`}
+                disabled={isLoading}
+                title={isListening ? 'Stop listening' : 'Use voice input'}
+              >
+                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            </div>
+            
+            {/* Generate Button */}
+            <button
+              type="submit"
+              disabled={isLoading || !query.trim()}
+              className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold rounded-lg hover:from-yellow-600 hover:to-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="w-5 h-5 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  Generate
+                </>
+              )}
+            </button>
+            
+            {/* Reset Button */}
+            {roadmapData && (
+              <button
+                type="button"
+                onClick={() => {
+                  setRoadmapData(null);
+                  setQuery('');
+                  setSelectedNode(null);
+                  setCompletedItems(new Set());
+                  setError(null);
+                }}
+                className="px-4 py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors flex items-center gap-2"
+                title="Reset and create new roadmap"
+              >
+                <RefreshCw className="w-5 h-5" />
+              </button>
+            )}
+          </form>
+          
+          {/* Error Message */}
+          {error && (
+            <div className="mt-3 p-3 bg-red-500/10 border border-red-500 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
+          
+          {/* Progress Bar */}
+          {roadmapData && (
+            <div className="mt-4">
+              <div className="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Progress: {completionPercentage} / {totalItems} items</span>
+                <span>{progressPercent}% Complete</span>
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <div
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
-      <div className="flex  gap-4 h-full">
+      {/* Main Content */}
+      <div className="flex gap-4 h-full overflow-hidden p-4">
         {/* Tree visualization */}
         <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden">
-          <svg ref={svgRef} className="w-full h-full"></svg>
+          {roadmapData ? (
+            <svg ref={svgRef} className="w-full h-full"></svg>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center max-w-md">
+                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
+                  <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-3">
+                  Welcome to AI Roadmap Generator
+                </h2>
+                <p className="text-gray-400 mb-6">
+                  Enter a topic above to generate a personalized learning roadmap. You can type your query or use voice input to get started.
+                </p>
+                <div className="bg-gray-800 rounded-lg p-4 text-left">
+                  <p className="text-sm text-gray-300 font-semibold mb-2">Example topics:</p>
+                  <ul className="text-sm text-gray-400 space-y-1">
+                    <li>• Learn Python Programming</li>
+                    <li>• Machine Learning Fundamentals</li>
+                    <li>• Web Development with React</li>
+                    <li>• Data Structures and Algorithms</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Side panel */}
