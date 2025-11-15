@@ -66,6 +66,17 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
     }
   };
 
+  // Handle previous question
+  const handlePreviousQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+      // Restore the previous answer
+      setSelectedAnswer(answers[currentQuestion - 1]);
+      // Remove the last answer from the array
+      setAnswers(answers.slice(0, -1));
+    }
+  };
+
   // Handle next question
   const handleNextQuestion = () => {
     if (selectedAnswer === null) {
@@ -307,7 +318,20 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <button
+          onClick={handlePreviousQuestion}
+          disabled={currentQuestion === 0}
+          className={`px-6 py-4 rounded-xl font-semibold transition-all transform flex items-center space-x-2 ${
+            currentQuestion === 0
+              ? 'bg-gray-700/50 cursor-not-allowed text-gray-500 border border-gray-700/50 opacity-50'
+              : 'bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 text-white hover:scale-105'
+          }`}
+        >
+          <ChevronRight className="w-5 h-5 rotate-180" />
+          <span className="text-lg">Previous</span>
+        </button>
+        
         <button
           onClick={handleNextQuestion}
           disabled={selectedAnswer === null}
