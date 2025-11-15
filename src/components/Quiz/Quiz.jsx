@@ -52,6 +52,15 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
   const handleFinishQuiz = async (finalAnswers = answers) => {
     setSubmittingQuiz(true);
     
+    // Print selected answers array to console
+    console.log('Selected Answers Array:', finalAnswers);
+    console.log('Selected Answers with Question IDs:', finalAnswers.map((selectedIndex, index) => ({
+      question_number: index + 1,
+      question_id: questions[index].question_id,
+      selected_index: selectedIndex,
+      selected_option: questions[index].options[selectedIndex]
+    })));
+    
     try {
       const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -61,6 +70,8 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
         question_id: questions[index].question_id,
         selected_index: selectedIndex
       }));
+      
+      console.log('Formatted Answers for API:', formattedAnswers);
       
       const response = await fetch(
         `${baseUrl}/api/v1/performance/submit_quiz`,
@@ -76,12 +87,16 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
           })
         }
       );
+
+      
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
+
+      console.log(data, "MAHFUZ");
       
       // Store the API response
       setQuizResult(data);
@@ -288,43 +303,50 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
                     {/* Options */}
                     <div className="ml-11 space-y-2">
                       {answer.options && answer.options.map((option, optIndex) => {
+                        console.log("Answer.chosen=", answer.chosen_index);
+                        console.log("Answer.correct_ansewer", answer.correct_answer);
+                        console.log("ANSWER", answer);
+
                         const isChosenOption = optIndex === answer.chosen_index;
                         const isCorrectOption = option === answer.correct_answer;
                         
                         return (
                           <div
                             key={optIndex}
-                            className={`p-3 rounded-lg border transition-all ${
+                            className={`p-3 rounded-lg border-2 transition-all ${
                               isCorrectOption
-                                ? 'bg-green-500/10 border-green-500/50'
+                                ? 'bg-green-500/20 border-green-500'
                                 : isChosenOption && !isCorrect
-                                ? 'bg-red-500/10 border-red-500/50'
+                                ? 'bg-red-500/20 border-red-500'
                                 : 'bg-gray-800/50 border-gray-600/30'
                             }`}
                           >
                             <div className="flex items-center justify-between">
-                              <span className={`text-sm ${
+                              <span className={`text-sm font-medium ${
                                 isCorrectOption
-                                  ? 'text-green-400 font-medium'
+                                  ? 'text-green-300'
                                   : isChosenOption && !isCorrect
-                                  ? 'text-red-400 font-medium'
+                                  ? 'text-red-300'
                                   : 'text-gray-400'
                               }`}>
                                 {option}
                               </span>
                               <div className="flex items-center gap-2">
                                 {isCorrectOption && (
-                                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                  <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                    <CheckCircle className="w-3 h-3" />
                                     Correct Answer
                                   </span>
                                 )}
                                 {isChosenOption && !isCorrect && (
-                                  <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full font-semibold">
+                                  <span className="text-xs bg-red-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                    <XCircle className="w-3 h-3" />
                                     Your Answer
                                   </span>
                                 )}
                                 {isChosenOption && isCorrect && (
-                                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                  <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                    <CheckCircle className="w-3 h-3" />
                                     Your Answer ✓
                                   </span>
                                 )}
