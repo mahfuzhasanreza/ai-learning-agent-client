@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Clock, Award, ChevronRight, RotateCcw, X } from 'lucide-react';
 import './Quiz.css';
 
-const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
+const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
   // Quiz state
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -155,15 +155,13 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
 
   // Restart quiz
   const handleRestartQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswer(null);
-    setAnswers([]);
-    setShowResult(false);
-    setQuizResult(null);
-    setTimeLeft(600);
-    
-    // Close and let parent component handle new quiz generation
-    onClose();
+    // Call onRetry if provided to regenerate quiz with same topic
+    if (onRetry) {
+      onRetry(topic);
+    } else {
+      // Fallback: just close
+      onClose();
+    }
   };
 
   // Results screen

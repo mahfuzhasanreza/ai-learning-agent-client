@@ -2094,6 +2094,13 @@ const StudentDashboard = () => {
                   // You can add logic here to save results to API or update state
                   alert(`Quiz completed! Score: ${results.score}/${results.total} (${results.percentage}%)`);
                 }}
+                onRetry={() => {
+                  // Close current quiz and regenerate with same topic
+                  setShowQuiz(false);
+                  setGeneratedQuiz(null);
+                  // Trigger quiz generation again
+                  handleGenerateQuiz();
+                }}
               />
             </div>
           </div>
