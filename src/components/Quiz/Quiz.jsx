@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Clock, Award, ChevronRight, RotateCcw } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Award, ChevronRight, RotateCcw, X } from 'lucide-react';
 import './Quiz.css';
 
 const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
@@ -172,8 +172,16 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
     const passed = percentage >= 60;
 
     return (
-      <div className="min-h-[500px] max-h-[90vh] bg-gray-900/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl overflow-y-auto scrollbar-hide">
+      <div className="relative min-h-[500px] max-h-[90vh] bg-gray-900/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl overflow-y-auto scrollbar-hide">
         <div className="max-w-3xl mx-auto">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 rounded-lg text-gray-400 hover:text-white transition-all"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
           {/* Score Header */}
           <div className="text-center mb-8">
             <div className="mb-6">
@@ -239,12 +247,6 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
               >
                 <RotateCcw className="w-5 h-5" />
                 <span>Attempt New Quiz</span>
-              </button>
-              <button
-                onClick={onClose}
-                className="px-8 py-3 bg-gray-700/80 hover:bg-gray-600/80 backdrop-blur-sm text-white rounded-xl font-semibold transition-all border border-gray-600/50 hover:border-gray-500/50"
-              >
-                Close
               </button>
             </div>
           </div>
@@ -312,21 +314,23 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
                               }`}>
                                 {option}
                               </span>
-                              {isCorrectOption && (
-                                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
-                                  Correct
-                                </span>
-                              )}
-                              {isChosenOption && !isCorrect && (
-                                <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full font-semibold">
-                                  Your Answer
-                                </span>
-                              )}
-                              {isChosenOption && isCorrect && (
-                                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
-                                  Your Answer
-                                </span>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {isCorrectOption && (
+                                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                    Correct Answer
+                                  </span>
+                                )}
+                                {isChosenOption && !isCorrect && (
+                                  <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full font-semibold">
+                                    Your Answer
+                                  </span>
+                                )}
+                                {isChosenOption && isCorrect && (
+                                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                    Your Answer ✓
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         );
