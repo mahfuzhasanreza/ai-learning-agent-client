@@ -3,7 +3,7 @@ import { CheckCircle, XCircle, Clock, Award, ChevronRight, RotateCcw } from 'luc
 import { Context } from '../../context/Context';
 import './Quiz.css';
 
-const Quiz = ({ topic, onClose, onComplete }) => {
+const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
   const { isDark } = useContext(Context);
   
   // Quiz state
@@ -12,7 +12,7 @@ const Quiz = ({ topic, onClose, onComplete }) => {
   const [answers, setAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(600); // Default 10 minutes in seconds
   const [quizStarted, setQuizStarted] = useState(false);
 
   // Sample quiz questions based on topic
@@ -395,7 +395,27 @@ const Quiz = ({ topic, onClose, onComplete }) => {
     ]
   };
 
-  const questions = quizQuestions[topic] || quizQuestions.Variables;
+  // Use generated quiz if available, otherwise use static questions
+  const questions = React.useMemo(() => {
+    if (generatedQuiz && generatedQuiz.generated_quiz) {
+      // Transform API quiz format to component format
+      return generatedQuiz.generated_quiz.map(q => ({
+        question: q.question,
+        options: q.options,
+        correctAnswer: null, // We don't have correct answers from API yet
+        question_id: q.question_id
+      }));
+    }
+    return quizQuestions[topic] || quizQuestions.Variables;
+  }, [generatedQuiz, topic]);
+
+  // Set time limit based on number of questions (2 minutes per question)
+  React.useEffect(() => {
+    if (generatedQuiz && generatedQuiz.generated_quiz) {
+      const timeInMinutes = generatedQuiz.generated_quiz.length * 2;
+      setTimeLeft(timeInMinutes * 60);
+    }
+  }, [generatedQuiz]);
 
   // Format time
   const formatTime = (seconds) => {

@@ -937,6 +937,65 @@ const StudentDashboard = () => {
     }
   };
 
+  // Generate quiz for selected topic
+  const handleGenerateQuiz = async () => {
+    if (!selectedQuizTopic || !selectedCourse?.course_id) {
+      alert('Please select a topic first');
+      return;
+    }
+
+    // Find the selected topic ID from courseTopics
+    const selectedTopic = courseTopics.find(topic => topic.name === selectedQuizTopic);
+    if (!selectedTopic) {
+      alert('Topic not found');
+      return;
+    }
+
+    setLoadingQuizGeneration(true);
+    setQuizGenerationError(null);
+    
+    try {
+      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+      const response = await fetch(
+        `${baseUrl}/api/v1/performance/generate-quiz`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            student_id: STUDENT_ID,
+            course_id: selectedCourse.course_id,
+            topic_ids: [selectedTopic.id]
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setGeneratedQuiz(data);
+      setShowQuizModal(true); // Show the modal with quiz info
+
+    } catch (error) {
+      console.error('Error generating quiz:', error);
+      setQuizGenerationError(error.message || 'Failed to generate quiz');
+      alert('Failed to generate quiz. Please try again.');
+    } finally {
+      setLoadingQuizGeneration(false);
+    }
+  };
+
+  // Start the generated quiz
+  const handleStartGeneratedQuiz = () => {
+    setShowQuizModal(false);
+    setShowQuiz(true);
+  };
+
   // Components
   const CircularProgress = ({ percentage, size = 60, strokeWidth = 4, color = "primary" }) => {
     const radius = (size - strokeWidth) / 2;
@@ -1027,6 +1086,12 @@ const StudentDashboard = () => {
   const [courseTopics, setCourseTopics] = useState([]);
   const [loadingCourseTopics, setLoadingCourseTopics] = useState(false);
   const [courseTopicsError, setCourseTopicsError] = useState(null);
+  
+  // Quiz generation states
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [generatedQuiz, setGeneratedQuiz] = useState(null);
+  const [loadingQuizGeneration, setLoadingQuizGeneration] = useState(false);
+  const [quizGenerationError, setQuizGenerationError] = useState(null);
 
   // Course deletion state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -1644,17 +1709,18 @@ const StudentDashboard = () => {
                     )}
                   </div>
                   <button
-                    onClick={() => {
-                      if (selectedQuizTopic) {
-                        setShowQuiz(true);
-                      } else {
-                        alert('Please select a topic first');
-                      }
-                    }}
-                    disabled={loadingCourseTopics || courseTopics.length === 0}
-                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleGenerateQuiz}
+                    disabled={loadingCourseTopics || courseTopics.length === 0 || loadingQuizGeneration}
+                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Take Quiz
+                    {loadingQuizGeneration ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Generating Quiz...
+                      </>
+                    ) : (
+                      'Take Quiz'
+                    )}
                   </button>
                 </div>
               )}
@@ -1955,16 +2021,73 @@ const StudentDashboard = () => {
           </div>
         )}
 
+        {/* Quiz Info Modal - Shows before starting quiz */}
+        {showQuizModal && generatedQuiz && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full">
+                  <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white text-center mb-2">
+                  Quiz Ready!
+                </h3>
+                
+                <p className="text-gray-300 text-center mb-6">
+                  Your quiz on <span className="font-semibold text-amber-500">{generatedQuiz.topics?.join(', ')}</span> has been generated
+                </p>
+
+                <div className="bg-gray-700/50 rounded-lg p-4 mb-6 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Total Questions:</span>
+                    <span className="text-white font-semibold">{generatedQuiz.generated_quiz?.length || 0}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Time Limit:</span>
+                    <span className="text-white font-semibold">
+                      {(generatedQuiz.generated_quiz?.length || 0) * 2} minutes
+                    </span>
+                  </div>
+         
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowQuizModal(false);
+                      setGeneratedQuiz(null);
+                    }}
+                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-3 rounded-lg font-semibold transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleStartGeneratedQuiz}
+                    className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                  >
+                    Start Quiz
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quiz Modal */}
         {showQuiz && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
             <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <Quiz
                 topic={selectedQuizTopic}
+                generatedQuiz={generatedQuiz}
                 onClose={() => {
                   setShowQuiz(false);
                   setShowAddTopicQuiz(false);
                   setSelectedQuizTopic('');
+                  setGeneratedQuiz(null);
                 }}
                 onComplete={(results) => {
                   console.log('Quiz completed:', results);
