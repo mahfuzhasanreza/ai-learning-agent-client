@@ -69,11 +69,15 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
   // Handle previous question
   const handlePreviousQuestion = () => {
     if (currentQuestion > 0) {
+      // Save current answer before going back
+      if (selectedAnswer !== null && answers.length === currentQuestion) {
+        const newAnswers = [...answers, selectedAnswer];
+        setAnswers(newAnswers);
+      }
+      
       setCurrentQuestion(currentQuestion - 1);
       // Restore the previous answer
-      setSelectedAnswer(answers[currentQuestion - 1]);
-      // Remove the last answer from the array
-      setAnswers(answers.slice(0, -1));
+      setSelectedAnswer(answers[currentQuestion - 1] ?? null);
     }
   };
 
@@ -84,12 +88,15 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
       return;
     }
 
-    const newAnswers = [...answers, selectedAnswer];
+    // Update or add the answer
+    const newAnswers = [...answers];
+    newAnswers[currentQuestion] = selectedAnswer;
     setAnswers(newAnswers);
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
+      // Check if there's already an answer for the next question
+      setSelectedAnswer(newAnswers[currentQuestion + 1] ?? null);
     } else {
       handleFinishQuiz(newAnswers);
     }
