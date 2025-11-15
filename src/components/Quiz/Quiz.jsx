@@ -172,7 +172,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
     const passed = percentage >= 60;
 
     return (
-      <div className="min-h-[500px] bg-gray-900/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl">
+      <div className="min-h-[500px] max-h-[90vh] bg-gray-900/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl overflow-y-auto scrollbar-hide">
         <div className="max-w-3xl mx-auto">
           {/* Score Header */}
           <div className="text-center mb-8">
@@ -197,7 +197,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
             </p>
 
             {/* Score Stats */}
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 mb-8 border border-gray-700/50">
+            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 mb-6 border border-gray-700/50">
               <div className="mb-4">
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-gray-400">Your Score</span>
@@ -230,6 +230,23 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
                 </div>
               </div>
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-4 justify-center mb-8">
+              <button
+                onClick={handleRestartQuiz}
+                className="px-8 py-3 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg shadow-[#FF4B00]/30 flex items-center space-x-2"
+              >
+                <RotateCcw className="w-5 h-5" />
+                <span>Attempt New Quiz</span>
+              </button>
+              <button
+                onClick={onClose}
+                className="px-8 py-3 bg-gray-700/80 hover:bg-gray-600/80 backdrop-blur-sm text-white rounded-xl font-semibold transition-all border border-gray-600/50 hover:border-gray-500/50"
+              >
+                Close
+              </button>
+            </div>
           </div>
 
           {/* Question Review */}
@@ -238,7 +255,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
               <Award className="w-6 h-6 mr-2 text-[#FF4B00]" />
               Answer Review
             </h3>
-            <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar pr-2">
+            <div className="space-y-4">
               {quizResult.right_answers && quizResult.right_answers.map((answer, index) => {
                 const isCorrect = answer.chosen_answer === answer.correct_answer;
                 
@@ -319,23 +336,6 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete }) => {
                 );
               })}
             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex space-x-4 justify-center mt-8">
-            <button
-              onClick={handleRestartQuiz}
-              className="px-8 py-3 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg shadow-[#FF4B00]/30 flex items-center space-x-2"
-            >
-              <RotateCcw className="w-5 h-5" />
-              <span>Attempt New Quiz</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="px-8 py-3 bg-gray-700/80 hover:bg-gray-600/80 backdrop-blur-sm text-white rounded-xl font-semibold transition-all border border-gray-600/50 hover:border-gray-500/50"
-            >
-              Close
-            </button>
           </div>
         </div>
       </div>

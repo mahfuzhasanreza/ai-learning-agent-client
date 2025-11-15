@@ -90,6 +90,16 @@
   background: rgba(255, 184, 0, 0.7);
 }
 
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .quiz-container {
