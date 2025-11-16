@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import Navigation from '../../components/LandingPage/components/Navigation';
 import FooterSection from '../../components/LandingPage/sections/FooterSection';
+import { UserAuth } from '../../context/AuthContext';
 
 const StudyPlan = () => {
+  const { getToken, user } = UserAuth();
   const [activeView, setActiveView] = useState('Active'); // Active, Completed
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -12,131 +14,264 @@ const StudyPlan = () => {
   const [filterType, setFilterType] = useState('All');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null); // For date filtering
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   
   // Form states
   const [taskForm, setTaskForm] = useState({
     title: '',
-    deadline: '',
-    links: '',
     description: '',
-    files: []
-  });
-  
-  const [assignmentForm, setAssignmentForm] = useState({
-    title: '',
-    deadline: '',
-    questions: '',
-    files: []
-  });
-  
-  const [ctForm, setCTForm] = useState({
-    courseName: '',
-    ctNumber: '',
-    date: '',
-    time: '',
-    syllabus: ''
+    event_date: '',
+    event_time: '',
+    type: 'assignment'
   });
 
   // Data states
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      type: 'Task',
-      title: 'Read Chapter 3',
-      deadline: '2025-09-09',
-      description: 'Focus on dynamic programming intro.',
-      links: 'https://example.com/ch3',
-      completed: false,
-      files: []
-    },
-    {
-      id: 2,
-      type: 'Assignment',
-      title: 'DSA Assignment 1',
-      deadline: '2025-09-17',
-      description: 'Implement stack & queue.',
-      completed: false,
-      files: ['Slides Week 2.pdf']
-    },
-    {
-      id: 3,
-      type: 'CT',
-      title: 'CSE 2201 - CT-2',
-      courseName: 'CSE 2201',
-      ctNumber: 'CT-2',
-      deadline: '2025-09-21',
-      time: '10:30',
-      syllabus: 'Ch 1-3, recursion basics',
-      completed: false,
-      files: []
+  const [tasks, setTasks] = useState([]);
+
+  const fetchEvents = useCallback(async () => {
+    setIsLoadingEvents(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/events/${user.uid}`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Transform API data to match our task structure
+      const transformedTasks = data.map(event => ({
+        id: event.id,
+        type: getEventTypeLabel(event.type),
+        title: event.title,
+        deadline: event.event_date,
+        time: event.event_time?.substring(0, 5), // Convert "11:00:00" to "11:00"
+        description: event.description,
+        completed: event.status === 'done',
+        apiType: event.type // Store original API type
+      }));
+      
+      setTasks(transformedTasks);
+    } catch (err) {
+      console.error('Error fetching events:', err);
+    } finally {
+      setIsLoadingEvents(false);
     }
-  ]);
+  }, [user, getToken]);
+
+  // Fetch events from API
+  useEffect(() => {
+    if (user?.uid) {
+      fetchEvents();
+    }
+  }, [user, fetchEvents]);
+
+  // Map API types to display labels
+  const getEventTypeLabel = (apiType) => {
+    const typeMap = {
+      'ct': 'CT',
+      'mid': 'Midterm',
+      'final': 'Final',
+      'assignment': 'Assignment',
+      'quiz': 'Quiz',
+      'project': 'Project',
+      'lab': 'Lab',
+      'attendance': 'Attendance',
+      'presentation': 'Presentation'
+    };
+    return typeMap[apiType] || 'Task';
+  };
+
+  // Map display types back to API types
+  const getApiType = (displayType) => {
+    const typeMap = {
+      'task': 'assignment',
+      'assignment': 'assignment',
+      'ct': 'ct',
+      'midterm': 'mid',
+      'final': 'final',
+      'quiz': 'quiz',
+      'project': 'project',
+      'lab': 'lab',
+      'attendance': 'attendance',
+      'presentation': 'presentation'
+    };
+    return typeMap[displayType.toLowerCase()] || 'assignment';
+  };
 
   const resetForms = () => {
-    setTaskForm({ title: '', deadline: '', links: '', description: '', files: [] });
-    setAssignmentForm({ title: '', deadline: '', questions: '', files: [] });
-    setCTForm({ courseName: '', ctNumber: '', date: '', time: '', syllabus: '' });
+    setTaskForm({ 
+      title: '', 
+      description: '', 
+      event_date: '', 
+      event_time: '', 
+      type: addType === 'ct' ? 'ct' : 'assignment' 
+    });
   };
 
-  const handleAddItem = () => {
-    let newItem;
-    const newId = tasks.length + 1;
-    
-    if (addType === 'task') {
-      newItem = {
-        id: newId,
-        type: 'Task',
-        title: taskForm.title,
-        deadline: taskForm.deadline,
-        description: taskForm.description,
-        links: taskForm.links,
-        files: taskForm.files,
-        completed: false
-      };
-    } else if (addType === 'assignment') {
-      newItem = {
-        id: newId,
-        type: 'Assignment',
-        title: assignmentForm.title,
-        deadline: assignmentForm.deadline,
-        questions: assignmentForm.questions,
-        files: assignmentForm.files,
-        completed: false
-      };
-    } else if (addType === 'ct') {
-      newItem = {
-        id: newId,
-        type: 'CT',
-        title: `${ctForm.courseName} - ${ctForm.ctNumber}`,
-        courseName: ctForm.courseName,
-        ctNumber: ctForm.ctNumber,
-        deadline: ctForm.date,
-        time: ctForm.time,
-        syllabus: ctForm.syllabus,
-        completed: false,
-        files: []
-      };
+  const handleAddItem = async () => {
+    if (!taskForm.title || !taskForm.event_date) {
+      alert('Please fill in required fields');
+      return;
     }
+
+    setIsLoading(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      // Format time properly - add :00 for seconds if needed
+      let formattedTime = taskForm.event_time;
+      if (formattedTime && !formattedTime.includes(':00', 5)) {
+        formattedTime = `${formattedTime}:00`;
+      } else if (!formattedTime) {
+        formattedTime = '00:00:00';
+      }
+
+
+      
+
+      const payload = {
+        student_id: user.id,
+        title: taskForm.title,
+        description: taskForm.description || '',
+        type: getApiType(addType),
+        event_date: taskForm.event_date,
+        event_time: formattedTime
+      };
+
+      console.log('Sending payload:', payload); // Debug log
+
+      const response = await fetch(`${baseUrl}/api/v1/events/create`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Server error:', errorData);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      await response.json();
+      
+      // Refresh events list
+      await fetchEvents();
+      
+      setShowAddModal(false);
+      resetForms();
+    } catch (err) {
+      console.error('Error creating event:', err);
+      alert('Failed to create event. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleComplete = async (id) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    const newStatus = task.completed ? 'pending' : 'done';
     
-    setTasks([...tasks, newItem]);
-    setShowAddModal(false);
-    resetForms();
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/events/${id}`, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify({
+          title: task.title,
+          description: task.description || '',
+          type: task.apiType || getApiType(task.type),
+          event_date: task.deadline,
+          event_time: task.time ? `${task.time}:00` : '00:00:00',
+          status: newStatus
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update local state
+      setTasks(tasks.map(t => 
+        t.id === id ? { ...t, completed: !t.completed } : t
+      ));
+    } catch (err) {
+      console.error('Error updating task:', err);
+      alert('Failed to update task status.');
+    }
   };
 
-  const toggleComplete = (id) => {
-    setTasks(tasks.map(task => 
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
-  };
+  const deleteTask = async (id) => {
+    if (!confirm('Are you sure you want to delete this task?')) return;
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/events/${id}`, {
+        method: 'DELETE',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update local state
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (err) {
+      console.error('Error deleting task:', err);
+      alert('Failed to delete task.');
+    }
   };
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (task.courseName && task.courseName.toLowerCase().includes(searchTerm.toLowerCase()));
+                         (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesFilter = filterType === 'All' || task.type === filterType;
     const matchesView = activeView === 'Active' ? !task.completed : task.completed;
@@ -286,180 +421,69 @@ const StudyPlan = () => {
     return calendar;
   };
 
-  const handleFileUpload = (e, formType) => {
-    const files = Array.from(e.target.files).map(file => file.name);
-    if (formType === 'task') {
-      setTaskForm({ ...taskForm, files: [...taskForm.files, ...files] });
-    } else if (formType === 'assignment') {
-      setAssignmentForm({ ...assignmentForm, files: [...assignmentForm.files, ...files] });
-    }
-  };
-
-  const removeFile = (fileName, formType) => {
-    if (formType === 'task') {
-      setTaskForm({ ...taskForm, files: taskForm.files.filter(f => f !== fileName) });
-    } else if (formType === 'assignment') {
-      setAssignmentForm({ ...assignmentForm, files: assignmentForm.files.filter(f => f !== fileName) });
-    }
-  };
-
   const renderAddModal = () => {
     if (!showAddModal) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-     
-        
-        <div className="bg-[#1e1d2e] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700/50 shadow-2xl">
           <div className="flex justify-between items-center mb-4">
-          
             <h3 className="text-lg font-semibold capitalize text-white">
-              Add {addType} {addType === 'ct' ? 'Date' : ''}
+              Add {addType === 'ct' ? 'Class Test' : addType}
             </h3>
             <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-white">
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {addType === 'task' && (
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Task title"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={taskForm.title}
-                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
-              />
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder={`${addType === 'ct' ? 'Class Test' : addType.charAt(0).toUpperCase() + addType.slice(1)} title`}
+              className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+              value={taskForm.title}
+              onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+            />
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Date</label>
               <input
                 type="date"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={taskForm.deadline}
-                onChange={(e) => setTaskForm({ ...taskForm, deadline: e.target.value })}
+                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600 [color-scheme:dark]"
+                value={taskForm.event_date}
+                onChange={(e) => setTaskForm({ ...taskForm, event_date: e.target.value })}
               />
-              <input
-                type="url"
-                placeholder="Necessary links"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={taskForm.links}
-                onChange={(e) => setTaskForm({ ...taskForm, links: e.target.value })}
-              />
-              <textarea
-                placeholder="Short description"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={taskForm.description}
-                onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
-              />
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">Upload Files</label>
-                <input
-                  type="file"
-                  multiple
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  onChange={(e) => handleFileUpload(e, 'task')}
-                  className="w-full p-2 bg-[#13121D] border border-gray-700 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-600 file:text-white hover:file:bg-orange-700"
-                />
-                {taskForm.files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between bg-[#13121D] p-2 mt-1 rounded border border-gray-700">
-                    <span className="text-sm text-white">{file}</span>
-                    <button onClick={() => removeFile(file, 'task')} className="text-gray-400 hover:text-white">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
-          )}
-
-          {addType === 'assignment' && (
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Assignment title"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={assignmentForm.title}
-                onChange={(e) => setAssignmentForm({ ...assignmentForm, title: e.target.value })}
-              />
-              <input
-                type="date"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={assignmentForm.deadline}
-                onChange={(e) => setAssignmentForm({ ...assignmentForm, deadline: e.target.value })}
-              />
-              <textarea
-                placeholder="Assignment questions"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={assignmentForm.questions}
-                onChange={(e) => setAssignmentForm({ ...assignmentForm, questions: e.target.value })}
-              />
-              <div>
-                <label className="block text-sm font-medium mb-2 text-white">Add Multiple Files (Class notes, Slides)</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => handleFileUpload(e, 'assignment')}
-                  className="w-full p-2 bg-[#13121D] border border-gray-700 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-600 file:text-white hover:file:bg-orange-700"
-                />
-                {assignmentForm.files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between bg-[#13121D] p-2 mt-1 rounded border border-gray-700">
-                    <span className="text-sm text-white">{file}</span>
-                    <button onClick={() => removeFile(file, 'assignment')} className="text-gray-400 hover:text-white">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {addType === 'ct' && (
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Course name"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={ctForm.courseName}
-                onChange={(e) => setCTForm({ ...ctForm, courseName: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="CT Number (e.g., CT-2)"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={ctForm.ctNumber}
-                onChange={(e) => setCTForm({ ...ctForm, ctNumber: e.target.value })}
-              />
-              <input
-                type="date"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={ctForm.date}
-                onChange={(e) => setCTForm({ ...ctForm, date: e.target.value })}
-              />
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Time</label>
               <input
                 type="time"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={ctForm.time}
-                onChange={(e) => setCTForm({ ...ctForm, time: e.target.value })}
-              />
-              <textarea
-                placeholder="CT Syllabus"
-                className="w-full p-3 bg-[#13121D] border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
-                value={ctForm.syllabus}
-                onChange={(e) => setCTForm({ ...ctForm, syllabus: e.target.value })}
+                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600 [color-scheme:dark]"
+                value={taskForm.event_time}
+                onChange={(e) => setTaskForm({ ...taskForm, event_time: e.target.value })}
               />
             </div>
-          )}
+            <textarea
+              placeholder="Description"
+              className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+              value={taskForm.description}
+              onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+            />
+          </div>
 
           <div className="flex gap-2 mt-6">
             <button
               onClick={() => setShowAddModal(false)}
               className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white"
+              disabled={isLoading}
             >
               Cancel
             </button>
             <button
               onClick={handleAddItem}
-              className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+              className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
             >
-              Add {addType}
+              {isLoading ? 'Adding...' : `Add ${addType}`}
             </button>
           </div>
         </div>
@@ -477,13 +501,13 @@ const StudyPlan = () => {
               <Navigation></Navigation>
      
       {/* Header */}
-      <div className="mt-20  flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+      <div className="mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Calendar className="w-6 h-6 text-orange-600" />
             Study Plan
           </h1>
-          <p className="text-gray-400 text-sm">Track Tasks • Assignments • CTs</p>
+          <p className="text-gray-400 text-sm">Track your tasks</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -531,14 +555,7 @@ const StudyPlan = () => {
             </button>
             
             {showAddDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-[#1e1d2e] border border-gray-700 rounded-lg shadow-lg z-10">
-                <button
-                  onClick={() => { setAddType('task'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <BookOpen className="w-4 h-4 text-orange-600" />
-                  Add Task
-                </button>
+              <div className="absolute right-0 mt-2 w-56 bg-[#1e1d2e] border border-gray-700 rounded-lg shadow-lg z-10 max-h-96 overflow-y-auto">
                 <button
                   onClick={() => { setAddType('assignment'); setShowAddModal(true); setShowAddDropdown(false); }}
                   className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
@@ -551,7 +568,49 @@ const StudyPlan = () => {
                   className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
                 >
                   <GraduationCap className="w-4 h-4 text-orange-600" />
-                  Add CT's Date
+                  Add Class Test
+                </button>
+                <button
+                  onClick={() => { setAddType('quiz'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <BookOpen className="w-4 h-4 text-orange-600" />
+                  Add Quiz
+                </button>
+                <button
+                  onClick={() => { setAddType('midterm'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <FileText className="w-4 h-4 text-orange-600" />
+                  Add Midterm
+                </button>
+                <button
+                  onClick={() => { setAddType('final'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <FileText className="w-4 h-4 text-orange-600" />
+                  Add Final Exam
+                </button>
+                <button
+                  onClick={() => { setAddType('project'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <Upload className="w-4 h-4 text-orange-600" />
+                  Add Project
+                </button>
+                <button
+                  onClick={() => { setAddType('lab'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <BookOpen className="w-4 h-4 text-orange-600" />
+                  Add Lab Work
+                </button>
+                <button
+                  onClick={() => { setAddType('presentation'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <Upload className="w-4 h-4 text-orange-600" />
+                  Add Presentation
                 </button>
               </div>
             )}
@@ -591,7 +650,7 @@ const StudyPlan = () => {
         <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
           <h3 className="font-medium text-white mb-3">Filter Type</h3>
           <div className="flex flex-wrap gap-2">
-            {['All', 'Task', 'Assignment', 'CT'].map(type => (
+            {['All', 'Task', 'Assignment', 'CT', 'Quiz', 'Project', 'Lab', 'Midterm', 'Final', 'Presentation'].map(type => (
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
@@ -635,7 +694,12 @@ const StudyPlan = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredTasks.map(task => (
+            {isLoadingEvents ? (
+              <div className="col-span-full text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+                <p className="text-gray-400 mt-4">Loading events...</p>
+              </div>
+            ) : filteredTasks.map(task => (
               <div key={task.id} className="bg-[#1e1d2e] rounded-lg border border-gray-700 p-4 hover:shadow-lg hover:border-orange-600/50 transition-all">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -728,7 +792,7 @@ const StudyPlan = () => {
             ))}
           </div>
 
-          {filteredTasks.length === 0 && (
+          {!isLoadingEvents && filteredTasks.length === 0 && (
             <div className="text-center py-12">
               <div className="text-gray-500 text-lg">
                 {selectedDate 
