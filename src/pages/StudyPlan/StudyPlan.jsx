@@ -215,9 +215,6 @@ const StudyPlan = () => {
         body: JSON.stringify({
           title: task.title,
           description: task.description || '',
-          type: task.apiType || getApiType(task.type),
-          event_date: task.deadline,
-          event_time: task.time ? `${task.time}:00` : '00:00:00',
           status: newStatus
         })
       });
@@ -230,6 +227,10 @@ const StudyPlan = () => {
       setTasks(tasks.map(t => 
         t.id === id ? { ...t, completed: !t.completed } : t
       ));
+
+      // Show success message
+      setSuccessMessage(newStatus === 'done' ? 'Task marked as completed!' : 'Task marked as pending!');
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
       console.error('Error updating task:', err);
       setErrorMessage('Failed to update task status.');
