@@ -18,7 +18,7 @@ import ApiService from '../../services/apiService';
 
 const Chat = () => {
 
-    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, questions, isTyping } = useContext(Context);
+    const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, isTyping } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
     const [agents, setAgents] = useState([]);
@@ -227,8 +227,8 @@ const Chat = () => {
                                         </div>
                                     </div>
 
-                                    {/* Display Questions if available - only on the last message */}
-                                    {questions && questions.length > 0 && index === conversation.length - 1 && (
+                                    {/* Display Questions if available for THIS specific message */}
+                                    {item.questions && item.questions.length > 0 && (
                                         <div className="questions-container mt-6 text-gray-200">
                                             {/* Collapsible Header */}
                                             <div 
@@ -236,7 +236,7 @@ const Chat = () => {
                                                 onClick={() => setIsQuestionsExpanded(!isQuestionsExpanded)}
                                             >
                                                 <h3 className="text-2xl font-bold text-white">
-                                                    Questions Found: <span className="text-[#FF4B00]">{questions.length}</span>
+                                                    Questions Found: <span className="text-[#FF4B00]">{item.questions.length}</span>
                                                 </h3>
                                                 <button className="p-2 rounded-lg hover:bg-white/10 transition-all duration-200">
                                                     {isQuestionsExpanded ? (
@@ -250,7 +250,7 @@ const Chat = () => {
                                             {/* Collapsible Content */}
                                             {isQuestionsExpanded && (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-fadeIn">
-                                                {questions.map((question, qIndex) => (
+                                                {item.questions.map((question, qIndex) => (
                                                     <div
                                                         key={question.id || qIndex}
                                                         className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"

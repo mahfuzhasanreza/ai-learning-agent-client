@@ -166,7 +166,8 @@ const ContextProvider = (props) => {
                             input: message.content,
                             response: formattedResponse,
                             agentName: nextMessage.agent_name || null,
-                            courseData: nextMessage.agent_name || ''
+                            courseData: nextMessage.agent_name || '',
+                            questions: [] // Will be populated if this message has questions
                         });
                         
                         // Track agent name
@@ -174,11 +175,14 @@ const ContextProvider = (props) => {
                             lastAgentName = nextMessage.agent_name;
                         }
                         
-                        // Check for questions in tool_response
+                        // Check for questions in tool_response and add to THIS message
                         if (nextMessage.response_type === 'tool_based' && 
                             nextMessage.tool_response && 
                             nextMessage.tool_response.processed_questions) {
-                            latestQuestions = nextMessage.tool_response.processed_questions;
+                            const msgQuestions = nextMessage.tool_response.processed_questions;
+                            // Update the last added message with its questions
+                            processedConversation[processedConversation.length - 1].questions = msgQuestions;
+                            latestQuestions = msgQuestions;
                         }
                         
                         // Skip the AI message in next iteration since we already processed it
@@ -250,12 +254,13 @@ const ContextProvider = (props) => {
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
                 
-                // Set questions if available
-                if (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) {
-                    setQuestions(data.raw.questions);
-                } else {
-                    setQuestions([]);
-                }
+                // Store questions for this specific message
+                const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
+                    ? data.raw.questions 
+                    : [];
+                
+                // Set questions if available (for display on current message only)
+                setQuestions(messageQuestions);
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -278,12 +283,13 @@ const ContextProvider = (props) => {
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
                 
-                // Set questions if available
-                if (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) {
-                    setQuestions(data.raw.questions);
-                } else {
-                    setQuestions([]);
-                }
+                // Store questions for this specific message
+                const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
+                    ? data.raw.questions 
+                    : [];
+                
+                // Set questions if available (for display on current message only)
+                setQuestions(messageQuestions);
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -299,6 +305,9 @@ const ContextProvider = (props) => {
             // Store the agent name and course data
             const agentName = data.course || data.agent_name || "";
             const courseDataValue = data.course || data.agent_name || "";
+            const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
+                ? data.raw.questions 
+                : [];
 
             // Add to conversation with typewriter effect
             if (!showResult) {
@@ -341,7 +350,8 @@ const ContextProvider = (props) => {
                             ...newConv[lastIndex],
                             response: formattedResponse,
                             agentName: agentName,
-                            courseData: courseDataValue
+                            courseData: courseDataValue,
+                            questions: messageQuestions // Store questions with this message
                         };
                     } else {
                         // Add new message
@@ -350,7 +360,8 @@ const ContextProvider = (props) => {
                             input: currentPrompt,
                             response: formattedResponse,
                             agentName: agentName,
-                            courseData: courseDataValue
+                            courseData: courseDataValue,
+                            questions: messageQuestions // Store questions with this message
                         });
                     }
                     
