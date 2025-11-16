@@ -14,8 +14,12 @@ const StudyPlan = () => {
   const [filterType, setFilterType] = useState('All');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null); // For date filtering
+  const [selectedDateEvents, setSelectedDateEvents] = useState([]); // Events for selected date
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
+  const [isLoadingDateEvents, setIsLoadingDateEvents] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   
   // Form states
   const [taskForm, setTaskForm] = useState({
@@ -43,7 +47,8 @@ const StudyPlan = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${baseUrl}/api/v1/events/${user.uid}`, {
+      // Use user.id to match the API student_id format
+      const response = await fetch(`${baseUrl}/api/v1/events/${user.id}`, {
         method: 'GET',
         headers: headers,
       });
@@ -59,7 +64,7 @@ const StudyPlan = () => {
         id: event.id,
         type: getEventTypeLabel(event.type),
         title: event.title,
-        deadline: event.event_date,
+        deadline: event.event_date, // Maps to event_date from API
         time: event.event_time?.substring(0, 5), // Convert "11:00:00" to "11:00"
         description: event.description,
         completed: event.status === 'done',
@@ -76,7 +81,7 @@ const StudyPlan = () => {
 
   // Fetch events from API
   useEffect(() => {
-    if (user?.uid) {
+    if (user?.id) {
       fetchEvents();
     }
   }, [user, fetchEvents]);
@@ -182,11 +187,16 @@ const StudyPlan = () => {
       // Refresh events list
       await fetchEvents();
       
+      // Show success message
+      setSuccessMessage('Event added successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
       setShowAddModal(false);
       resetForms();
     } catch (err) {
       console.error('Error creating event:', err);
-      alert('Failed to create event. Please try again.');
+      setErrorMessage('Failed to create event. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
     } finally {
       setIsLoading(false);
     }
@@ -233,7 +243,8 @@ const StudyPlan = () => {
       ));
     } catch (err) {
       console.error('Error updating task:', err);
-      alert('Failed to update task status.');
+      setErrorMessage('Failed to update task status.');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
@@ -265,19 +276,27 @@ const StudyPlan = () => {
       setTasks(tasks.filter(task => task.id !== id));
     } catch (err) {
       console.error('Error deleting task:', err);
-      alert('Failed to delete task.');
+      setErrorMessage('Failed to delete task.');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
-  const filteredTasks = tasks.filter(task => {
+  const filteredTasks = selectedDate ? selectedDateEvents.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesFilter = filterType === 'All' || task.type === filterType;
     const matchesView = activeView === 'Active' ? !task.completed : task.completed;
-    const matchesDate = !selectedDate || task.deadline === selectedDate;
     
-    return matchesSearch && matchesFilter && matchesView && matchesDate;
+    return matchesSearch && matchesFilter && matchesView;
+  }) : tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesFilter = filterType === 'All' || task.type === filterType;
+    const matchesView = activeView === 'Active' ? !task.completed : task.completed;
+    
+    return matchesSearch && matchesFilter && matchesView;
   });
 
   const getStatusBadge = (deadline) => {
@@ -299,9 +318,64 @@ const StudyPlan = () => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
+  const fetchEventsByDate = useCallback(async (dateString) => {
+    setIsLoadingDateEvents(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/events/${user.id}/date/${dateString}`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Transform API data to match our task structure
+      const transformedEvents = data.map(event => ({
+        id: event.id,
+        type: getEventTypeLabel(event.type),
+        title: event.title,
+        deadline: event.event_date,
+        time: event.event_time?.substring(0, 5),
+        description: event.description,
+        completed: event.status === 'done',
+        apiType: event.type
+      }));
+      
+      setSelectedDateEvents(transformedEvents);
+    } catch (err) {
+      console.error('Error fetching events by date:', err);
+      setSelectedDateEvents([]);
+    } finally {
+      setIsLoadingDateEvents(false);
+    }
+  }, [user, getToken]);
+
   const handleDateClick = (day) => {
     const dateString = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    setSelectedDate(selectedDate === dateString ? null : dateString);
+    
+    if (selectedDate === dateString) {
+      // Deselect date
+      setSelectedDate(null);
+      setSelectedDateEvents([]);
+    } else {
+      // Select new date and fetch events
+      setSelectedDate(dateString);
+      fetchEventsByDate(dateString);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -383,26 +457,37 @@ const StudyPlan = () => {
       const dateString = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const dayTasks = tasks.filter(task => task.deadline === dateString);
       const isToday = new Date().toDateString() === new Date(dateString).toDateString();
+      const hasEvents = dayTasks.length > 0;
       
       calendarDays.push(
         <div 
           key={day} 
-          className={`h-16 border border-gray-700 p-1 text-xs cursor-pointer transition-colors hover:bg-orange-600/10 ${
-            isToday ? 'bg-orange-600/10' : ''
-          } ${selectedDate === dateString ? 'ring-2 ring-orange-600 bg-orange-600/10' : ''}`}
+          className={`min-h-24 border border-gray-700 p-2 text-xs cursor-pointer transition-all hover:bg-orange-600/10 ${
+            isToday ? 'bg-orange-600/10 border-orange-600' : ''
+          } ${selectedDate === dateString ? 'ring-2 ring-orange-600 bg-orange-600/20' : ''} ${
+            hasEvents ? 'hover:shadow-lg' : ''
+          }`}
           onClick={() => handleDateClick(day)}
         >
-          <div className={`font-medium ${isToday ? 'bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-white'}`}>
+          <div className={`font-medium mb-1 ${isToday ? 'bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-white'}`}>
             {day}
           </div>
-          {dayTasks.slice(0, 2).map((task, index) => (
-            <div key={index} className="text-xs mt-1 p-1 bg-[#2a2938] rounded truncate text-gray-300">
-              {task.type === 'CT' ? task.ctNumber : task.title.split(' ').slice(0, 2).join(' ')}
-            </div>
-          ))}
-          {dayTasks.length > 2 && (
-            <div className="text-xs text-gray-500 mt-1">+{dayTasks.length - 2} more</div>
-          )}
+          <div className="space-y-1">
+            {dayTasks.map((task, index) => (
+              <div 
+                key={index} 
+                className={`text-xs px-2 py-1 rounded truncate ${
+                  task.completed 
+                    ? 'bg-green-600/20 text-green-400 border border-green-600/30' 
+                    : 'bg-orange-600/20 text-orange-300 border border-orange-600/30'
+                }`}
+                title={`${task.title} - ${task.time || 'No time'}`}
+              >
+                <div className="font-medium truncate">{task.title}</div>
+                {task.time && <div className="text-[10px] opacity-75">{task.time}</div>}
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
@@ -670,36 +755,49 @@ const StudyPlan = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Calendar Sidebar */}
-        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
-          <div className="text-center text-sm text-gray-400 mb-4">Click a date to filter</div>
+      <div className="grid grid-cols-1 gap-6">
+        {/* Calendar View */}
+        <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-orange-600" />
+              Calendar View
+            </h2>
+            <div className="text-sm text-gray-400">
+              {selectedDate ? 'Click date again to show all items' : 'Click a date to filter'}
+            </div>
+          </div>
           {renderCalendar()}
         </div>
 
         {/* Main Content - Card Layout */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium text-white">
-              {selectedDate ? `Items for ${formatDate(selectedDate)}` : `${activeView} Items`}
-            </h2>
-            {selectedDate && (
-              <button
-                onClick={() => setSelectedDate(null)}
-                className="text-sm text-orange-600 hover:text-orange-500"
-              >
-                Clear Date Filter
-              </button>
-            )}
-          </div>
+        <div className="space-y-4">
+          <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-white">
+                {selectedDate ? `Items for ${formatDate(selectedDate)}` : `${activeView} Items`}
+              </h2>
+              {selectedDate && (
+                <button
+                  onClick={() => {
+                    setSelectedDate(null);
+                    setSelectedDateEvents([]);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/30 border border-orange-600/30"
+                >
+                  <X className="w-4 h-4" />
+                  Clear Filter
+                </button>
+              )}
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {isLoadingEvents ? (
-              <div className="col-span-full text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-                <p className="text-gray-400 mt-4">Loading events...</p>
-              </div>
-            ) : filteredTasks.map(task => (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {(isLoadingEvents || isLoadingDateEvents) ? (
+                <div className="col-span-full text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+                  <p className="text-gray-400 mt-4">Loading events...</p>
+                </div>
+              ) : filteredTasks.map(task => (
               <div key={task.id} className="bg-[#1e1d2e] rounded-lg border border-gray-700 p-4 hover:shadow-lg hover:border-orange-600/50 transition-all">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -789,25 +887,46 @@ const StudyPlan = () => {
                   {task.completed ? 'Completed' : 'Mark as Done'}
                 </button>
               </div>
-            ))}
-          </div>
-
-          {!isLoadingEvents && filteredTasks.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-gray-500 text-lg">
-                {selectedDate 
-                  ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
-                  : activeView === 'Completed' 
-                    ? 'No completed tasks yet' 
-                    : 'No items match your search criteria'
-                }
-              </div>
+              ))}
             </div>
-          )}
+
+            {!isLoadingEvents && !isLoadingDateEvents && filteredTasks.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-500 text-lg">
+                  {selectedDate 
+                    ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
+                    : activeView === 'Completed' 
+                      ? 'No completed tasks yet' 
+                      : 'No items match your search criteria'
+                  }
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {renderAddModal()}
+      
+      {/* Success Message Toast */}
+      {successMessage && (
+        <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
+          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-green-500/50">
+            <CheckCircle className="w-5 h-5" />
+            <span className="font-medium">{successMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message Toast */}
+      {errorMessage && (
+        <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
+          <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-red-500/50">
+            <X className="w-5 h-5" />
+            <span className="font-medium">{errorMessage}</span>
+          </div>
+        </div>
+      )}
       
     </div>
     
