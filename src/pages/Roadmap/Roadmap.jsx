@@ -657,7 +657,7 @@ const Roadmap = () => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {loadingHistory ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader className="w-6 h-6 animate-spin text-[#a200ff]" />
