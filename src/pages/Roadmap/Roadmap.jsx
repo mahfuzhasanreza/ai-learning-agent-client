@@ -76,7 +76,7 @@ const Roadmap = () => {
     setRoadmapData(thread.roadmap);
     setThreadId(thread.thread_id);
     setQuery(thread.title);
-    setShowHistoryPanel(false);
+    // Keep history panel open - removed: setShowHistoryPanel(false);
     
     // Set completed items based on progress
     if (thread.roadmap && thread.roadmap.stages) {
@@ -90,6 +90,9 @@ const Roadmap = () => {
       });
       setCompletedItems(completed);
     }
+    
+    // Reset selected node to allow fresh interaction
+    setSelectedNode(null);
   };
 
   // Initialize speech recognition
@@ -670,11 +673,20 @@ const Roadmap = () => {
                     <div
                       key={thread.thread_id}
                       onClick={() => loadThread(thread)}
-                      className="bg-[#0f0f0f]/50 hover:bg-[#0f0f0f]/80 border border-white/5 hover:border-[#a200ff]/30 rounded-lg p-4 cursor-pointer transition-all group"
+                      className={`bg-[#0f0f0f]/50 hover:bg-[#0f0f0f]/80 border rounded-lg p-4 cursor-pointer transition-all group ${
+                        thread.thread_id === threadId 
+                          ? 'border-[#a200ff] bg-[#a200ff]/10' 
+                          : 'border-white/5 hover:border-[#a200ff]/30'
+                      }`}
                     >
-                      <h4 className="text-white font-semibold text-sm mb-2 group-hover:text-[#a200ff] transition-colors">
-                        {thread.title || 'Untitled'}
-                      </h4>
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className={`font-semibold text-sm group-hover:text-[#a200ff] transition-colors ${
+                          thread.thread_id === threadId ? 'text-[#a200ff]' : 'text-white'
+                        }`}>
+                          {thread.title || 'Untitled'}
+                        </h4>
+                      
+                      </div>
                       <div className="space-y-1 text-xs text-gray-400">
                         <div className="flex items-center justify-between">
                           <span>Progress:</span>

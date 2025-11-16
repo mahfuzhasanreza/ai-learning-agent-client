@@ -11,12 +11,68 @@ const ChatBotPanel = ({ topic, threadId }) => {
     const { getToken } = UserAuth();
     const hasInitialized = useRef(false);
     const currentTopic = useRef(null);
+    const currentThreadId = useRef(null);
+    const [loadingHistory, setLoadingHistory] = useState(false);
   
     const scrollToBottom = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
   
     useEffect(scrollToBottom, [messages]);
+
+    // Fetch chat history for the thread
+    const fetchChatHistory = useCallback(async (threadIdToFetch) => {
+      if (!threadIdToFetch) return;
+      
+      setLoadingHistory(true);
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        const token = getToken();
+        
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        console.log('Fetching chat history for thread:', threadIdToFetch);
+        const response = await fetch(`${baseUrl}/api/v1/roadmap/threads`, {
+          method: 'GET',
+          headers: headers,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Fetched threads:', data);
+        
+        // Find the specific thread
+        const thread = data.threads?.find(t => t.thread_id === threadIdToFetch);
+        if (thread && thread.chat_history) {
+          console.log('Found chat history:', thread.chat_history);
+          
+          // Convert chat history to message format
+          const historyMessages = thread.chat_history.map(msg => ({
+            sender: msg.type === 'human' ? 'user' : 'bot',
+            text: msg.content
+          }));
+          
+          setMessages(historyMessages);
+        } else {
+          console.log('No chat history found for thread');
+          setMessages([]);
+        }
+      } catch (err) {
+        console.error('Error fetching chat history:', err);
+        setMessages([]);
+      } finally {
+        setLoadingHistory(false);
+      }
+    }, [getToken]);
 
     const sendMessage = useCallback(async (text, isInitial = false) => {
       if (!text.trim()) return;
@@ -180,17 +236,31 @@ const ChatBotPanel = ({ topic, threadId }) => {
       }
     }, [threadId, getToken]);
 
-    // Auto-send initial question when topic changes
+    // Auto-send initial question when topic changes OR load chat history when thread changes
     useEffect(() => {
       console.log('ChatBotPanel useEffect triggered:', { topic, threadId, hasInit: hasInitialized.current, currentTopic: currentTopic.current });
       
-      // Check if topic has changed or it's a new initialization
-      if (topic && threadId) {
+      // If threadId changed, it means we're loading a different thread
+      if (threadId && currentThreadId.current !== threadId) {
+        console.log('Thread ID changed, loading chat history');
+        currentThreadId.current = threadId;
+        currentTopic.current = topic;
+        hasInitialized.current = true; // Mark as initialized to prevent auto-sending
+        
+        // Fetch and load previous chat history
+        fetchChatHistory(threadId);
+        return;
+      }
+      
+      // Check if topic has changed or it's a new initialization (only for new roadmaps)
+      if (topic && threadId && !currentThreadId.current) {
         // If topic changed, reset initialization
         if (currentTopic.current !== topic) {
           hasInitialized.current = false;
           currentTopic.current = topic;
         }
+        
+        currentThreadId.current = threadId;
         
         // Send initial message if not already sent for this topic
         if (!hasInitialized.current) {
@@ -202,7 +272,7 @@ const ChatBotPanel = ({ topic, threadId }) => {
           sendMessage(initialQuestion, true);
         }
       }
-    }, [topic, threadId, sendMessage]);
+    }, [topic, threadId, sendMessage, fetchChatHistory]);
   
     // Format bot message with markdown-like rendering
     const formatBotMessage = (text) => {
@@ -320,6 +390,20 @@ const ChatBotPanel = ({ topic, threadId }) => {
     return (
       <div className="mb-2 flex flex-col h-full bg-[#1a1a1a] rounded-lg">
         <div className="flex-1 overflow-y-auto mb-4 p-4 border border-gray-700 rounded-lg bg-[#0f0f0f]">
+          {/* Loading chat history indicator */}
+          {loadingHistory && (
+            <div className="flex items-center justify-center py-8">
+              <div className="flex items-center gap-3 text-gray-400">
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 bg-[#a200ff] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="w-2 h-2 bg-[#FF4B00] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="w-2 h-2 bg-[#a200ff] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                </div>
+                <span className="text-sm">Loading chat history...</span>
+              </div>
+            </div>
+          )}
+          
           {messages.map((msg, i) => (
             <div key={i} className={`mb-3 ${msg.sender === "user" ? "flex justify-end" : ""}`}>
               <div className={`px-4 py-3 rounded-lg ${
