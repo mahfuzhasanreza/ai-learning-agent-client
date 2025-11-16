@@ -257,7 +257,7 @@ const StudyPlan = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${baseUrl}/api/student-events/${taskToDelete}`, {
+      const response = await fetch(`${baseUrl}/api/v1/events/${taskToDelete}`, {
         method: 'DELETE',
         headers: headers,
       });
@@ -718,6 +718,19 @@ const StudyPlan = () => {
 
       {/* Stats and Filter Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        
+          {/* All Stats */}
+        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
+          <h3 className="font-medium text-white mb-3">All</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium">
+                {allStats.total} total
+              </span>
+              <span className="text-sm text-gray-400">{allStats.pending} pending</span>
+            </div>
+          </div>
+        </div>
         {/* This Month Stats */}
         <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
           <h3 className="font-medium text-white mb-3">This Month</h3>
@@ -731,18 +744,7 @@ const StudyPlan = () => {
           </div>
         </div>
 
-        {/* All Stats */}
-        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
-          <h3 className="font-medium text-white mb-3">All</h3>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium">
-                {allStats.total} total
-              </span>
-              <span className="text-sm text-gray-400">{allStats.pending} pending</span>
-            </div>
-          </div>
-        </div>
+      
 
         {/* Filter Type */}
         <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
