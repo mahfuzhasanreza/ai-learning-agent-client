@@ -637,7 +637,7 @@ const StudyPlan = () => {
       <div className="mb-5 mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-orange-600" />
+            {/* <Calendar className="w-6 h-6 text-orange-600" /> */}
             Study Plan
           </h1>
           <p className="text-gray-400 text-sm">Track your tasks</p>
