@@ -755,8 +755,8 @@ const StudyPlan = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        {/* Calendar View */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Calendar View - Left Half */}
         <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
@@ -770,9 +770,9 @@ const StudyPlan = () => {
           {renderCalendar()}
         </div>
 
-        {/* Main Content - Card Layout */}
+        {/* Main Content - Card Layout - Right Half */}
         <div className="space-y-4">
-          <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700">
+          <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700 h-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">
                 {selectedDate ? `Items for ${formatDate(selectedDate)}` : `${activeView} Items`}
@@ -791,7 +791,7 @@ const StudyPlan = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
               {(isLoadingEvents || isLoadingDateEvents) ? (
                 <div className="col-span-full text-center py-12">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
