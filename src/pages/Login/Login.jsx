@@ -503,9 +503,9 @@ const Login = () => {
       </div>
 
       {/* Animated gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FF4B00] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+      {/* <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FF4B00] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#a200ff] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
-      <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000" />
+      <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000" /> */}
 
       {/* Left Side - Enhanced Animation Area */}
       <div
@@ -530,9 +530,9 @@ const Login = () => {
           <div className="absolute top-1/2 left-10 w-32 h-32 bg-gradient-to-r from-[#FF4B00]/30 to-orange-500/20 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
 
           {/* Geometric shapes */}
-          <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-[#FF4B00]/30 rotate-45 animate-spin" style={{ animationDuration: '10s' }} />
-          <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-[#a200ff]/30 rounded-full animate-pulse" />
-          <div className="absolute top-1/3 right-1/3 w-12 h-12 border border-cyan-400/20 animate-spin" style={{ animationDuration: '7s' }} />
+          {/* <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-[#FF4B00]/30 rotate-45 animate-spin" style={{ animationDuration: '10s' }} /> */}
+          {/* <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-[#a200ff]/30 rounded-full animate-pulse" /> */}
+          {/* <div className="absolute top-1/3 right-1/3 w-12 h-12 border border-cyan-400/20 animate-spin" style={{ animationDuration: '7s' }} /> */}
         </div>
 
         {/* Enhanced Content */}
@@ -542,16 +542,13 @@ const Login = () => {
             <div className="flex items-center justify-center mb-8 relative">
               <div className="relative">
                 {/* Glowing background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-3xl blur-2xl opacity-60 animate-pulse" />
+                {/* <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-3xl blur-2xl opacity-60 animate-pulse" /> */}
                 
                 {/* Main logo container */}
                 <div className="relative bg-gradient-to-br from-[#1a0a14] to-[#0f0a1a] rounded-3xl p-6 border-2 border-white/10 backdrop-blur-xl shadow-2xl">
                   <Brain className="w-20 h-20 text-[#FF4B00] animate-pulse" style={{ filter: 'drop-shadow(0 0 20px rgba(255,75,0,0.5))' }} />
                   
-                  {/* Sparkle badge */}
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-full animate-bounce flex items-center justify-center shadow-lg shadow-[#FF4B00]/50">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
+                 
                 </div>
               </div>
             </div>
@@ -564,77 +561,22 @@ const Login = () => {
             </h1>
             <p className="text-gray-300 text-xl font-semibold tracking-wide mb-4">AI-Powered Learning Platform</p>
             
-            {/* Animated underline */}
-            <div className="relative w-32 h-1 mx-auto overflow-hidden rounded-full bg-white/10">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-cyan-400 animate-shimmer" />
-            </div>
+   
+            
           </div>
 
-          {/* Enhanced Animated Features with COSMOS theme */}
-          <div className="space-y-10 max-w-lg">
-            {[
-              { 
-                icon: Target, 
-                title: "University-Specific AI", 
-                desc: "Tailored question patterns and exam insights for your institution",
-                gradient: "from-[#FF4B00]/30 to-orange-500/30",
-                iconColor: "text-[#FF4B00]",
-                delay: "0.3s" 
-              },
-              { 
-                icon: TrendingUp, 
-                title: "Performance Analytics", 
-                desc: "Track your progress with intelligent insights and predictions",
-                gradient: "from-[#a200ff]/30 to-purple-500/30",
-                iconColor: "text-[#a200ff]",
-                delay: "0.6s" 
-              },
-              { 
-                icon: Award, 
-                title: "Personalized Roadmaps", 
-                desc: "Custom learning paths designed to achieve your academic goals",
-                gradient: "from-cyan-500/30 to-blue-500/30",
-                iconColor: "text-cyan-400",
-                delay: "0.9s" 
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-start space-x-6 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-500 cursor-pointer"
-                style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
-              >
-                <div className="relative flex-shrink-0">
-                  {/* Icon glow */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100`} />
-                  
-                  {/* Icon container */}
-                  <div className={`relative w-20 h-20 bg-gradient-to-br from-white/5 to-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10 group-hover:border-white/30 transition-all duration-500 shadow-xl`}>
-                    <feature.icon className={`w-10 h-10 ${feature.iconColor} group-hover:scale-110 transition-transform duration-500`} />
-                  </div>
-                </div>
-                
-                <div className="flex-1 text-left pt-2">
-                  <h3 className="font-bold text-xl text-white mb-2 group-hover:text-[#FF4B00] transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    {feature.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+      
 
           {/* Enhanced Floating Elements */}
-          <div className="absolute top-1/4 right-16 animate-float">
+          {/* <div className="absolute top-1/4 right-16 animate-float">
             <Star className="w-8 h-8 text-[#FF4B00] opacity-60" style={{ filter: 'drop-shadow(0 0 10px rgba(255,75,0,0.5))' }} />
-          </div>
-          <div className="absolute bottom-1/3 left-1/4 animate-float" style={{ animationDelay: '1.5s' }}>
+          </div> */}
+          {/* <div className="absolute bottom-1/3 left-1/4 animate-float" style={{ animationDelay: '1.5s' }}>
             <Sparkles className="w-7 h-7 text-[#a200ff] opacity-60" style={{ filter: 'drop-shadow(0 0 10px rgba(162,0,255,0.5))' }} />
-          </div>
-          <div className="absolute top-2/3 right-1/3 animate-float" style={{ animationDelay: '2.5s' }}>
+          </div> */}
+          {/* <div className="absolute top-2/3 right-1/3 animate-float" style={{ animationDelay: '2.5s' }}>
             <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full opacity-60 shadow-lg shadow-cyan-400/50" />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -667,10 +609,7 @@ const Login = () => {
             </h2>
             <p className="text-gray-400 text-lg">Continue your learning journey with COSMOS</p>
             
-            {/* Animated underline */}
-            <div className="relative w-20 h-1 mx-auto mt-5 overflow-hidden rounded-full bg-white/10">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] animate-shimmer" />
-            </div>
+      
           </div>
 
           {/* Enhanced Login Form */}
@@ -722,11 +661,11 @@ const Login = () => {
               </div>
 
               {/* Enhanced Password Field */}
-              <div className="relative group">
+              <div className="mt-4 relative group">
                 <label className="block text-sm font-bold text-gray-300 mb-3 ml-1">
                   Password
                 </label>
-                <div className="relative">
+                <div className=" relative">
                   {/* Focus glow effect */}
                   <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
                     focusedField === 'password'
@@ -769,7 +708,7 @@ const Login = () => {
               </div>
 
               {/* Enhanced Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between pt-2">
+              {/* <div className="flex items-center justify-between pt-2">
                 <label className="flex items-center group cursor-pointer">
                   <input
                     type="checkbox"
@@ -785,7 +724,7 @@ const Login = () => {
                 >
                   Forgot password?
                 </a>
-              </div>
+              </div> */}
 
               {/* Enhanced Login Button */}
               <button
@@ -811,7 +750,7 @@ const Login = () => {
                     </>
                   ) : (
                     <>
-                      <span>Sign In to COSMOS</span>
+                      <span>Sign In</span>
                       <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300" />
                     </>
                   )}
@@ -845,7 +784,7 @@ const Login = () => {
             </div>
 
             {/* Enhanced Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <button className="group flex items-center justify-center px-5 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#FF4B00]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#FF4B00]/10">
                 <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -856,12 +795,12 @@ const Login = () => {
                 <span className="text-white font-semibold">Google</span>
               </button>
               
-              <button className="group flex items-center justify-center px-5 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#a200ff]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#a200ff]/10">
+              {/* <button className="group flex items-center justify-center px-5 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#a200ff]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#a200ff]/10">
                 <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" fill="white" viewBox="0 0 24 24">
                   <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                 </svg>
                 <span className="text-white font-semibold">Microsoft</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
