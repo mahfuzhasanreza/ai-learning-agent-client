@@ -255,6 +255,13 @@ const Roadmap = () => {
       }
 
       setIsLoading(false);
+      
+      // Auto-refresh chat history after successful roadmap generation (with 5 second delay)
+      if (showHistoryPanel) {
+        setTimeout(async () => {
+          await fetchChatHistory();
+        }, 5000); // 5 second delay to allow backend to save the thread
+      }
     } catch (err) {
       console.error('Error generating roadmap:', err);
       setError('Failed to generate roadmap. Please try again.');
@@ -715,17 +722,7 @@ const Roadmap = () => {
               )}
             </div>
 
-            {/* Refresh Button */}
-            <div className="px-4 py-3 border-t border-[#2a2938]">
-              <button
-                onClick={fetchChatHistory}
-                disabled={loadingHistory}
-                className="w-full px-4 py-2 bg-gradient-to-r from-[#a200ff] to-[#c240ff] hover:from-[#b520ff] hover:to-[#d050ff] text-white text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                <RefreshCw className={`w-4 h-4 ${loadingHistory ? 'animate-spin' : ''}`} />
-                Refresh
-              </button>
-            </div>
+            
           </div>
         )}
         
