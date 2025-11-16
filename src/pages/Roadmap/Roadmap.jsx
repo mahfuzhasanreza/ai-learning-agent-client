@@ -31,6 +31,8 @@ const Roadmap = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('date'); // 'date', 'progress', 'title'
 
   // Debug: Log threadId changes
   useEffect(() => {
@@ -629,6 +631,39 @@ const Roadmap = () => {
   const totalItems = roadmapData?.stages ? roadmapData.stages.reduce((total, stage) => total + stage.items.length, 0) : 0;
   const progressPercent = totalItems > 0 ? Math.round((completionPercentage / totalItems) * 100) : 0;
 
+  // Filter and sort chat history
+  const filteredAndSortedHistory = React.useMemo(() => {
+    let filtered = chatHistory;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(thread => 
+        thread.title?.toLowerCase().includes(query) ||
+        thread.roadmap?.topic?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date':
+          return new Date(b.created_at) - new Date(a.created_at); // Newest first
+        case 'progress': {
+          const progressA = a.progress?.overall_progress_percentage || 0;
+          const progressB = b.progress?.overall_progress_percentage || 0;
+          return progressB - progressA; // Highest progress first
+        }
+        case 'title':
+          return (a.title || '').localeCompare(b.title || '');
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [chatHistory, searchQuery, sortBy]);
+
   return (
     <div className=" min-w-[1585px] w-full h-screen bg-gray-900 flex flex-col">
       {/* Header with Input Section */}
@@ -656,18 +691,59 @@ const Roadmap = () => {
               </button>
             </div>
 
+            {/* Search and Sort Controls */}
+            <div className="px-4 py-3 space-y-2 border-b border-[#2a2938]">
+              {/* Search Input */}
+              <div className="mb-2 relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search title..."
+                  className="w-full px-3 py-2 pl-9 bg-[#0f0f0f]/50 text-white text-sm rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent placeholder-gray-500 transition-all"
+                />
+                <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded transition-all"
+                  >
+                    <svg className="w-3 h-3 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 font-medium">Sort by:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="flex-1 px-2 py-1.5 bg-[#0f0f0f]/50 text-white text-xs rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent cursor-pointer transition-all"
+                >
+                  <option className='hover:bg-orange-600' value="date">Newest First</option>
+                  <option value="progress">Progress (High to Low)</option>
+                  <option value="title">Title (A-Z)</option>
+                </select>
+              </div>
+            </div>
+
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {loadingHistory ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader className="w-6 h-6 animate-spin text-[#a200ff]" />
                 </div>
-              ) : chatHistory.length === 0 ? (
+              ) : filteredAndSortedHistory.length === 0 ? (
                 <div className="text-center py-8 text-gray-400 text-sm">
-                  No chat history yet
+                  {searchQuery ? 'No matching threads found' : 'No chat history yet'}
                 </div>
               ) : (
-                chatHistory.map((thread) => {
+                filteredAndSortedHistory.map((thread) => {
                   const progress = thread.progress || {
                     total_items: 0,
                     completed_items: 0,
