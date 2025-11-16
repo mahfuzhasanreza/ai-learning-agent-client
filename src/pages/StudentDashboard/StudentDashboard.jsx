@@ -1739,18 +1739,9 @@ const StudentDashboard = () => {
                           key={topic.id || index} 
                           className="bg-gray-700/50 hover:bg-gray-700 transition-colors rounded-lg p-3 border border-gray-600/30"
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1 pr-2">
-                              <p className="text-sm font-medium text-white truncate" title={topic.name}>
-                                {topic.name}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <span className="text-xs font-semibold text-amber-500">
-                                {topic.mastery_percentage || 0}%
-                              </span>
-                            </div>
-                          </div>
+                          <p className="text-sm font-medium text-white" title={topic.name}>
+                            {topic.name}
+                          </p>
                         </div>
                       ))}
                     </div>
