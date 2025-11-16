@@ -1647,28 +1647,36 @@ const StudentDashboard = () => {
 
           {/* Third Column - Topic Mastery */}
           <div className="space-y-4 sm:space-y-6">
-            {/* Topic Mastery */}
-            <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
-                <div className="flex items-center">
-                  {/* Close button when quiz section is active */}
-                  {showAddTopicQuiz && (
-                    <button
-                      onClick={() => {
-                        setShowAddTopicQuiz(false);
-                        setSelectedQuizTopic('');
-                      }}
-                      className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                      title="Close quiz section"
-                    >
-                      <X className="w-5 h-5 text-gray-400 hover:text-white" />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Quiz Section - Shown when Add Topic is clicked */}
+              {/* Topic Mastery */}
+              <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
+                  <div className="flex items-center gap-2">
+                    {/* Quiz button - always visible on the right */}
+                    {!showAddTopicQuiz && (
+                      <button
+                        onClick={() => setShowAddTopicQuiz(true)}
+                        className="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium shadow-lg hover:shadow-xl"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Quiz
+                      </button>
+                    )}
+                    {/* Close button when quiz section is active */}
+                    {showAddTopicQuiz && (
+                      <button
+                        onClick={() => {
+                          setShowAddTopicQuiz(false);
+                          setSelectedQuizTopic('');
+                        }}
+                        className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                        title="Close quiz section"
+                      >
+                        <X className="w-5 h-5 text-gray-400 hover:text-white" />
+                      </button>
+                    )}
+                  </div>
+                </div>              {/* Quiz Section - Shown when Add Topic is clicked */}
               {showAddTopicQuiz && (
                 <div className="bg-gray-700 rounded-lg p-3 sm:p-4 mb-4 space-y-3 sm:space-y-4">
                   <div>
@@ -1733,7 +1741,7 @@ const StudentDashboard = () => {
                       <p>No topics found. Click "Quiz" to load topics.</p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                       {(showAllTopics ? courseTopics : courseTopics.slice(0, 6)).map((topic, index) => (
                         <div 
                           key={topic.id || index} 
@@ -1747,30 +1755,17 @@ const StudentDashboard = () => {
                     </div>
                   )}
                   
-
-                  <div className="mt-7">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-2 p-2">
-
-                      {courseTopics.length > 6 && (
-                        <button
-                          onClick={() => setShowAllTopics(!showAllTopics)}
-                          className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
-                        >
-                          <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
-                        </button>
-                      )}
-
+                  {/* See All Button */}
+                  {courseTopics.length > 6 && (
+                    <div className="mt-6">
                       <button
-                        onClick={() => {
-                          setShowAddTopicQuiz(true);
-                        }}
-                        className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                        onClick={() => setShowAllTopics(!showAllTopics)}
+                        className="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm font-medium"
                       >
-                        <span className="text-sm">Quiz</span>
-                        <Edit className="w-3 h-3" />
+                        {showAllTopics ? 'Show Less' : 'See All'}
                       </button>
                     </div>
-                  </div>
+                  )}
                 </>
               )}
             </div>

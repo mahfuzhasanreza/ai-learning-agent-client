@@ -600,9 +600,9 @@ const Roadmap = () => {
                     {selectedNode.difficulty}
                   </span>
 
-                  <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#a200ff]/10 text-[#a200ff] border border-[#a200ff]/30">
+                  {/* <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#a200ff]/10 text-[#a200ff] border border-[#a200ff]/30">
                     ⏱ {selectedNode.timeCommitment}
-                  </span>
+                  </span> */}
 
                   {completedItems.has(selectedNode.id) && (
                     <span className="px-3 py-1.5 bg-green-500/20 text-green-300 rounded-lg text-xs font-semibold border border-green-500/30 flex items-center gap-1">
@@ -659,15 +659,7 @@ const Roadmap = () => {
                 <p className="text-gray-400 mb-6">
                   Enter a topic in the bottom input to generate a personalized learning roadmap. You can type your query or use voice input to get started.
                 </p>
-                <div className="bg-[#1e1e1e]/50 backdrop-blur-sm rounded-xl p-4 text-left border border-white/10">
-                  <p className="text-sm text-gray-300 font-semibold mb-2">Example topics:</p>
-                  <ul className="text-sm text-gray-400 space-y-1">
-                    <li>• Learn Python Programming</li>
-                    <li>• Machine Learning Fundamentals</li>
-                    <li>• Web Development with React</li>
-                    <li>• Data Structures and Algorithms</li>
-                  </ul>
-                </div>
+              
               </div>
             </div>
           )}
@@ -679,7 +671,7 @@ const Roadmap = () => {
             {/* Header with Close Button */}
             <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
               <h3 className="text-lg font-bold bg-gradient-to-r from-[#a200ff] to-[#FF4B00] bg-clip-text text-transparent">
-                AI Chatbot Insights
+                COSMOS Chatbot
               </h3>
               <button
                 onClick={() => setShowChatbot(false)}
