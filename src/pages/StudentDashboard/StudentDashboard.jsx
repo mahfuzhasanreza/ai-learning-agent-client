@@ -43,8 +43,8 @@ const StudentDashboard = () => {
   const chartInstanceRef = useRef(null);
   const { user } = UserAuth();
 
-  // Configuration
-  const STUDENT_ID = user?.id;
+  // Configuration - Get student ID from logged-in user
+  const STUDENT_ID = user?.student_id || user?.id;
   const CURRENT_COURSE = "CSE1110";
 
   // API Connection Test
@@ -313,8 +313,6 @@ const StudentDashboard = () => {
     setLoadingEnrolledCourses(true);
     setEnrolledCoursesError(null);
     try {
-      // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const controller = new AbortController();
@@ -361,7 +359,7 @@ const StudentDashboard = () => {
     } finally {
       setLoadingEnrolledCourses(false);
     }
-  }, []);
+  }, [STUDENT_ID]);
 
   // Fetch enrolled courses when trimester changes
   useEffect(() => {
@@ -384,9 +382,6 @@ const StudentDashboard = () => {
 
     setAddingCourse(true);
     try {
-      // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = user?.id;
-
       await ApiService.addStudentCourse({
         student_id: STUDENT_ID,
         course_id: selectedCourseToAdd.id,
@@ -453,8 +448,6 @@ const StudentDashboard = () => {
 
     setDeletingCourse(true);
     try {
-      // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/student-courses`, {
@@ -503,7 +496,6 @@ const StudentDashboard = () => {
 
     setUpdatingCounts(true);
     try {
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/ct-count`, {
@@ -559,7 +551,6 @@ const StudentDashboard = () => {
 
     setUpdatingCounts(true);
     try {
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/assignment-count`, {
@@ -636,7 +627,6 @@ const StudentDashboard = () => {
 
     setAddingAssessment(true);
     try {
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const requestBody = {
@@ -738,7 +728,6 @@ const StudentDashboard = () => {
 
     setUpdatingAssessment(true);
     try {
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const requestBody = {
@@ -856,7 +845,6 @@ const StudentDashboard = () => {
     setLoadingFetchedAssessments(true);
     setFetchedAssessmentsError(null);
     try {
-      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const controller = new AbortController();
@@ -890,7 +878,7 @@ const StudentDashboard = () => {
     } finally {
       setLoadingFetchedAssessments(false);
     }
-  }, []);
+  }, [STUDENT_ID]);
 
   // Fetch assessments when course changes
   useEffect(() => {
@@ -1171,12 +1159,14 @@ const StudentDashboard = () => {
   const [assessmentToDelete, setAssessmentToDelete] = useState(null);
   const [deletingAssessment, setDeletingAssessment] = useState(false);
 
-  // Fetch course topics when Add Topic button is clicked
+  // Fetch course topics when course is selected or when Add Topic button is clicked
   useEffect(() => {
-    if (showAddTopicQuiz && selectedCourse?.course_id) {
+    if (selectedCourse?.course_id) {
       fetchCourseTopics(selectedCourse.course_id);
+    } else {
+      setCourseTopics([]);
     }
-  }, [showAddTopicQuiz, selectedCourse]);
+  }, [selectedCourse]);
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
@@ -1718,27 +1708,45 @@ const StudentDashboard = () => {
               {/* Topic List - Hidden when Add Topic Quiz is active */}
               {!showAddTopicQuiz && (
                 <>
-                  <div className="space-y-4">
-                    {(showAllTopics ? studentData.selectedCourse.topics : studentData.selectedCourse.topics.slice(0, 2)).map((topic, index) => (
-                      <div key={index} className='mb-3'>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>{topic.name}</span>
-                          <span>{topic.progress}%</span>
+                  {loadingCourseTopics ? (
+                    <div className="flex items-center justify-center py-8">
+                      <RefreshCw className="w-6 h-6 animate-spin text-amber-500 mr-2" />
+                      <span className="text-gray-400">Loading topics...</span>
+                    </div>
+                  ) : courseTopicsError ? (
+                    <div className="text-center py-8 text-gray-400">
+                      <p>No topics available for this course.</p>
+                    </div>
+                  ) : courseTopics.length === 0 ? (
+                    <div className="text-center py-8 text-gray-400">
+                      <p>No topics found. Click "Quiz" to load topics.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {(showAllTopics ? courseTopics : courseTopics.slice(0, 2)).map((topic, index) => (
+                        <div key={topic.id || index} className='mb-3'>
+                          <div className="flex justify-between text-sm mb-2">
+                            <span>{topic.name}</span>
+                            <span className="text-amber-500">{topic.mastery_percentage || 0}%</span>
+                          </div>
+                          <ProgressBar percentage={topic.mastery_percentage || 0} />
                         </div>
-                        <ProgressBar percentage={topic.progress} />
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
+                  
 
                   <div className="mt-7">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-2 p-2">
 
-                      <button
-                        onClick={() => setShowAllTopics(!showAllTopics)}
-                        className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
-                      >
-                        <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
-                      </button>
+                      {courseTopics.length > 2 && (
+                        <button
+                          onClick={() => setShowAllTopics(!showAllTopics)}
+                          className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
+                        >
+                          <span className="text-sm">{showAllTopics ? 'Show Less' : 'See All'}</span>
+                        </button>
+                      )}
 
                       <button
                         onClick={() => {
