@@ -27,10 +27,70 @@ const Roadmap = () => {
   const [recognition, setRecognition] = useState(null);
   const [threadId, setThreadId] = useState(null);
 
+  // Chat history states
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+
   // Debug: Log threadId changes
   useEffect(() => {
     console.log('Roadmap threadId updated:', threadId);
   }, [threadId]);
+
+  // Fetch chat history from API
+  const fetchChatHistory = async () => {
+    setLoadingHistory(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(`${baseUrl}/api/v1/roadmap/threads`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setChatHistory(data.threads || []);
+    } catch (err) {
+      console.error('Error fetching chat history:', err);
+      setError('Failed to load chat history');
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  // Load a thread from history
+  const loadThread = (thread) => {
+    setRoadmapData(thread.roadmap);
+    setThreadId(thread.thread_id);
+    setQuery(thread.title);
+    setShowHistoryPanel(false);
+    
+    // Set completed items based on progress
+    if (thread.roadmap && thread.roadmap.stages) {
+      const completed = new Set();
+      thread.roadmap.stages.forEach((stage, stageIndex) => {
+        stage.items.forEach((item, itemIndex) => {
+          if (item.status === 'completed') {
+            completed.add(`${stageIndex}-${itemIndex}`);
+          }
+        });
+      });
+      setCompletedItems(completed);
+    }
+  };
 
   // Initialize speech recognition
   useEffect(() => {
@@ -59,6 +119,9 @@ const Roadmap = () => {
 
       setRecognition(recognitionInstance);
     }
+    
+    // Fetch chat history on component mount
+    fetchChatHistory();
   }, []);
 
   // Toggle voice input
@@ -564,6 +627,96 @@ const Roadmap = () => {
       {/* Main Content */}
       <div className="flex gap-4 h-full overflow-hidden p-4 mt-20 pb-20">
         
+        {/* Chat History Panel (Left Side) */}
+        {showHistoryPanel && (
+          <div className="w-80 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
+              <h3 className="text-lg font-bold bg-gradient-to-r from-[#FF4B00] to-[#a200ff] bg-clip-text text-transparent">
+                Chat History
+              </h3>
+              <button
+                onClick={() => setShowHistoryPanel(false)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                title="Close History"
+              >
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+              {loadingHistory ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader className="w-6 h-6 animate-spin text-[#a200ff]" />
+                </div>
+              ) : chatHistory.length === 0 ? (
+                <div className="text-center py-8 text-gray-400 text-sm">
+                  No chat history yet
+                </div>
+              ) : (
+                chatHistory.map((thread) => {
+                  const progress = thread.progress || {
+                    total_items: 0,
+                    completed_items: 0,
+                    in_progress_items: 0,
+                    not_started_items: 0,
+                    overall_progress_percentage: 0
+                  };
+                  
+                  return (
+                    <div
+                      key={thread.thread_id}
+                      onClick={() => loadThread(thread)}
+                      className="bg-[#0f0f0f]/50 hover:bg-[#0f0f0f]/80 border border-white/5 hover:border-[#a200ff]/30 rounded-lg p-4 cursor-pointer transition-all group"
+                    >
+                      <h4 className="text-white font-semibold text-sm mb-2 group-hover:text-[#a200ff] transition-colors">
+                        {thread.title || 'Untitled'}
+                      </h4>
+                      <div className="space-y-1 text-xs text-gray-400">
+                        <div className="flex items-center justify-between">
+                          <span>Progress:</span>
+                          <span className="text-[#FF4B00] font-medium">
+                            {progress.overall_progress_percentage?.toFixed(0) || 0}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span>Items:</span>
+                          <span>{progress.completed_items || 0}/{progress.total_items || 0}</span>
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2">
+                          {thread.created_at ? new Date(thread.created_at).toLocaleDateString() : 'N/A'}
+                        </div>
+                      </div>
+                      {/* Progress Bar */}
+                      <div className="mt-3 w-full bg-gray-700 rounded-full h-1.5">
+                        <div
+                          className="bg-gradient-to-r from-[#FF4B00] to-[#a200ff] h-1.5 rounded-full transition-all"
+                          style={{ width: `${progress.overall_progress_percentage || 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Refresh Button */}
+            <div className="px-4 py-3 border-t border-[#2a2938]">
+              <button
+                onClick={fetchChatHistory}
+                disabled={loadingHistory}
+                className="w-full px-4 py-2 bg-gradient-to-r from-[#a200ff] to-[#c240ff] hover:from-[#b520ff] hover:to-[#d050ff] text-white text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${loadingHistory ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+            </div>
+          </div>
+        )}
+        
         {/* Left Side Panel - Details */}
         {selectedNode && showDetails && (
           <div className="w-96 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
@@ -707,6 +860,21 @@ const Roadmap = () => {
           
           {/* Input Form */}
           <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            {/* History Button */}
+            <button
+              type="button"
+              onClick={() => setShowHistoryPanel(!showHistoryPanel)}
+              className={`p-2.5 rounded-lg transition-all hover:scale-105 ${
+                showHistoryPanel 
+                  ? 'bg-gradient-to-r from-[#a200ff] to-[#c240ff] text-white' 
+                  : 'bg-[#1e1e1e]/70 hover:bg-[#1e1e1e] text-gray-400 hover:text-white border border-white/10'
+              }`}
+              title="Chat History"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
             <div className="flex-1 relative group">
               {/* Subtle Glow Effect */}
               <div className="absolute -inset-0.5 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-lg opacity-0 group-hover:opacity-20 group-focus-within:opacity-20 blur transition duration-300"></div>
