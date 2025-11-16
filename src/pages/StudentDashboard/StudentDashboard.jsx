@@ -1652,8 +1652,19 @@ const StudentDashboard = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
                 <div className="flex items-center">
-                
-
+                  {/* Close button when quiz section is active */}
+                  {showAddTopicQuiz && (
+                    <button
+                      onClick={() => {
+                        setShowAddTopicQuiz(false);
+                        setSelectedQuizTopic('');
+                      }}
+                      className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                      title="Close quiz section"
+                    >
+                      <X className="w-5 h-5 text-gray-400 hover:text-white" />
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -1676,7 +1687,7 @@ const StudentDashboard = () => {
                       <select
                         value={selectedQuizTopic}
                         onChange={(e) => setSelectedQuizTopic(e.target.value)}
-                        className=" w-full p-2 bg-gray-600 rounded text-white mb-2"
+                        className="w-full p-2 bg-gray-600 rounded text-white mb-2"
                         disabled={courseTopics.length === 0}
                       >
                         <option value="">
@@ -1722,14 +1733,24 @@ const StudentDashboard = () => {
                       <p>No topics found. Click "Quiz" to load topics.</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      {(showAllTopics ? courseTopics : courseTopics.slice(0, 2)).map((topic, index) => (
-                        <div key={topic.id || index} className='mb-3'>
-                          <div className="flex justify-between text-sm mb-2">
-                            <span>{topic.name}</span>
-                            <span className="text-amber-500">{topic.mastery_percentage || 0}%</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {(showAllTopics ? courseTopics : courseTopics.slice(0, 6)).map((topic, index) => (
+                        <div 
+                          key={topic.id || index} 
+                          className="bg-gray-700/50 hover:bg-gray-700 transition-colors rounded-lg p-3 border border-gray-600/30"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 pr-2">
+                              <p className="text-sm font-medium text-white truncate" title={topic.name}>
+                                {topic.name}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs font-semibold text-amber-500">
+                                {topic.mastery_percentage || 0}%
+                              </span>
+                            </div>
                           </div>
-                          <ProgressBar percentage={topic.mastery_percentage || 0} />
                         </div>
                       ))}
                     </div>
@@ -1739,7 +1760,7 @@ const StudentDashboard = () => {
                   <div className="mt-7">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-2 p-2">
 
-                      {courseTopics.length > 2 && (
+                      {courseTopics.length > 6 && (
                         <button
                           onClick={() => setShowAllTopics(!showAllTopics)}
                           className="w-full sm:w-auto flex justify-center px-5 sm:px-7 py-3 btn-bg-primary hover:bg-amber-700 rounded-lg gap-1 items-center"
