@@ -230,6 +230,13 @@ const StudyPlan = () => {
         t.id === id ? { ...t, completed: !t.completed } : t
       ));
 
+      // If a date is selected, also update the selected date events
+      if (selectedDate) {
+        setSelectedDateEvents(selectedDateEvents.map(t => 
+          t.id === id ? { ...t, completed: !t.completed } : t
+        ));
+      }
+
       // Show success message
       setSuccessMessage(newStatus === 'done' ? 'Task marked as completed!' : 'Task marked as pending!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -271,6 +278,11 @@ const StudyPlan = () => {
 
       // Update local state
       setTasks(tasks.filter(task => task.id !== taskToDelete));
+      
+      // If a date is selected, also update the selected date events
+      if (selectedDate) {
+        setSelectedDateEvents(selectedDateEvents.filter(task => task.id !== taskToDelete));
+      }
       
       // Show success message
       setSuccessMessage('Event deleted successfully!');
@@ -341,6 +353,11 @@ const StudyPlan = () => {
       // Refresh events list
       await fetchEvents();
       
+      // If a date is selected, also refresh the date-specific events
+      if (selectedDate) {
+        await fetchEventsByDate(selectedDate);
+      }
+      
       // Show success message
       setSuccessMessage('Event updated successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -388,7 +405,7 @@ const StudyPlan = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays < 0) return { text: 'Overdue', class: 'bg-red-500 text-white' };
-    if (diffDays <= 2) return { text: 'Pending', class: 'bg-yellow-600 text-white' };
+    else if (diffDays <= 2) return { text: 'Pending', class: 'bg-yellow-600 text-white' };
     return { text: 'Pending', class: 'bg-gray-600 text-white' };
   };
 
@@ -978,11 +995,7 @@ const StudyPlan = () => {
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(task.deadline).class}`}>
                     {getStatusBadge(task.deadline).text}
                   </span>
-                  {!task.completed && (
-                    <span className="bg-yellow-600/20 text-yellow-400 px-2 py-1 rounded-full text-xs font-medium border border-yellow-600/30">
-                      Pending
-                    </span>
-                  )}
+                
                 </div>
 
                 <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
