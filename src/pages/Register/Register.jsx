@@ -86,7 +86,7 @@ const Register = () => {
 
       if (result.success) {
         // Successfully registered, navigate to dashboard
-        navigate('/dashboard');
+        navigate('/login');
       } else {
         // Registration failed, show error message
         setError(result.error || 'Failed to create account. Please try again.');

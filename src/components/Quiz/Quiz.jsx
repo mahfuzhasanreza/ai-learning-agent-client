@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Clock, Award, ChevronRight, RotateCcw, X } from 'lucide-react';
 import './Quiz.css';
+import { UserAuth } from '../../context/AuthContext';
 
 const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
   // Quiz state
@@ -12,6 +13,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
   const [timeLeft, setTimeLeft] = useState(600); // Default 10 minutes in seconds
   const [quizResult, setQuizResult] = useState(null); // Store API response
   const [submittingQuiz, setSubmittingQuiz] = useState(false);
+  const { user } = UserAuth();
 
   // Use generated quiz if available, otherwise use static questions
   const questions = React.useMemo(() => {
@@ -62,7 +64,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
     })));
     
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       
       // Prepare answers in the required format
@@ -258,7 +260,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
                 onClick={handleRestartQuiz}
                 className="px-8 py-3 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg shadow-[#FF4B00]/30 flex items-center space-x-2"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-5 h-5 mr-1" />
                 <span>Attempt New Quiz</span>
               </button>
             </div>
@@ -289,10 +291,10 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
                   return (
                     <div 
                       key={answer.question_id || index} 
-                      className="p-5 rounded-xl bg-gray-700/50 border border-gray-600/50 hover:border-gray-500/50 transition-all"
+                      className="p-5 rounded-xl bg-gray-700/50 border mt-3 border-gray-600/50 hover:border-gray-500/50 transition-all"
                     >
                       {/* Question Header */}
-                      <div className="flex items-start space-x-3 mb-4">
+                      <div className="flex gap-4 items-start space-x-3 mb-2 ">
                         {isCorrect ? (
                           <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
                             <CheckCircle className="w-5 h-5 text-green-400" />
@@ -313,7 +315,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
                       </div>
 
                       {/* Options */}
-                      <div className="ml-11 space-y-2">
+                      <div className="ml-11 space-y-4">
                         {answer.options && answer.options.map((option, optIndex) => {
                           const isChosenOption = optIndex === answer.chosen_index;
                           // For correct answers, chosen_answer is the correct one
@@ -324,7 +326,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
                           return (
                             <div
                               key={optIndex}
-                              className={`p-3 rounded-lg border-2 transition-all ${
+                              className={`p-3 mt-2 rounded-lg border-2 transition-all ${
                                 isCorrectOption
                                   ? 'bg-green-500/20 border-green-500'
                                   : isChosenOption && !isCorrect
@@ -385,13 +387,13 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
     <div className="min-h-[500px] bg-gray-900/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center space-x-4">
+        <div className="flex gap-2 items-center space-x-4">
           <div className="bg-gray-800/80 backdrop-blur-sm px-5 py-3 rounded-xl border border-gray-700/50">
             <span className="text-sm font-semibold text-white">
               Question <span className="text-[#FF4B00]">{currentQuestion + 1}</span> / {questions.length}
             </span>
           </div>
-          <div className={`flex items-center space-x-2 px-5 py-3 rounded-xl border ${
+          <div className={`flex gap-2 items-center space-x-2 px-5 py-3 rounded-xl border ${
             timeLeft < 60 
               ? 'bg-red-500/20 border-red-500/50 backdrop-blur-sm' 
               : 'bg-gray-800/80 border-gray-700/50 backdrop-blur-sm'
@@ -431,7 +433,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
             <button
               key={index}
               onClick={() => handleAnswerSelect(index)}
-              className={`w-full text-left p-5 rounded-xl border-2 transition-all transform hover:scale-[1.02] ${
+              className={`mt-2 w-full text-left p-5 rounded-xl border-2 transition-all transform hover:scale-[1.02] ${
                 selectedAnswer === index
                   ? 'border-[#FF4B00] bg-gradient-to-r from-[#FF4B00]/20 to-amber-500/20 backdrop-blur-sm shadow-lg shadow-[#FF4B00]/20'
                   : 'border-gray-700/50 bg-gray-800/50 backdrop-blur-sm hover:border-gray-600/50 hover:bg-gray-800/70'
@@ -439,7 +441,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
             >
               <div className="flex items-center space-x-4">
                 <div
-                  className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                  className={`mr-3 w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
                     selectedAnswer === index
                       ? 'border-[#FF4B00] bg-gradient-to-br from-[#FF4B00] to-amber-500 shadow-lg shadow-[#FF4B00]/30'
                       : 'border-gray-600'
@@ -487,7 +489,7 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
           {submittingQuiz ? (
             <>
               <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-              <span className="text-lg">Submitting...</span>
+              <span className="ml-2 text-lg">Submitting...</span>
             </>
           ) : (
             <>

@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import * as Chart from 'chart.js';
 import Navigation from "../../components/LandingPage/components/Navigation";
 import ApiService from '../../services/apiService';
+import { UserAuth } from '../../context/AuthContext';
 import {
   useStudentPerformance,
   useCoursePerformance,
@@ -40,9 +41,10 @@ const StudentDashboard = () => {
 
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
+  const { user } = UserAuth();
 
   // Configuration
-  const STUDENT_ID = 123;
+  const STUDENT_ID = user?.id;
   const CURRENT_COURSE = "CSE1110";
 
   // API Connection Test
@@ -165,7 +167,7 @@ const StudentDashboard = () => {
       title: "Structured Programming Language",
       instructor: "Dr. Ada Lovelace",
       credits: 3,
-      progress: 68,
+      progress: 0,
       topicMastery: 69,
       topics: [
         { name: "Variables", progress: 85 },
@@ -272,7 +274,7 @@ const StudentDashboard = () => {
 
     } catch (error) {
       console.error('Failed to add assessment:', error);
-      alert('Failed to add assessment. Please try again.');
+      //alert('Failed to add assessment. Please try again.');
     }
   };
 
@@ -312,7 +314,7 @@ const StudentDashboard = () => {
     setEnrolledCoursesError(null);
     try {
       // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const controller = new AbortController();
@@ -371,19 +373,19 @@ const StudentDashboard = () => {
     e.preventDefault();
 
     if (!selectedCourseToAdd) {
-      alert('Please select a course first');
+      // alert('Please select a course first');
       return;
     }
 
     if (!addCourseForm.trimester || !addCourseForm.section || !addCourseForm.faculty) {
-      alert('Please fill in all fields');
+      // alert('Please fill in all fields');
       return;
     }
 
     setAddingCourse(true);
     try {
       // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
 
       await ApiService.addStudentCourse({
         student_id: STUDENT_ID,
@@ -452,7 +454,7 @@ const StudentDashboard = () => {
     setDeletingCourse(true);
     try {
       // TODO: Replace with actual student_id from auth context
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/student-courses`, {
@@ -489,7 +491,7 @@ const StudentDashboard = () => {
 
     } catch (error) {
       console.error('Error deleting course:', error);
-      alert(error.message || 'Failed to delete course. Please try again.');
+      // alert(error.message || 'Failed to delete course. Please try again.');
     } finally {
       setDeletingCourse(false);
     }
@@ -501,7 +503,7 @@ const StudentDashboard = () => {
 
     setUpdatingCounts(true);
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/ct-count`, {
@@ -557,7 +559,7 @@ const StudentDashboard = () => {
 
     setUpdatingCounts(true);
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/v1/performance/assignment-count`, {
@@ -634,7 +636,7 @@ const StudentDashboard = () => {
 
     setAddingAssessment(true);
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const requestBody = {
@@ -736,7 +738,7 @@ const StudentDashboard = () => {
 
     setUpdatingAssessment(true);
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const requestBody = {
@@ -854,7 +856,7 @@ const StudentDashboard = () => {
     setLoadingFetchedAssessments(true);
     setFetchedAssessmentsError(null);
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const controller = new AbortController();
@@ -940,14 +942,14 @@ const StudentDashboard = () => {
   // Generate quiz for selected topic
   const handleGenerateQuiz = async () => {
     if (!selectedQuizTopic || !selectedCourse?.course_id) {
-      alert('Please select a topic first');
+      // alert('Please select a topic first');
       return;
     }
 
     // Find the selected topic ID from courseTopics
     const selectedTopic = courseTopics.find(topic => topic.name === selectedQuizTopic);
     if (!selectedTopic) {
-      alert('Topic not found');
+     // alert('Topic not found');
       return;
     }
 
@@ -955,7 +957,7 @@ const StudentDashboard = () => {
     setQuizGenerationError(null);
     
     try {
-      const STUDENT_ID = "f046dc51-56d2-4443-b829-0be7688745ae";
+      const STUDENT_ID = user?.id;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
       const response = await fetch(
@@ -984,7 +986,7 @@ const StudentDashboard = () => {
     } catch (error) {
       console.error('Error generating quiz:', error);
       setQuizGenerationError(error.message || 'Failed to generate quiz');
-      alert('Failed to generate quiz. Please try again.');
+      //('Failed to generate quiz. Please try again.');
     } finally {
       setLoadingQuizGeneration(false);
     }
@@ -1249,7 +1251,7 @@ const StudentDashboard = () => {
                   {loadingCourses ? 'Loading...' : '+ Add Courses'}
                 </button>
                 {coursesError && (
-                  <p className="mt-2 text-sm text-red-500">⚠️ {coursesError}</p>
+                  <p className="mt-2 text-sm text-red-500">No courses found.</p>
                 )}
               </div>
 
@@ -1306,7 +1308,7 @@ const StudentDashboard = () => {
                     <div className="flex space-x-2">
                       <button
                         type="submit"
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 py-2 rounded"
+                        className="flex-1 bg-orange-500 hover:bg-blue-700 py-2 rounded"
                       >
                         Add
                       </button>
@@ -1334,7 +1336,7 @@ const StudentDashboard = () => {
                 {/* Error state */}
                 {enrolledCoursesError && (
                   <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
-                    ⚠️ {enrolledCoursesError}
+                    No courses found for the selected trimester.
                   </div>
                 )}
 
@@ -1589,7 +1591,7 @@ const StudentDashboard = () => {
                 {/* Error state */}
                 {fetchedAssessmentsError && (
                   <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
-                    ⚠️ {fetchedAssessmentsError}
+                    No assessments found.
                   </div>
                 )}
 
@@ -1641,7 +1643,7 @@ const StudentDashboard = () => {
                   !loadingFetchedAssessments && !fetchedAssessmentsError && (
                     <>
                       <div>
-                        <p>No assessments available.</p>
+                        <p>No scores available.</p>
                       </div>
                     </>
                   )
@@ -1660,19 +1662,7 @@ const StudentDashboard = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
                 <div className="flex items-center">
-                  {/* <CircularProgress
-                  percentage={studentData.selectedCourse.topicMastery}
-                  size={40}
-                /> */}
-
-                  <button
-                    onClick={() => setShowAddTopicQuiz(!showAddTopicQuiz)}
-                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm"
-                    title="Add New Topic"
-                  >
-                    <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="text-xs sm:text-sm">{showAddTopicQuiz ? 'Close' : 'Add Topic'}</span>
-                  </button>
+                
 
                 </div>
               </div>
@@ -1690,13 +1680,13 @@ const StudentDashboard = () => {
                       </div>
                     ) : courseTopicsError ? (
                       <div className="w-full p-2 bg-red-500/20 border border-red-500/50 rounded text-red-300 mb-2 text-sm">
-                        ⚠️ {courseTopicsError}
+                        No topics found.
                       </div>
                     ) : (
                       <select
                         value={selectedQuizTopic}
                         onChange={(e) => setSelectedQuizTopic(e.target.value)}
-                        className="w-full p-2 bg-gray-600 rounded text-white mb-2"
+                        className=" w-full p-2 bg-gray-600 rounded text-white mb-2"
                         disabled={courseTopics.length === 0}
                       >
                         <option value="">
@@ -1821,10 +1811,7 @@ const StudentDashboard = () => {
                   ) : (
                     // Fallback to static data
                     <>
-                     <div className="text-center py-4">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
-                    <p className="text-sm text-gray-400">Loading assessments...</p>
-                  </div>
+                     
                     </>
                   )}
                 </div>
@@ -1870,14 +1857,14 @@ const StudentDashboard = () => {
                     Ask SPL Agent for tailored plan
                   </button>
 
-                  <button
+                  {/* <button
                     className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm"
                     onClick={() => {
                       console.log('Fetching resources for', CURRENT_COURSE);
                     }}
                   >
                     Click here to get course resources
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>}
@@ -2092,7 +2079,7 @@ const StudentDashboard = () => {
                 onComplete={(results) => {
                   console.log('Quiz completed:', results);
                   // You can add logic here to save results to API or update state
-                  alert(`Quiz completed! Score: ${results.score}/${results.total} (${results.percentage}%)`);
+                 // alert(`Quiz completed! Score: ${results.score}/${results.total} (${results.percentage}%)`);
                 }}
                 onRetry={() => {
                   // Close current quiz and regenerate with same topic
@@ -2174,7 +2161,7 @@ const StudentDashboard = () => {
                       <p className="text-gray-300 text-xs sm:text-sm mb-2">
                         {selectedCourseToAdd.title}
                       </p>
-                      <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
+                      <span className="px-2 py-1 bg-orange-500 text-white text-xs rounded-full">
                         {selectedCourseToAdd.credit} Credits
                       </span>
                     </div>
@@ -2274,7 +2261,7 @@ const StudentDashboard = () => {
                                     {course.title}
                                   </p>
                                 </div>
-                                <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full ml-2 whitespace-nowrap">
+                                <span className="px-2 py-1 bg-orange-500 text-white text-xs rounded-full ml-2 whitespace-nowrap">
                                   {course.credit} Credits
                                 </span>
                               </div>
