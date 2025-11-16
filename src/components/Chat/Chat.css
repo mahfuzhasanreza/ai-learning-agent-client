@@ -816,7 +816,9 @@
 .loader hr {
     border-radius: 4px;
     border: none;
-    background: linear-gradient(to right, #a200ff, #FF4B00, #a200ff);
+    /* background: linear-gradient(to right, #0f0f0f, #2d2d2d, #ea580c20, #2d2d2d, #0f0f0f); */
+background: linear-gradient(to right, #292929, #585858, #ea580c40, #585858, #292929);
+
     background-size: 800px 50px;
     height: 20px;
     animation: loader 3s infinite linear;
