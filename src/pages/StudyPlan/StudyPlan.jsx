@@ -743,7 +743,7 @@ const StudyPlan = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-hide">
               {(isLoadingEvents || isLoadingDateEvents) ? (
                 <div className="col-span-full text-center py-12">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
