@@ -90,14 +90,8 @@ const StudyPlan = () => {
   const getEventTypeLabel = (apiType) => {
     const typeMap = {
       'ct': 'CT',
-      'mid': 'Midterm',
-      'final': 'Final',
       'assignment': 'Assignment',
-      'quiz': 'Quiz',
-      'project': 'Project',
-      'lab': 'Lab',
-      'attendance': 'Attendance',
-      'presentation': 'Presentation'
+      'task': 'Task'
     };
     return typeMap[apiType] || 'Task';
   };
@@ -105,16 +99,9 @@ const StudyPlan = () => {
   // Map display types back to API types
   const getApiType = (displayType) => {
     const typeMap = {
-      'task': 'assignment',
+      'task': 'task',
       'assignment': 'assignment',
-      'ct': 'ct',
-      'midterm': 'mid',
-      'final': 'final',
-      'quiz': 'quiz',
-      'project': 'project',
-      'lab': 'lab',
-      'attendance': 'attendance',
-      'presentation': 'presentation'
+      'ct': 'ct'
     };
     return typeMap[displayType.toLowerCase()] || 'assignment';
   };
@@ -586,7 +573,7 @@ const StudyPlan = () => {
               <Navigation></Navigation>
      
       {/* Header */}
-      <div className=" mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
+      <div className="mb-5 mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Calendar className="w-6 h-6 text-orange-600" />
@@ -600,7 +587,7 @@ const StudyPlan = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search by title, course, date (YYYY-MM-DD)"
+              placeholder="Search by title, course, date"
               className="pl-10 pr-4 py-2 bg-[#1e1d2e] border border-gray-700 rounded-lg w-80 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -640,7 +627,14 @@ const StudyPlan = () => {
             </button>
             
             {showAddDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-[#1e1d2e] border border-gray-700 rounded-lg shadow-lg z-10 max-h-96 overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-56 bg-[#1e1d2e] border border-gray-700 rounded-lg shadow-lg z-10">
+                <button
+                  onClick={() => { setAddType('task'); setShowAddModal(true); setShowAddDropdown(false); }}
+                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                >
+                  <BookOpen className="w-4 h-4 text-orange-600" />
+                  Add Task
+                </button>
                 <button
                   onClick={() => { setAddType('assignment'); setShowAddModal(true); setShowAddDropdown(false); }}
                   className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
@@ -654,48 +648,6 @@ const StudyPlan = () => {
                 >
                   <GraduationCap className="w-4 h-4 text-orange-600" />
                   Add Class Test
-                </button>
-                <button
-                  onClick={() => { setAddType('quiz'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <BookOpen className="w-4 h-4 text-orange-600" />
-                  Add Quiz
-                </button>
-                <button
-                  onClick={() => { setAddType('midterm'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <FileText className="w-4 h-4 text-orange-600" />
-                  Add Midterm
-                </button>
-                <button
-                  onClick={() => { setAddType('final'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <FileText className="w-4 h-4 text-orange-600" />
-                  Add Final Exam
-                </button>
-                <button
-                  onClick={() => { setAddType('project'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <Upload className="w-4 h-4 text-orange-600" />
-                  Add Project
-                </button>
-                <button
-                  onClick={() => { setAddType('lab'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <BookOpen className="w-4 h-4 text-orange-600" />
-                  Add Lab Work
-                </button>
-                <button
-                  onClick={() => { setAddType('presentation'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
-                >
-                  <Upload className="w-4 h-4 text-orange-600" />
-                  Add Presentation
                 </button>
               </div>
             )}
@@ -735,7 +687,7 @@ const StudyPlan = () => {
         <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
           <h3 className="font-medium text-white mb-3">Filter Type</h3>
           <div className="flex flex-wrap gap-2">
-            {['All', 'Task', 'Assignment', 'CT', 'Quiz', 'Project', 'Lab', 'Midterm', 'Final', 'Presentation'].map(type => (
+            {['All', 'Task', 'Assignment', 'CT'].map(type => (
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
