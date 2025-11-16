@@ -20,6 +20,8 @@ const StudyPlan = () => {
   const [isLoadingDateEvents, setIsLoadingDateEvents] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
   
   // Form states
   const [taskForm, setTaskForm] = useState({
@@ -236,7 +238,12 @@ const StudyPlan = () => {
   };
 
   const deleteTask = async (id) => {
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    setTaskToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!taskToDelete) return;
 
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -250,7 +257,7 @@ const StudyPlan = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${baseUrl}/api/v1/events/${id}`, {
+      const response = await fetch(`${baseUrl}/api/student-events/${taskToDelete}`, {
         method: 'DELETE',
         headers: headers,
       });
@@ -260,12 +267,27 @@ const StudyPlan = () => {
       }
 
       // Update local state
-      setTasks(tasks.filter(task => task.id !== id));
+      setTasks(tasks.filter(task => task.id !== taskToDelete));
+      
+      // Show success message
+      setSuccessMessage('Event deleted successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      // Close modal and reset
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
     } catch (err) {
       console.error('Error deleting task:', err);
       setErrorMessage('Failed to delete task.');
       setTimeout(() => setErrorMessage(''), 3000);
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setTaskToDelete(null);
   };
 
   const filteredTasks = selectedDate ? selectedDateEvents.filter(task => {
@@ -556,6 +578,45 @@ const StudyPlan = () => {
               disabled={isLoading}
             >
               {isLoading ? 'Adding...' : `Add ${addType}`}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderDeleteModal = () => {
+    if (!showDeleteModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md border border-gray-700/50 shadow-2xl">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+              <Trash2 className="w-6 h-6 text-red-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Delete Event</h3>
+              <p className="text-sm text-gray-400">This action cannot be undone</p>
+            </div>
+          </div>
+
+          <p className="text-gray-300 mb-6">
+            Are you sure you want to delete this event? All data associated with this event will be permanently removed.
+          </p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={cancelDelete}
+              className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Delete
             </button>
           </div>
         </div>
@@ -859,6 +920,7 @@ const StudyPlan = () => {
       </div>
 
       {renderAddModal()}
+      {renderDeleteModal()}
       
       {/* Success Message Toast */}
       {successMessage && (
