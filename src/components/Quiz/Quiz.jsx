@@ -271,94 +271,106 @@ const Quiz = ({ topic, generatedQuiz, onClose, onComplete, onRetry }) => {
               Answer Review
             </h3>
             <div className="space-y-4">
-              {quizResult.right_answers && quizResult.right_answers.map((answer, index) => {
-                const isCorrect = answer.chosen_answer === answer.correct_answer;
+              {/* Combine right and wrong answers, maintaining order by question_id */}
+              {(() => {
+                const allAnswers = [
+                  ...(quizResult.right_answers || []).map(ans => ({ ...ans, isCorrect: true })),
+                  ...(quizResult.wrong_answers || []).map(ans => ({ ...ans, isCorrect: false }))
+                ];
                 
-                return (
-                  <div 
-                    key={answer.question_id || index} 
-                    className="p-5 rounded-xl bg-gray-700/50 border border-gray-600/50 hover:border-gray-500/50 transition-all"
-                  >
-                    {/* Question Header */}
-                    <div className="flex items-start space-x-3 mb-4">
-                      {isCorrect ? (
-                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                          <CheckCircle className="w-5 h-5 text-green-400" />
+                // Sort by matching question order
+                const sortedAnswers = questions.map(q => 
+                  allAnswers.find(ans => ans.question_id === q.question_id)
+                ).filter(Boolean);
+                
+                return sortedAnswers.map((answer, index) => {
+                  const isCorrect = answer.isCorrect;
+                  
+                  return (
+                    <div 
+                      key={answer.question_id || index} 
+                      className="p-5 rounded-xl bg-gray-700/50 border border-gray-600/50 hover:border-gray-500/50 transition-all"
+                    >
+                      {/* Question Header */}
+                      <div className="flex items-start space-x-3 mb-4">
+                        {isCorrect ? (
+                          <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <CheckCircle className="w-5 h-5 text-green-400" />
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <XCircle className="w-5 h-5 text-red-400" />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold mb-2 text-white">
+                            Question {index + 1}
+                          </p>
+                          <p className="text-base font-medium mb-3 text-gray-200">
+                            {answer.question}
+                          </p>
                         </div>
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                          <XCircle className="w-5 h-5 text-red-400" />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold mb-2 text-white">
-                          Question {index + 1}
-                        </p>
-                        <p className="text-base font-medium mb-3 text-gray-200">
-                          {answer.question}
-                        </p>
                       </div>
-                    </div>
 
-                    {/* Options */}
-                    <div className="ml-11 space-y-2">
-                      {answer.options && answer.options.map((option, optIndex) => {
-                        console.log("Answer.chosen=", answer.chosen_index);
-                        console.log("Answer.correct_ansewer", answer.correct_answer);
-                        console.log("ANSWER", answer);
-
-                        const isChosenOption = optIndex === answer.chosen_index;
-                        const isCorrectOption = option === answer.correct_answer;
-                        
-                        return (
-                          <div
-                            key={optIndex}
-                            className={`p-3 rounded-lg border-2 transition-all ${
-                              isCorrectOption
-                                ? 'bg-green-500/20 border-green-500'
-                                : isChosenOption && !isCorrect
-                                ? 'bg-red-500/20 border-red-500'
-                                : 'bg-gray-800/50 border-gray-600/30'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className={`text-sm font-medium ${
+                      {/* Options */}
+                      <div className="ml-11 space-y-2">
+                        {answer.options && answer.options.map((option, optIndex) => {
+                          const isChosenOption = optIndex === answer.chosen_index;
+                          // For correct answers, chosen_answer is the correct one
+                          // For wrong answers, we need to check correct_index or correct_answer
+                          const correctAnswer = isCorrect ? answer.chosen_answer : answer.correct_answer;
+                          const isCorrectOption = option === correctAnswer;
+                          
+                          return (
+                            <div
+                              key={optIndex}
+                              className={`p-3 rounded-lg border-2 transition-all ${
                                 isCorrectOption
-                                  ? 'text-green-300'
+                                  ? 'bg-green-500/20 border-green-500'
                                   : isChosenOption && !isCorrect
-                                  ? 'text-red-300'
-                                  : 'text-gray-400'
-                              }`}>
-                                {option}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                {isCorrectOption && (
-                                  <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
-                                    <CheckCircle className="w-3 h-3" />
-                                    Correct Answer
-                                  </span>
-                                )}
-                                {isChosenOption && !isCorrect && (
-                                  <span className="text-xs bg-red-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
-                                    <XCircle className="w-3 h-3" />
-                                    Your Answer
-                                  </span>
-                                )}
-                                {isChosenOption && isCorrect && (
-                                  <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
-                                    <CheckCircle className="w-3 h-3" />
-                                    Your Answer ✓
-                                  </span>
-                                )}
+                                  ? 'bg-red-500/20 border-red-500'
+                                  : 'bg-gray-800/50 border-gray-600/30'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className={`text-sm font-medium ${
+                                  isCorrectOption
+                                    ? 'text-green-300'
+                                    : isChosenOption && !isCorrect
+                                    ? 'text-red-300'
+                                    : 'text-gray-400'
+                                }`}>
+                                  {option}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  {isCorrectOption && (
+                                    <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                      <CheckCircle className="w-3 h-3" />
+                                      Correct Answer
+                                    </span>
+                                  )}
+                                  {isChosenOption && !isCorrect && (
+                                    <span className="text-xs bg-red-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                      <XCircle className="w-3 h-3" />
+                                      Your Answer
+                                    </span>
+                                  )}
+                                  {isChosenOption && isCorrect && (
+                                    <span className="text-xs bg-green-600 text-white px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-lg">
+                                      <CheckCircle className="w-3 h-3" />
+                                      Your Answer ✓
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                });
+              })()}
             </div>
           </div>
         </div>
