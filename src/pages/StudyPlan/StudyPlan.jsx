@@ -582,11 +582,11 @@ const StudyPlan = () => {
   return (
     
     <div className="w-full ">
-       <div className="mx-auto p-64 pt-14 min-h-screen" style={{ backgroundColor: '#13121D' }}>
+       <div className="mx-auto p-15 pt-14 min-h-screen" style={{ backgroundColor: '#13121D' }}>
               <Navigation></Navigation>
      
       {/* Header */}
-      <div className="mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+      <div className=" mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Calendar className="w-6 h-6 text-orange-600" />
