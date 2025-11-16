@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
+import { Calendar, Plus, Search, CheckCircle, Clock, FileText, Upload, X, Filter, BookOpen, PenTool, GraduationCap, ChevronLeft, ChevronRight, Trash2, Edit2 } from 'lucide-react';
 import Navigation from '../../components/LandingPage/components/Navigation';
 import FooterSection from '../../components/LandingPage/sections/FooterSection';
 import { UserAuth } from '../../context/AuthContext';
@@ -22,6 +22,8 @@ const StudyPlan = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState(null);
   
   // Form states
   const [taskForm, setTaskForm] = useState({
@@ -289,6 +291,76 @@ const StudyPlan = () => {
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setTaskToDelete(null);
+  };
+
+  const openEditModal = (task) => {
+    setTaskToEdit(task);
+    setTaskForm({
+      title: task.title,
+      description: task.description || '',
+      event_date: task.deadline,
+      event_time: task.time || '',
+      type: task.apiType
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditItem = async () => {
+    if (!taskForm.title) {
+      alert('Please enter a title');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const token = getToken();
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${baseUrl}/api/v1/events/${taskToEdit.id}`, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify({
+          title: taskForm.title,
+          description: taskForm.description || '',
+          status: taskToEdit.completed ? 'done' : 'pending'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Refresh events list
+      await fetchEvents();
+      
+      // Show success message
+      setSuccessMessage('Event updated successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      setShowEditModal(false);
+      setTaskToEdit(null);
+      resetForms();
+    } catch (err) {
+      console.error('Error updating event:', err);
+      setErrorMessage('Failed to update event. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setShowEditModal(false);
+    setTaskToEdit(null);
+    resetForms();
   };
 
   const filteredTasks = selectedDate ? selectedDateEvents.filter(task => {
@@ -586,6 +658,64 @@ const StudyPlan = () => {
     );
   };
 
+  const renderEditModal = () => {
+    if (!showEditModal || !taskToEdit) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md border border-gray-700/50 shadow-2xl">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-white">
+              Edit {taskToEdit.type === 'CT' ? 'Class Test' : taskToEdit.type}
+            </h3>
+            <button onClick={cancelEdit} className="text-gray-400 hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Title</label>
+              <input
+                type="text"
+                placeholder="Title"
+                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+                value={taskForm.title}
+                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Description</label>
+              <textarea
+                placeholder="Description"
+                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+                value={taskForm.description}
+                onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-6">
+            <button
+              onClick={cancelEdit}
+              className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white"
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleEditItem}
+              className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Updating...' : 'Update'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderDeleteModal = () => {
     if (!showDeleteModal) return null;
 
@@ -824,12 +954,22 @@ const StudyPlan = () => {
                       {task.type === 'CT' ? 'Class Test' : task.type}
                     </span>
                   </div>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="p-1 text-gray-500 hover:text-red-500"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditModal(task)}
+                      className="p-1 text-gray-500 hover:text-orange-600"
+                      title="Edit"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="p-1 text-gray-500 hover:text-red-500"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <h3 className="font-semibold text-white mb-2 text-lg leading-tight">{task.title}</h3>
@@ -923,6 +1063,7 @@ const StudyPlan = () => {
       </div>
 
       {renderAddModal()}
+      {renderEditModal()}
       {renderDeleteModal()}
       
       {/* Success Message Toast */}
