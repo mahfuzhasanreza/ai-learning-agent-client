@@ -237,6 +237,13 @@ const StudyPlan = () => {
         ));
       }
 
+      // Automatically switch to the appropriate view
+      if (newStatus === 'done') {
+        setActiveView('Completed');
+      } else {
+        setActiveView('Active');
+      }
+
       // Show success message
       setSuccessMessage(newStatus === 'done' ? 'Task marked as completed!' : 'Task marked as pending!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -750,7 +757,7 @@ const StudyPlan = () => {
           </div>
 
           <p className="text-gray-300 mb-6">
-            Are you sure you want to delete this event? All data associated with this event will be permanently removed.
+            All data associated with this event will be permanently removed.
           </p>
 
           <div className="flex gap-3">
