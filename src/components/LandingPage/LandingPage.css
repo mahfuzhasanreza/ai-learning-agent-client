@@ -1458,10 +1458,14 @@
 }
 
 .footer-container {
-  max-width: 1400px;
+  width: full;
+  
   margin: 0 auto;
   position: relative;
+  /* border: 2px solid red; */
   z-index: 2;
+  padding: 0px 200px;
+  justify-content: space-around;
 }
 
 .footer-main {
@@ -1481,7 +1485,7 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0 0 15px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgb(255, 94, 0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1609,7 +1613,7 @@
 .newsletter-btn {
   width: 45px;
   height: 45px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgb(255, 94, 0);
   border: none;
   border-radius: 50%;
   color: white;

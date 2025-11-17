@@ -49,8 +49,16 @@ const Navigation = () => {
 
   // Set active section based on current route
   useEffect(() => {
-    if (location.pathname === '/chat') {
-      setActiveSection('chat');
+    if (location.pathname === '/cosmos-chatbot') {
+      setActiveSection('cosmoschat');
+    } else if(location.pathname === '/') {
+      setActiveSection('home');
+    } else if(location.pathname === '/performance-tracking') {
+      setActiveSection('performance');
+    } else if(location.pathname === '/study-plan') {
+      setActiveSection('plan');
+    } else if(location.pathname === '/roadmap') {
+      setActiveSection('roadmap');
     } else {
       setActiveSection('');
     }
@@ -58,11 +66,11 @@ const Navigation = () => {
 
  const navItems = [
   { name: 'Home', href: '/', id: 'home' },
-  { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
-  { name: 'Study Plan', href: '/study-plan', id: 'features' },
-  { name: 'Roadmap', href: '/roadmap', id: 'quick-start' },
+  { name: 'Performance Tracking', href: '/performance-tracking', id: 'performance' },
+  { name: 'Study Plan', href: '/study-plan', id: 'plan' },
+  { name: 'Roadmap', href: '/roadmap', id: 'roadmap' },
   // Conditionally add Chatbot
-  ...(!user?.email ? [{ name: 'Chatbot', href: '/cosmos-chatbot', id: 'chat' }] : [])
+  ...(!user?.email ? [{ name: 'Chatbot', href: '/cosmos-chatbot', id: 'cosmoschat' }] : [])
 ];
 
 
