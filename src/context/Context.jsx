@@ -67,6 +67,7 @@ const ContextProvider = (props) => {
         setConversation([]); // Clear conversation
         setQuestions([]); // Clear questions
         setIsTyping(false); // Reset typing state
+        setSelectedAgent(null);
     }
 
     // Function to trigger chat history refresh in sidebar

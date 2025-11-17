@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -37,7 +38,8 @@ import FooterSection from '../../components/LandingPage/sections/FooterSection';
 
 const StudentDashboard = () => {
 
-  const { isDark } = useContext(Context);
+  const { isDark, onSent, setInput } = useContext(Context);
+  const navigate = useNavigate();
 
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
@@ -1170,6 +1172,74 @@ const StudentDashboard = () => {
 
   console.log(editingCourses + "EDIIIIIIIIIIIIIIIIIIIII");
 
+  // Handler for "Ask agent for tailored plan" button
+  const handleAskAgentForPlan = () => {
+    // Prepare performance data
+    let performanceMessage = "Based on my current academic performance, please create a tailored study plan for me.\n\n";
+    
+    // Add selected course information
+    if (selectedCourse) {
+      performanceMessage += ` **Current Course:** ${selectedCourse.title} (${selectedCourse.code})\n`;
+      performanceMessage += `- Section: ${selectedCourse.section}\n`;
+      performanceMessage += `- Faculty: ${selectedCourse.faculty_name}\n`;
+      performanceMessage += `- Credits: ${selectedCourse.credits}\n`;
+      performanceMessage += `- CT Count: ${selectedCourse.ct_count}\n`;
+      performanceMessage += `- Assignment Count: ${selectedCourse.assignment_count}\n\n`;
+    }
+    
+    // Add performance summary
+    if (coursePerformance) {
+      performanceMessage += ` **Course Performance:**\n`;
+      performanceMessage += `- Average Score: ${coursePerformance.average}%\n`;
+      performanceMessage += `- Highest Score: ${coursePerformance.highest}%\n`;
+      performanceMessage += `- Lowest Score: ${coursePerformance.lowest}%\n`;
+      performanceMessage += `- Total Assessments: ${coursePerformance.count}\n\n`;
+    }
+    
+    // Add assessments breakdown
+    if (fetchedAssessments && fetchedAssessments.length > 0) {
+      performanceMessage += ` **Recent Assessments:**\n`;
+      fetchedAssessments.slice(0, 5).forEach((assessment, index) => {
+        const assessmentName = `${assessment.assessment_type.toUpperCase()}${assessment.ct_no ? ` ${assessment.ct_no}` : ''}${assessment.assignment_no ? ` ${assessment.assignment_no}` : ''}`;
+        const percentage = ((assessment.marks / assessment.full_marks) * 100).toFixed(1);
+        performanceMessage += `${index + 1}. ${assessmentName}: ${assessment.marks}/${assessment.full_marks} (${percentage}%)\n`;
+      });
+      performanceMessage += `\n`;
+    }
+    
+    // Add areas for improvement
+    if (studentSummary && studentSummary.weakestCourse) {
+      performanceMessage += ` **Area for Improvement:** ${studentSummary.weakestCourse}\n\n`;
+    }
+    
+    // Add all enrolled courses summary
+    if (enrolledCourses && enrolledCourses.length > 0) {
+      performanceMessage += ` **All Enrolled Courses (Trimester ${selectedTrimester}):**\n`;
+      enrolledCourses.forEach((course, index) => {
+        performanceMessage += `${index + 1}. ${course.code} - ${course.title}\n`;
+      });
+      performanceMessage += `\n`;
+    }
+    
+    performanceMessage += `Please analyze my performance and provide:\n`;
+    performanceMessage += `1. A personalized study schedule\n`;
+    performanceMessage += `2. Topics I should focus on more\n`;
+    performanceMessage += `3. Study strategies to improve my weaker areas\n`;
+    performanceMessage += `4. Time management recommendations\n`;
+    performanceMessage += `5. Preparation tips for upcoming assessments`;
+    
+    // Set the message in the chat input
+    setInput(performanceMessage);
+    
+    // Navigate to chatbot page
+    navigate('/cosmos-chatbot');
+    
+    // Auto-send the message after a short delay to ensure navigation completes
+    setTimeout(() => {
+      onSent(performanceMessage);
+    }, 500);
+  };
+
   return (
 
     <div className="w-full flex flex-col min-h-screen">
@@ -1865,11 +1935,9 @@ const StudentDashboard = () => {
 
                   <button
                     className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm mb-3"
-                    onClick={() => {
-                      console.log('Requesting tailored plan for', CURRENT_COURSE);
-                    }}
+                    onClick={handleAskAgentForPlan}
                   >
-                    Ask SPL Agent for tailored plan
+                    Ask agent for tailored plan
                   </button>
 
                   {/* <button
