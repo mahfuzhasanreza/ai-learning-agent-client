@@ -26,6 +26,9 @@ const Chat = () => {
     const [isQuestionsExpanded, setIsQuestionsExpanded] = useState(true); // State for questions dropdown
     const resultEndRef = useRef(null);
 
+    const agentMap = { "Professor DBMS": "dbms_agent", "Professor General": "fallback_agent", "Professor OOP": "oop_agent", "System Design Specialist": "sad_agent", "Professor SE": "se_agent", "Professor SPL": "spl_agent" };
+
+    function convertDisplayNameToName(displayName) { return agentMap[displayName] || null; }
 
     // Fetch agents from API
     useEffect(() => {
@@ -181,6 +184,9 @@ const Chat = () => {
                     </>
                     : <div className='result'>
                         {conversation.map((item, index) => {
+
+                            if (item.courseData && item.courseData != "Professor General" && !selectedAgent) { setSelectedAgent(convertDisplayNameToName(item.courseData)); }
+
                             return (
                                 <div key={index}>
                                     <div className="result-title">
@@ -231,7 +237,7 @@ const Chat = () => {
                                     {item.questions && item.questions.length > 0 && (
                                         <div className="questions-container mt-6 text-gray-200">
                                             {/* Collapsible Header */}
-                                            <div 
+                                            <div
                                                 className="flex items-center justify-between mb-6 cursor-pointer p-4 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10 rounded-xl border border-white/10 hover:border-[#FF4B00]/50 transition-all duration-300"
                                                 onClick={() => setIsQuestionsExpanded(!isQuestionsExpanded)}
                                             >
@@ -250,77 +256,133 @@ const Chat = () => {
                                             {/* Collapsible Content */}
                                             {isQuestionsExpanded && (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-fadeIn">
-                                                {item.questions.map((question, qIndex) => (
-                                                    <div
-                                                        key={question.id || qIndex}
-                                                        className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"
-                                                    >
-                                                        {/* Gradient Accent Line */}
-                                                        <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff]" />
+                                                    {item.questions.map((question, qIndex) => (
+                                                        <div
+                                                            key={question.id || qIndex}
+                                                            className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"
+                                                        >
+                                                            {/* Gradient Accent Line */}
+                                                            <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff]" />
 
-                                                        {/* Header */}
-                                                        <div className="flex items-start justify-between mb-3">
-                                                            <span className="text-sm font-semibold text-[#FF4B00] bg-[#FF4B0015] px-3 py-1 rounded-full">
-                                                                Q{question.question_number}
-                                                                {question.sub_question && question.sub_question !== '-' && (
-                                                                    <span>.{question.sub_question}</span>
-                                                                )}
-                                                            </span>
+                                                            {/* Header */}
+                                                            <div className="flex items-start justify-between mb-3">
+                                                                <span className="text-sm font-semibold text-[#FF4B00] bg-[#FF4B0015] px-3 py-1 rounded-full">
+                                                                    Q{question.question_number}
+                                                                    {question.sub_question && question.sub_question !== '-' && (
+                                                                        <span>.{question.sub_question}</span>
+                                                                    )}
+                                                                </span>
 
-                                                            <div className="flex gap-2">
-                                                                {question.course_code && (
-                                                                    <span className="text-xs text-gray-300 bg-[#2a2938] px-2 py-1 rounded-md font-medium">
-                                                                        {question.course_code}
-                                                                    </span>
-                                                                )}
-                                                                {question.exam_type && (
-                                                                    <span className="text-xs text-[#a200ff] bg-[#a200ff15] px-2 py-1 rounded-md font-medium uppercase">
-                                                                        {question.exam_type}
-                                                                    </span>
-                                                                )}
+                                                                <div className="flex gap-2">
+                                                                    {question.course_code && (
+                                                                        <span className="text-xs text-gray-300 bg-[#2a2938] px-2 py-1 rounded-md font-medium">
+                                                                            {question.course_code}
+                                                                        </span>
+                                                                    )}
+                                                                    {question.exam_type && (
+                                                                        <span className="text-xs text-[#a200ff] bg-[#a200ff15] px-2 py-1 rounded-md font-medium uppercase">
+                                                                            {question.exam_type}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        {/* Course Title */}
-                                                        {question.course_title && (
-                                                            <p className="text-xs text-gray-400 mb-2 capitalize">
-                                                                {question.course_title}
+                                                            {/* Course Title */}
+                                                            {question.course_title && (
+                                                                <p className="text-xs text-gray-400 mb-2 capitalize">
+                                                                    {question.course_title}
+                                                                </p>
+                                                            )}
+
+                                                            {/* Question Text */}
+                                                            <p className="text-gray-100 text-sm leading-relaxed mb-3 whitespace-pre-line">
+                                                                {question.question_text}
                                                             </p>
-                                                        )}
 
-                                                        {/* Question Text */}
-                                                        <p className="text-gray-100 text-sm leading-relaxed mb-3 whitespace-pre-line">
-                                                            {question.question_text}
-                                                        </p>
+                                                            {/* Image Display - Show image directly if available with full width */}
+                                                            {question.has_image &&
+                                                                question.image_url &&
+                                                                question.image_url !== 'N/A' && (
+                                                                    <div className="overflow-visible -mx-3 mb-3" style={{ borderRadius: '0' }}>
+                                                                        <img
+                                                                            src={question.image_url}
+                                                                            alt={`Question ${question.question_number} diagram`}
+                                                                            className="w-full h-auto min-h-[400px] min-w-[400px] bg-white"
+                                                                            style={{ maxHeight: '600px', borderRadius: '0', clipPath: 'none' }}
+                                                                            onError={(e) => {
+                                                                                // Fallback if image fails to load
+                                                                                e.target.style.display = 'none';
+                                                                                e.target.nextElementSibling.style.display = 'flex';
+                                                                            }}
+                                                                        />
+                                                                        <div
+                                                                            className="hidden items-center justify-center p-4 bg-gray-800/50"
+                                                                            style={{ display: 'none' }}
+                                                                        >
+                                                                            <a
+                                                                                href={question.image_url}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="text-sm text-[#FF4B00] hover:text-white flex items-center gap-2"
+                                                                            >
+                                                                                <svg
+                                                                                    className="w-4 h-4"
+                                                                                    fill="none"
+                                                                                    stroke="currentColor"
+                                                                                    viewBox="0 0 24 24"
+                                                                                >
+                                                                                    <path
+                                                                                        strokeLinecap="round"
+                                                                                        strokeLinejoin="round"
+                                                                                        strokeWidth={2}
+                                                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                                    />
+                                                                                </svg>
+                                                                                Image failed to load - Click to open in new tab
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
 
-                                                        {/* Image Display - Show image directly if available with full width */}
-                                                        {question.has_image &&
-                                                            question.image_url &&
-                                                            question.image_url !== 'N/A' && (
-                                                                <div className="overflow-visible -mx-3 mb-3" style={{ borderRadius: '0' }}>
-                                                                    <img 
-                                                                        src={question.image_url}
-                                                                        alt={`Question ${question.question_number} diagram`}
-                                                                        className="w-full h-auto min-h-[400px] min-w-[400px] bg-white"
-                                                                        style={{ maxHeight: '600px', borderRadius: '0', clipPath: 'none' }}
-                                                                        onError={(e) => {
-                                                                            // Fallback if image fails to load
-                                                                            e.target.style.display = 'none';
-                                                                            e.target.nextElementSibling.style.display = 'flex';
-                                                                        }}
-                                                                    />
-                                                                    <div 
-                                                                        className="hidden items-center justify-center p-4 bg-gray-800/50"
-                                                                        style={{ display: 'none' }}
-                                                                    >
+                                                            {/* Description Section */}
+                                                            {question.has_description &&
+                                                                question.description_content &&
+                                                                question.description_content !== 'N/A' && (
+                                                                    <div className="mb-3 p-3 bg-[#FF4B0010] rounded-lg border border-[#FF4B0030]">
+                                                                        <p className="text-xs font-semibold text-[#FF4B00] mb-1">
+                                                                            Description:
+                                                                        </p>
+                                                                        <p className="text-xs text-gray-300 whitespace-pre-line">
+                                                                            {question.description_content}
+                                                                        </p>
+                                                                    </div>
+                                                                )}
+
+                                                            {/* Footer */}
+                                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                                                                <div className="flex gap-2 items-center">
+                                                                    {question.marks && (
+                                                                        <span className="text-xs font-medium text-[#10b981] bg-[#10b98115] px-2 py-1 rounded">
+                                                                            Marks: {question.marks}
+                                                                        </span>
+                                                                    )}
+                                                                    {question.semester_term && (
+                                                                        <span className="text-xs text-gray-400">
+                                                                            Term: {question.semester_term}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+
+                                                                <div className="flex gap-2">
+                                                                    {question.pdf_url && question.pdf_url !== 'N/A' && (
                                                                         <a
-                                                                            href={question.image_url}
+                                                                            href={question.pdf_url}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
-                                                                            className="text-sm text-[#FF4B00] hover:text-white flex items-center gap-2"
+                                                                            className="text-xs text-[#dc2626] hover:text-white bg-[#dc262615] hover:bg-[#dc2626] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
                                                                         >
                                                                             <svg
-                                                                                className="w-4 h-4"
+                                                                                className="w-3 h-3"
                                                                                 fill="none"
                                                                                 stroke="currentColor"
                                                                                 viewBox="0 0 24 24"
@@ -329,72 +391,16 @@ const Chat = () => {
                                                                                     strokeLinecap="round"
                                                                                     strokeLinejoin="round"
                                                                                     strokeWidth={2}
-                                                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                                                                                 />
                                                                             </svg>
-                                                                            Image failed to load - Click to open in new tab
+                                                                            Full Question
                                                                         </a>
-                                                                    </div>
+                                                                    )}
                                                                 </div>
-                                                            )}
-
-                                                        {/* Description Section */}
-                                                        {question.has_description &&
-                                                            question.description_content &&
-                                                            question.description_content !== 'N/A' && (
-                                                                <div className="mb-3 p-3 bg-[#FF4B0010] rounded-lg border border-[#FF4B0030]">
-                                                                    <p className="text-xs font-semibold text-[#FF4B00] mb-1">
-                                                                        Description:
-                                                                    </p>
-                                                                    <p className="text-xs text-gray-300 whitespace-pre-line">
-                                                                        {question.description_content}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-
-                                                        {/* Footer */}
-                                                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
-                                                            <div className="flex gap-2 items-center">
-                                                                {question.marks && (
-                                                                    <span className="text-xs font-medium text-[#10b981] bg-[#10b98115] px-2 py-1 rounded">
-                                                                        Marks: {question.marks}
-                                                                    </span>
-                                                                )}
-                                                                {question.semester_term && (
-                                                                    <span className="text-xs text-gray-400">
-                                                                        Term: {question.semester_term}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-
-                                                            <div className="flex gap-2">
-                                                                {question.pdf_url && question.pdf_url !== 'N/A' && (
-                                                                    <a
-                                                                        href={question.pdf_url}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="text-xs text-[#dc2626] hover:text-white bg-[#dc262615] hover:bg-[#dc2626] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
-                                                                    >
-                                                                        <svg
-                                                                            className="w-3 h-3"
-                                                                            fill="none"
-                                                                            stroke="currentColor"
-                                                                            viewBox="0 0 24 24"
-                                                                        >
-                                                                            <path
-                                                                                strokeLinecap="round"
-                                                                                strokeLinejoin="round"
-                                                                                strokeWidth={2}
-                                                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                                                            />
-                                                                        </svg>
-                                                                        Full Question
-                                                                    </a>
-                                                                )}
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                ))}
+                                                    ))}
                                                 </div>
                                             )}
                                         </div>
@@ -482,10 +488,13 @@ const Chat = () => {
                                 <span className='font-semibold'>
                                     {selectedAgent ? agents.find(a => a.id === selectedAgent)?.name.split(' ')[0] : 'Agent'}
                                 </span>
-                                <img className='cursor-pointer w-3' src={assets.CaretDown} alt="" />
+
+                                {
+                                    !selectedAgent && (<img className='cursor-pointer w-3' src={assets.CaretDown} alt="" />)
+                                }
                             </button>
 
-                            {showAgentDropdown && (
+                            {!selectedAgent && showAgentDropdown && (
                                 <div className="absolute bottom-13 right-0 bg-[#1a1f2e] border border-gray-700 rounded-lg shadow-lg w-100 z-50 overflow-hidden">
                                     <div className="p-2 flex flex-col gap-2">
                                         {/* Default agent */}
@@ -536,29 +545,28 @@ const Chat = () => {
                                         resetTranscript();
                                     }
                                 }
-                            }} 
-                            className={`send-icon p-2 rounded-full transition-all duration-200 ${
-                                !(input || listening) 
-                                    ? 'opacity-60 cursor-not-allowed bg-gray-600/20' 
-                                    : 'cursor-pointer bg-[#ff4d00ab] hover:bg-[#FF4B00]/90'
-                            }`}
-                            style={{ 
+                            }}
+                            className={`send-icon p-2 rounded-full transition-all duration-200 ${!(input || listening)
+                                ? 'opacity-60 cursor-not-allowed bg-gray-600/20'
+                                : 'cursor-pointer bg-[#ff4d00ab] hover:bg-[#FF4B00]/90'
+                                }`}
+                            style={{
                                 pointerEvents: !(input || listening) ? 'none' : 'auto'
                             }}
                             disabled={!(input || listening)}
                         >
-                            <svg 
-                                width="20" 
-                                height="20" 
-                                viewBox="0 0 24 24" 
-                                fill="none" 
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" 
+                                <path
+                                    d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
                                     stroke={!(input || listening) ? '#6B7280' : '#FFFFFF'}
-                                    strokeWidth="2" 
-                                    strokeLinecap="round" 
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />
                             </svg>
