@@ -18,6 +18,7 @@ const Navigation = () => {
   const {isDark, isSidebarOpen} = useContext(Context);
   const { user, isAuthenticated, signOut } = UserAuth();
 
+  // console.log("USERRRRRRRRRRRRRRRRRRRRRRRR", user);
   // Check if we're on the chat page
   const isChatPage = location.pathname === '/cosmos-chatbot';
 
@@ -289,9 +290,9 @@ const Navigation = () => {
                             <span className="text-lg">{getUserInitials()}</span>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 ml-2">
                           <p className={`text-sm font-semibold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            {user.full_name || 'User'}
+                            {user.email.split("@")[0].replace(/\d+$/, "") || 'User'}
                           </p>
                           <p className={`text-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                             {user.email}

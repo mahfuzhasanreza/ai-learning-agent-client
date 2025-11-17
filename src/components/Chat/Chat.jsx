@@ -14,10 +14,10 @@ import TTSSettings from '../TTSSettings/TTSSettings';
 import Navigation from '../LandingPage/components/Navigation';
 import ChatSidebar from './ChatSidebar';
 import ApiService from '../../services/apiService';
-
+import { UserAuth } from '../../context/AuthContext';
 
 const Chat = () => {
-
+    const {user} = UserAuth();
     const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, isTyping } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
@@ -143,7 +143,7 @@ const Chat = () => {
                     ? <>
                         <div className="greet">
                             <p className="greeting-line-1">
-                                <span className="greeting-highlight">Hello, User.</span>
+                                <span className="greeting-highlight">Hello, {user.email.split("@")[0].replace(/\d+$/, "")}.</span>
                             </p>
                             <p className="greeting-line-2">How can I help you today?</p>
                         </div>
