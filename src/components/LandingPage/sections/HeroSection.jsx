@@ -289,6 +289,7 @@ const HeroSection = () => {
                         Start Learning Now
                       </button>
                     </Link>
+                    <Link to={'/login'}>
                     <button
                       className="cursor-pointer border-2 border-white/30 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
                       whileHover={{ scale: 1.05, y: -2 }}
@@ -297,6 +298,7 @@ const HeroSection = () => {
                       Learn More
                       <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                     </button>
+                    </Link>
                   </div>
                 </div>
 

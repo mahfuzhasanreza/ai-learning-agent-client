@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaRobot, FaUser, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
 import logo from '../../../../public/assets/logo.svg';
 import { Context } from '../../../context/Context';
@@ -55,13 +55,15 @@ const Navigation = () => {
     }
   }, [location.pathname]);
 
-  const navItems = [
-    { name: 'Home', href: '/', id: 'home' },
-    { name: 'Study Plan', href: '/study-plan', id: 'features' },
-    { name: 'Roadmap', href: '/roadmap', id: 'quick-start' },
-    { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
-    { name: 'AI Chat', href: '/cosmos-chatbot', id: 'chat' }
-  ];
+ const navItems = [
+  { name: 'Home', href: '/', id: 'home' },
+  { name: 'Performance Tracking', href: '/performance-tracking', id: 'stats' },
+  { name: 'Study Plan', href: '/study-plan', id: 'features' },
+  { name: 'Roadmap', href: '/roadmap', id: 'quick-start' },
+  // Conditionally add Chatbot
+  ...(!user?.email ? [{ name: 'Chatbot', href: '/cosmos-chatbot', id: 'chat' }] : [])
+];
+
 
   const scrollToSection = (href) => {
     if (href.startsWith('#')) {
@@ -169,14 +171,20 @@ const Navigation = () => {
                 } ${(scrolled || isChatPage) ? 'group-hover:bg-yellow-600' : 'group-hover:bg-white'}`} />
               </motion.button>
             ))}
-            <div className="ml-4 pl-4 border-l border-gray-300/30">
+          
+
+{
+
+!user?.email && (
+<div className="ml-4 pl-4 border-l border-gray-300/30">
+      
               <motion.button
                 className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
                   isActive('chat')
                     ? 'btn-bg-primary  text-white shadow-lg shadow-yellow-500/25'
                     : 'btn-bg-primary text-white hover:shadow-lg hover:shadow-yellow-500/25'
                 }`}
-                onClick={() => navigate('/student-dashboard')}
+                onClick={() => navigate('/login')}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: -20 }}
@@ -185,8 +193,49 @@ const Navigation = () => {
               >
                 <span>Start Learning</span>
               </motion.button>
+         
             </div>
-            <DarkModeToggle></DarkModeToggle>
+
+)
+
+}
+
+
+{
+             !user?.email || (
+
+              <div className="ml-4 pl-4 border-l border-gray-300/30">
+        
+              <motion.button
+                className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
+                  isActive('chat')
+                    ? 'btn-bg-primary  text-white shadow-lg shadow-yellow-500/25'
+                    : 'btn-bg-primary text-white hover:shadow-lg hover:shadow-yellow-500/25'
+                }`}
+                onClick={() => navigate('/cosmos-chatbot')}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <span>Chatbot</span>
+              </motion.button>
+   
+            </div>
+
+             )
+            }
+
+         
+
+              <div className='mx-2 mt-1'>
+
+<DarkModeToggle></DarkModeToggle>
+                </div>
+
+
+            
             
             {/* User Profile Dropdown */}
             {isAuthenticated() && user && (
