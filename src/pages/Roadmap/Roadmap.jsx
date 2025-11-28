@@ -1,8 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import ChatBotPanel from './ChatBotPanel';
 import { Mic, MicOff, Send, Loader, RefreshCw } from 'lucide-react';
 import { UserAuth } from '../../context/AuthContext';
+import { Context } from '../../context/Context';
 import Navigation from '../../components/LandingPage/components/Navigation';
 // import roadmapData from "../../../src/data/c_roadmap.json";
 // import roadmapData from "../../../src/data/python_roadmap.json";
@@ -10,6 +12,8 @@ import Navigation from '../../components/LandingPage/components/Navigation';
 const Roadmap = () => {
   const svgRef = useRef();
   const {user} = UserAuth();
+  const navigate = useNavigate();
+  const { onSent, setInput } = useContext(Context);
   const [selectedNode, setSelectedNode] = useState(null);
   const [completedItems, setCompletedItems] = useState(new Set());
   const [showDetails, setShowDetails] = useState(true);
@@ -436,6 +440,19 @@ const Roadmap = () => {
 
     nodes.on("click", (event, d) => {
       event.stopPropagation();
+      
+      // Check if Shift key is pressed - redirect to chat
+      if (event.shiftKey && (d.data.type === "stage" || d.data.type === "item")) {
+        const promptMessage = `Please explain: ${d.data.name}`;
+        setInput(promptMessage);
+        navigate('/cosmos-chatbot');
+        setTimeout(() => {
+          onSent(promptMessage);
+        }, 500);
+        return;
+      }
+      
+      // Normal click behavior
       setSelectedNode(d.data);
       // Reset panel visibility when selecting new node
       setShowDetails(true);
@@ -618,7 +635,7 @@ const Roadmap = () => {
       .translate(fullWidth / 2 - bounds.width * scale / 2, fullHeight / 2 - bounds.height * scale / 2)
       .scale(scale));
 
-  }, [completedItems, roadmapData]);
+  }, [completedItems, roadmapData, toggleCompletion, navigate, onSent, setInput]);
 
   // Calculate completion percentage safely
   const completionPercentage = roadmapData?.stages ? roadmapData.stages.reduce((total, stage) => {
@@ -880,9 +897,22 @@ const Roadmap = () => {
         )}
 
         {/* Tree visualization */}
-        <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden">
+        <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden relative">
           {roadmapData ? (
-            <svg ref={svgRef} className="w-full h-full"></svg>
+            <>
+              <svg ref={svgRef} className="w-full h-full"></svg>
+              {/* Floating hint for Shift+Click */}
+              <div className="absolute top-4 right-4 p-3 bg-gradient-to-r from-[#1a1926]/90 to-[#0f0f1a]/90 backdrop-blur-sm border border-[#a200ff]/30 rounded-lg shadow-xl">
+                <p className="text-xs text-gray-300 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#FF4B00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>
+                    Hold <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-white text-xs mx-1">Shift</kbd> + Click to explain in chat
+                  </span>
+                </p>
+              </div>
+            </>
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
@@ -900,6 +930,13 @@ const Roadmap = () => {
                 <p className="text-gray-400 mb-6">
                   Enter a topic in the bottom input to generate a personalized learning roadmap. You can type your query or use voice input to get started.
                 </p>
+                
+                {/* Hint for Shift+Click feature */}
+                <div className="mt-4 p-3 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10 border border-[#FF4B00]/20 rounded-lg">
+                  <p className="text-xs text-gray-300">
+                    💡 <span className="font-semibold text-[#FF4B00]">Pro Tip:</span> Hold <kbd className="px-2 py-1 bg-gray-700 rounded text-white text-xs">Shift</kbd> and click any stage or item to get AI explanation in chat
+                  </p>
+                </div>
               
               </div>
             </div>
