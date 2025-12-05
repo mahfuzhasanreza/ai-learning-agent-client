@@ -26,6 +26,8 @@ const Chat = () => {
     const [isQuestionsExpanded, setIsQuestionsExpanded] = useState(true); // State for questions dropdown
     const resultEndRef = useRef(null);
 
+    const {isDark} = useContext(Context)
+
     const agentMap = { "Professor DBMS": "dbms_agent", "Professor General": "fallback_agent", "Professor OOP": "oop_agent", "System Design Specialist": "sad_agent", "Professor SE": "se_agent", "Professor SPL": "spl_agent" };
 
     function convertDisplayNameToName(displayName) { return agentMap[displayName] || null; }
@@ -126,12 +128,11 @@ const Chat = () => {
     return (
         // <div className='main'>
 
-        <div className={`main pt-25 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
+        <div className={`main ${isDark ? 'bg-[#13121d]' : ''} pt-25 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
             {/* Sidebar */}
             <ChatSidebar
                 isOpen={isSidebarOpen}
                 setIsOpen={setIsSidebarOpen}
-
             />
 
 
@@ -192,7 +193,7 @@ const Chat = () => {
                                     <div className="result-title">
                                         <img src={assets.user_icon} alt="" />
                                         <div className="message-content">
-                                            <p>{item.input}</p>
+                                            <p className={`${isDark? '': 'text-black'}`}>{item.input}</p>
                                             <ListenButton
                                                 text={item.input}
                                                 size="small"
@@ -438,8 +439,8 @@ const Chat = () => {
                     </div>
                 }
 
-                <div className="main-bottom">
-                    <div className="search-box">
+                <div className={`main-bottom ${isDark ? 'bg-[#13121d]' : ''}`}>
+                    <div className={`search-box ${isDark ? 'bg-[#1e1e2f]' : 'bg-gray-800'}`}>
                         <GrAttachment className='attachment-icon' />
 
                         <input

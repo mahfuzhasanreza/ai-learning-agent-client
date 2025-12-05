@@ -733,13 +733,13 @@ const Login = () => {
                 className={`relative w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-500 transform overflow-hidden group mt-8 ${
                   isLoading
                     ? 'bg-gray-700 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-[#FF4B00] hover:shadow-2xl hover:shadow-[#FF4B00]/30 hover:-translate-y-1 active:translate-y-0 bg-[length:200%_100%] hover:bg-right'
+                    : 'bg-orange-600 hover:shadow-2xl hover:shadow-[#FF4B00]/30 hover:-translate-y-1 active:translate-y-0 bg-[length:200%_100%] hover:bg-right'
                 } text-white shadow-xl shadow-[#FF4B00]/20`}
                 style={{ transition: 'all 0.5s ease, background-position 0.8s ease' }}
               >
                 {/* Shimmer effect */}
                 {!isLoading && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-orange-600 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 )}
                 
                 <div className="relative flex items-center justify-center">
