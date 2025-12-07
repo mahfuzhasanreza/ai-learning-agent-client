@@ -1859,7 +1859,84 @@ const StudentDashboard = () => {
                       let grandTotalMarks = 0;
                       let grandTotalObtained = 0;
 
-                      fetchedAssessments.forEach(assessment => {
+                      // Separate CTs and Assignments
+                      const ctAssessments = fetchedAssessments.filter(a => a.assessment_type.toLowerCase() === 'ct');
+                      const assignmentAssessments = fetchedAssessments.filter(a => a.assessment_type.toLowerCase() === 'assignment');
+                      const otherAssessments = fetchedAssessments.filter(a => 
+                        a.assessment_type.toLowerCase() !== 'ct' && 
+                        a.assessment_type.toLowerCase() !== 'assignment'
+                      );
+
+                      // Process CT assessments - select best based on CT Count
+                      if (ctAssessments.length > 0) {
+                        const ctCount = selectedCourse?.ct_count || 2;
+                        
+                        // Calculate percentage for each CT
+                        const ctWithPercentages = ctAssessments.map(ct => ({
+                          ...ct,
+                          percentage: (parseFloat(ct.marks) / parseFloat(ct.full_marks)) * 100
+                        }));
+                        
+                        // Sort by percentage descending and take best CT Count
+                        const bestCTs = ctWithPercentages
+                          .sort((a, b) => b.percentage - a.percentage)
+                          .slice(0, ctCount);
+                        
+                        // Calculate total marks and obtained for best CTs
+                        const ctTotalMarks = bestCTs.reduce((sum, ct) => sum + parseFloat(ct.full_marks), 0);
+                        const ctTotalObtained = bestCTs.reduce((sum, ct) => sum + parseFloat(ct.marks), 0);
+                        
+                        // Convert to 20% scale
+                        const ctPercentageOf20 = ctTotalMarks > 0 ? (ctTotalObtained / ctTotalMarks) * 20 : 0;
+                        
+                        assessmentGroups['CT'] = {
+                          totalMarks: 20, // Always show as 20 (20% scale)
+                          totalObtained: ctPercentageOf20,
+                          count: bestCTs.length,
+                          bestOf: ctAssessments.length,
+                          requiredCount: ctCount
+                        };
+                        
+                        grandTotalMarks += 20;
+                        grandTotalObtained += ctPercentageOf20;
+                      }
+
+                      // Process Assignment assessments - select best based on Assignment Count
+                      if (assignmentAssessments.length > 0) {
+                        const assignmentCount = selectedCourse?.assignment_count || 2;
+                        
+                        // Calculate percentage for each assignment
+                        const assignmentWithPercentages = assignmentAssessments.map(assignment => ({
+                          ...assignment,
+                          percentage: (parseFloat(assignment.marks) / parseFloat(assignment.full_marks)) * 100
+                        }));
+                        
+                        // Sort by percentage descending and take best Assignment Count
+                        const bestAssignments = assignmentWithPercentages
+                          .sort((a, b) => b.percentage - a.percentage)
+                          .slice(0, assignmentCount);
+                        
+                        // Calculate total marks and obtained for best Assignments
+                        const assignmentTotalMarks = bestAssignments.reduce((sum, a) => sum + parseFloat(a.full_marks), 0);
+                        const assignmentTotalObtained = bestAssignments.reduce((sum, a) => sum + parseFloat(a.marks), 0);
+                        
+                        // Convert to 20% scale
+                        const assignmentPercentageOf20 = assignmentTotalMarks > 0 ? (assignmentTotalObtained / assignmentTotalMarks) * 20 : 0;
+                        
+                        assessmentGroups['ASSIGNMENT'] = {
+                          totalMarks: 20, // Always show as 20 (20% scale)
+                          totalObtained: assignmentPercentageOf20,
+                          count: bestAssignments.length,
+                          bestOf: assignmentAssessments.length,
+                          requiredCount: assignmentCount
+                        };
+                        
+                        grandTotalMarks += 20;
+                        grandTotalObtained += assignmentPercentageOf20;
+                      }
+
+                      // Process other assessment types normally
+                      otherAssessments.forEach(assessment => {
                         const type = assessment.assessment_type.toUpperCase();
                         if (!assessmentGroups[type]) {
                           assessmentGroups[type] = {
@@ -1877,7 +1954,14 @@ const StudentDashboard = () => {
                         <>
                           {Object.entries(assessmentGroups).map(([type, totals], index) => (
                             <div key={index} className="grid grid-cols-3 text-center text-xs sm:text-sm mt-2">
-                              <span>{type}</span>
+                              <span>
+                                {type}
+                                {totals.requiredCount && (
+                                  <span className="text-xs text-gray-500 ml-1">
+                                    (Best {totals.requiredCount} of {totals.bestOf})
+                                  </span>
+                                )}
+                              </span>
                               <span className='text-gray-400'>{totals.totalMarks.toFixed(2)}</span>
                               <span className='text-gray-400'>{totals.totalObtained.toFixed(2)}</span>
                             </div>
