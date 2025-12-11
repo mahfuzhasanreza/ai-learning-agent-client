@@ -1920,19 +1920,19 @@ const StudentDashboard = () => {
                         const assignmentTotalMarks = bestAssignments.reduce((sum, a) => sum + parseFloat(a.full_marks), 0);
                         const assignmentTotalObtained = bestAssignments.reduce((sum, a) => sum + parseFloat(a.marks), 0);
                         
-                        // Convert to 20% scale
-                        const assignmentPercentageOf20 = assignmentTotalMarks > 0 ? (assignmentTotalObtained / assignmentTotalMarks) * 20 : 0;
+                        // Convert to 5% scale
+                        const assignmentPercentageOf5 = assignmentTotalMarks > 0 ? (assignmentTotalObtained / assignmentTotalMarks) * 5 : 0;
                         
                         assessmentGroups['ASSIGNMENT'] = {
-                          totalMarks: 20, // Always show as 20 (20% scale)
-                          totalObtained: assignmentPercentageOf20,
+                          totalMarks: 5, // Always show as 5 (5% scale)
+                          totalObtained: assignmentPercentageOf5,
                           count: bestAssignments.length,
                           bestOf: assignmentAssessments.length,
                           requiredCount: assignmentCount
                         };
                         
-                        grandTotalMarks += 20;
-                        grandTotalObtained += assignmentPercentageOf20;
+                        grandTotalMarks += 5;
+                        grandTotalObtained += assignmentPercentageOf5;
                       }
 
                       // Process other assessment types normally

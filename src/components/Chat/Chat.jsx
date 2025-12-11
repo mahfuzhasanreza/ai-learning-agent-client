@@ -136,7 +136,7 @@ const Chat = () => {
             />
 
 
-            <Navigation></Navigation>
+            {/* <Navigation></Navigation> */}
 
 
             <div className="main-container">
