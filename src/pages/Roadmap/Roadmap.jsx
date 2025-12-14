@@ -682,7 +682,7 @@ const Roadmap = () => {
   }, [chatHistory, searchQuery, sortBy]);
 
   return (
-    <div className=" min-w-[1585px] w-full h-screen bg-gray-900 flex flex-col">
+    <div className=" min-w-[1585px] w-full h-screen bg-[#13121D] flex flex-col">
       {/* Header with Input Section */}
 
       {/* Main Content */}
@@ -896,7 +896,7 @@ const Roadmap = () => {
         )}
 
         {/* Tree visualization */}
-        <div className="flex-1 bg-gray-900 rounded-lg shadow-md overflow-hidden relative">
+        <div className="flex-1  rounded-lg shadow-md overflow-hidden relative">
           {roadmapData ? (
             <>
               <svg ref={svgRef} className="w-full h-full"></svg>
@@ -972,7 +972,7 @@ const Roadmap = () => {
       </div>
 
       {/* Minimal Fixed Bottom Input Section */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="ml-60 fixed bottom-0 left-0 right-0 z-50">
         <div className="max-w-3xl mx-auto px-4 py-3">
           
           {/* Error Message */}
