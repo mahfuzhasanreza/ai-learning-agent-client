@@ -7,26 +7,27 @@ import Login from "./pages/Login/Login.jsx";
 import Roadmap from "./pages/Roadmap/Roadmap.jsx";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard.jsx";
 import StudyPlan from "./pages/StudyPlan/StudyPlan.jsx";
-import SidebarLayout from "./layout/SidebarLayout.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
-import Navigation from "./components/LandingPage/components/Navigation.jsx";
+import AuthenticatedLayout from "./layout/AuthenticatedLayout.jsx";
 
 
 export const router = createBrowserRouter([
+  // Public routes (no sidebar)
   { path: "/", element: <LandingPage /> },
   { path: "/about", element: <div>About Page</div> },
   { path: "/register", element: <Register />},
   { path: "/login", element: <Login /> },
+  
+  // Authenticated routes (with sidebar for logged-in users)
   { 
     path: "/", 
-    // element: <SidebarLayout></SidebarLayout>,
-    // element: <Navigation></Navigation>,
+    element: <AuthenticatedLayout />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "roadmap", element: <Roadmap /> },
       { path: "performance-tracking", element: <StudentDashboard /> },
       { path: "study-plan", element: <StudyPlan /> },
-      { path: "cosmos-chatbot", element: <ChatPage></ChatPage> },
+      { path: "cosmos-chatbot", element: <ChatPage /> },
     ]
   }
 ]);

@@ -7,7 +7,7 @@ export default function SidebarLayout() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar section */}
-      <Sidebar />
+      {/* <Sidebar /> */}
 
       {/* Main content */}
       <main className="flex-1 bg-gray-50 p-6">
