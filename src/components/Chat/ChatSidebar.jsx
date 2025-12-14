@@ -147,20 +147,20 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF4B00]/20">
+            {/* <div className="w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF4B00]/20">
               <MessageSquare className="w-5 h-5 text-white" />
-            </div>
+            </div> */}
             <div>
               <h2 className="text-lg font-bold text-white">Chat Menu</h2>
               {/* <p className="text-xs text-gray-400">Chat History</p> */}
             </div>
           </div>
-          <button
+          {/* <button
             onClick={() => setIsOpen(false)}
             className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200 text-gray-400 hover:text-white"
           >
             <X className="w-5 h-5" />
-          </button>
+          </button> */}
         </div>
 
         {/* New Chat Button */}
