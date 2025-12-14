@@ -158,12 +158,12 @@ const AuthenticatedLayout = () => {
                     <motion.button
                       key={item.name}
                       onClick={() => scrollToSection(item.href)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      className={`w-full flex items-center gap-3 px-4 mt-1 py-3  rounded-lg text-sm font-medium transition-all duration-200 ${
                         isActive(item.id)
-                          ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
                           : isDark
-                            ? 'text-gray-300 hover:bg-gray-800 hover:text-yellow-400'
-                            : 'text-gray-700 hover:bg-gray-100 hover:text-yellow-600'
+                            ? 'text-gray-300 hover:bg-gray-800 hover:text-orange-400'
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-orange-600'
                       }`}
                       whileHover={{ x: 5 }}
                     >
@@ -191,10 +191,10 @@ const AuthenticatedLayout = () => {
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive('cosmoschat')
-                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
                     : isDark
-                      ? 'text-gray-300 hover:bg-gray-800 hover:text-yellow-400'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-yellow-600'
+                      ? 'text-gray-300 hover:bg-gray-800 hover:text-orange-400'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-orange-600'
                 }`}
                 whileHover={{ x: 5 }}
               >
@@ -219,7 +219,7 @@ const AuthenticatedLayout = () => {
                 <button
                   className={`flex-1 h-8 rounded-md flex items-center justify-center transition-colors ${
                     theme === 'light'
-                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
                       : isDark
                         ? 'text-gray-400 hover:bg-gray-800'
                         : 'text-gray-600 hover:bg-gray-100'
@@ -231,7 +231,7 @@ const AuthenticatedLayout = () => {
                 <button
                   className={`flex-1 h-8 rounded-md flex items-center justify-center transition-colors ${
                     theme === 'dark'
-                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
                       : isDark
                         ? 'text-gray-400 hover:bg-gray-800'
                         : 'text-gray-600 hover:bg-gray-100'
@@ -243,7 +243,7 @@ const AuthenticatedLayout = () => {
                 <button
                   className={`flex-1 h-8 rounded-md flex items-center justify-center transition-colors ${
                     theme === 'system'
-                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
                       : isDark
                         ? 'text-gray-400 hover:bg-gray-800'
                         : 'text-gray-600 hover:bg-gray-100'
