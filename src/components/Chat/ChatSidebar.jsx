@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { PlusCircle, FileText, Volume2, X, MessageSquare, Settings, Trash2, Search, ChevronRight, History, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
 import ApiService from '../../services/apiService';
 import { Context } from '../../context/Context';
 
@@ -128,12 +129,21 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
 
   return (
     <>
-      {/* Sidebar - No overlay, just push content */}
-      <div
-        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl z-50 transform transition-all duration-300 ease-out flex flex-col ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      {/* Sidebar - Flex child, always visible on chat route with smooth animation */}
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            className="h-screen w-80 fixed top-0 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl flex-shrink-0 flex flex-col"
+            initial={{ x: -320, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -320, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              mass: 0.8
+            }}
+          >
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
           <div className="flex items-center gap-3">
@@ -226,12 +236,18 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                     
                     {/* Collapsible Chat List */}
                     {isExpanded && (
-                      <div className="space-y-1 mt-2">
-                        {filteredChats.map((chat) => {
+                      <motion.div 
+                        className="space-y-1 mt-2"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {filteredChats.map((chat, index) => {
                           const isActive = chat.id === threadId;
                           
                           return (
-                            <button
+                            <motion.button
                               key={chat.id}
                               onClick={() => handleChatClick(chat.id)}
                               className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left border ${
@@ -239,6 +255,13 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                                   ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 border-[#FF4B00]/50' 
                                   : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10'
                               }`}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ 
+                                delay: index * 0.05,
+                                duration: 0.3
+                              }}
+                              whileHover={{ x: 5 }}
                             >
                             <div className="flex items-center gap-3 flex-1 min-w-0">
                               <div className={`w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0 ${
@@ -271,10 +294,10 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                               </button>
                               <ChevronRight className="w-4 h-4 text-gray-500" />
                             </div>
-                          </button>
+                          </motion.button>
                           );
                         })}
-                      </div>
+                      </motion.div>
                     )}
                   </div>
                 );
@@ -330,16 +353,22 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
             background: rgba(255, 75, 0, 0.5);
           }
         `}</style>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Floating Toggle Button (when sidebar is closed) */}
       {!isOpen && (
-        <button
+        <motion.button
           onClick={() => setIsOpen(true)}
           className="fixed top-50 left-6 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white p-3 rounded-xl shadow-lg shadow-[#FF4B00]/30 hover:shadow-2xl hover:shadow-[#FF4B00]/40 z-30 transition-all duration-300 transform hover:scale-110 group"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ delay: 0.3 }}
         >
           <MessageSquare className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-        </button>
+        </motion.button>
       )}
     </>
   );

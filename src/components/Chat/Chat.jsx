@@ -3,6 +3,7 @@ import './Chat.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { motion } from 'framer-motion';
 import { IoMdMicOff } from "react-icons/io";
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineLightMode } from "react-icons/md";
@@ -128,10 +129,10 @@ const Chat = () => {
     return (
         // <div className='main'>
 
-        <div className={`main ${isDark ? 'bg-[#13121d]' : ''} pt-25 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
-            {/* Sidebar */}
+        <div className={`main w-full ${isDark ? 'bg-[#13121d]' : ''} pt-25 transition-all duration-300 flex`}>
+            {/* Sidebar - ChatSidebar will always be open */}
             <ChatSidebar
-                isOpen={isSidebarOpen}
+                isOpen={true}
                 setIsOpen={setIsSidebarOpen}
             />
 
@@ -139,7 +140,17 @@ const Chat = () => {
             {/* <Navigation></Navigation> */}
 
 
-            <div className="main-container">
+            <motion.div 
+              className="main-container flex-1"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.2
+              }}
+            >
                 {!showResult
                     ? <>
                         <div className="greet">
@@ -575,7 +586,7 @@ const Chat = () => {
                     </div>
                     <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
-            </div>
+            </motion.div>
 
             {/* TTS Settings Modal */}
             <TTSSettings
