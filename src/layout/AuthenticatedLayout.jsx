@@ -81,7 +81,7 @@ const AuthenticatedLayout = () => {
   }
 
   return (
-    <>
+    <div className="flex min-h-screen w-full overflow-x-hidden">
       {/* Toggle Button - Fixed position */}
       <motion.button
         className={`fixed top-4 left-4 z-50 p-3 rounded-lg shadow-lg transition-all duration-300 lg:hidden ${
@@ -109,7 +109,7 @@ const AuthenticatedLayout = () => {
 
       {/* Sidebar */}
       <motion.aside
-        className={`fixed left-0 top-0 h-screen z-40 transition-all duration-300 shadow-2xl ${
+        className={`fixed lg:relative left-0 top-0 h-screen z-40 flex-shrink-0 transition-all duration-300 shadow-2xl ${
           isDark ? 'bg-[#13121D] border-r border-gray-800' : 'bg-white border-r border-gray-200'
         } ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
         initial={false}
@@ -128,7 +128,7 @@ const AuthenticatedLayout = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-lg font-bold text-white shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg text-lg font-bold text-white shadow-md">
                 <img className='w-full h-full object-cover rounded-lg' src={logo} alt="COSMOS" />
               </div>
               <div className="flex flex-col">
@@ -312,15 +312,11 @@ const AuthenticatedLayout = () => {
         </div>
       </motion.aside>
 
-      {/* Main Content Spacer - pushes content when sidebar is open on desktop */}
-      <div 
-        className={`transition-all duration-300 ${
-          isOpen ? 'lg:ml-[280px]' : 'lg:ml-0'
-        }`}
-      >
+      {/* Main Content Area - Takes remaining width */}
+      <div className="flex-1 w-full overflow-x-hidden">
         <Outlet />
       </div>
-    </>
+    </div>
   );
 };
 
