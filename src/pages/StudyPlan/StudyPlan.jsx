@@ -784,9 +784,8 @@ const StudyPlan = () => {
 
   return (
     
-    <div className="w-full ">
+    <div className="border border-red-600">
        <div className="mx-auto p-15 pt-14 min-h-screen" style={{ backgroundColor: '#13121D' }}>
-              <Navigation></Navigation>
      
       {/* Header */}
       <div className="mb-5 mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
@@ -1107,8 +1106,6 @@ const StudyPlan = () => {
       )}
       
     </div>
-    
-    <FooterSection></FooterSection>
     </div>
     
  

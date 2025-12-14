@@ -684,7 +684,6 @@ const Roadmap = () => {
   return (
     <div className=" min-w-[1585px] w-full h-screen bg-gray-900 flex flex-col">
       {/* Header with Input Section */}
-      <Navigation></Navigation>
 
       {/* Main Content */}
       <div className="flex gap-4 h-full overflow-hidden p-4 mt-20 pb-20">

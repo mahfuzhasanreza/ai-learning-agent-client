@@ -1246,10 +1246,6 @@ const StudentDashboard = () => {
       <div className="bg-gray-900 text-white p-3 sm:p-4 md:p-6 pb-20 w-full overflow-x-hidden">
         {/* Header */}
 
-        <div className="mb-10 sm:mb-12 md:mb-20">
-          <Navigation></Navigation>
-        </div>
-
         <div className="flex items-center justify-between mb-6 sm:mb-8">
 
 
