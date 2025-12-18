@@ -112,7 +112,7 @@ const AuthenticatedLayout = () => {
 
       {/* Sidebar */}
       <motion.aside
-        className={`fixed lg:relative left-0 top-0 h-screen z-40 flex-shrink-0 shadow-2xl ${
+        className={`fixed left-0 top-0 h-screen z-40 flex-shrink-0 shadow-2xl ${
           isDark ? 'bg-[#13121D] border-r border-gray-800' : 'bg-white border-r border-gray-200'
         } ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
         initial={false}
@@ -390,8 +390,11 @@ const AuthenticatedLayout = () => {
         </div>
       </motion.aside>
 
-      {/* Main Content Area - Takes remaining width */}
-      <div className="flex-1 w-full overflow-x-hidden">
+      {/* Main Content Area - Takes remaining width. Content gets left margin so fixed sidebar doesn't overlap */}
+      <div
+        className="flex-1 w-full overflow-x-hidden transition-all duration-300"
+        style={{ marginLeft: isOpen ? (isChatRoute ? '80px' : '280px') : '0px' }}
+      >
         <Outlet />
       </div>
     </div>
