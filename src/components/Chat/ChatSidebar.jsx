@@ -169,7 +169,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
             onClick={() => {
               newChat();
             }}
-            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-0.5"
+            className="cursor-pointer w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-0.5"
           >
             <PlusCircle className="w-5 h-5" />
             New Chat
