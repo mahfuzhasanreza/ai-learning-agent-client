@@ -133,7 +133,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            className="h-screen w-80 fixed top-0 bg-white border-r border-gray-200 shadow-2xl flex-shrink-0 flex flex-col"
+            className="h-screen w-80 fixed top-0 bg-white border-r border-gray-200  flex-shrink-0 flex flex-col"
             initial={{ x: -320, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -320, opacity: 0 }}

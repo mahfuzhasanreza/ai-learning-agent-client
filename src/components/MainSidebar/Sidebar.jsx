@@ -92,7 +92,7 @@ const Sidebar = ({ user, onLinkClick, isDark, setTheme, theme }) => {
 
       {/* Sidebar */}
       <motion.aside
-        className={`fixed left-0 top-0 h-screen z-40 transition-all duration-300 shadow-2xl ${
+        className={`fixed left-0 top-0 h-screen z-40 transition-all duration-300  ${
           isDark ? 'bg-[#13121D] border-r border-gray-800' : 'bg-white border-r border-gray-200'
         } ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
         initial={false}
@@ -108,7 +108,7 @@ const Sidebar = ({ user, onLinkClick, isDark, setTheme, theme }) => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-lg font-bold text-white shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-lg font-bold text-white ">
                 C
               </div>
               <div className="flex flex-col">
@@ -135,7 +135,7 @@ const Sidebar = ({ user, onLinkClick, isDark, setTheme, theme }) => {
                 onClick={() => handleNavigation('/dashboard')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive('/dashboard')
-                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white '
                     : isDark
                       ? 'text-gray-300 hover:bg-gray-800 hover:text-yellow-400'
                       : 'text-gray-700 hover:bg-gray-100 hover:text-yellow-600'
@@ -161,7 +161,7 @@ const Sidebar = ({ user, onLinkClick, isDark, setTheme, theme }) => {
                   onClick={() => handleNavigation('/dashboard/add-question')}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive('/dashboard/add-question')
-                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white '
                       : isDark
                         ? 'text-gray-300 hover:bg-gray-800 hover:text-yellow-400'
                         : 'text-gray-700 hover:bg-gray-100 hover:text-yellow-600'
