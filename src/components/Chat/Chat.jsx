@@ -129,7 +129,7 @@ const Chat = () => {
     return (
         // <div className='main'>
 
-        <div className={`main w-full bg-white pt-25 transition-all duration-300 flex`}>
+        <div className={`main w-full pt-25 transition-all duration-300 flex`}>
             {/* Sidebar - ChatSidebar will always be open */}
             <ChatSidebar
                 isOpen={true}
@@ -450,8 +450,8 @@ const Chat = () => {
                     </div>
                 }
 
-                <div className="main-bottom bg-white">
-                    <div className="search-box bg-white border-2 border-gray-200">
+                <div className="main-bottom ">
+                    <div className="search-box  border-2 border-gray-200">
                         <GrAttachment className='attachment-icon' />
 
                         <input
@@ -507,7 +507,7 @@ const Chat = () => {
                             </button>
 
                             {!selectedAgent && showAgentDropdown && (
-                                <div className="absolute bottom-13 right-0 bg-white border border-gray-200 rounded-lg shadow-lg w-100 z-50 overflow-hidden">
+                                <div className="absolute bottom-13 right-0 bg-white border border-gray-200 rounded-lg shadow-lg w-55 z-50 overflow-hidden">
                                     <div className="p-2 flex flex-col gap-2">
                                         {/* Default agent */}
                                         <button
