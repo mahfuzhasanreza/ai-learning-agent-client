@@ -6,15 +6,18 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [refreshToken, setRefreshToken] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Check if user is already logged in on mount
     useEffect(() => {
         const savedToken = authService.getAuthToken();
+        const savedRefreshToken = authService.getRefreshToken();
         const savedUser = authService.getCurrentUser();
         
         if (savedToken && savedUser) {
             setToken(savedToken);
+            setRefreshToken(savedRefreshToken);
             setUser(savedUser);
         }
         setIsLoading(false);
@@ -45,12 +48,14 @@ export const AuthContextProvider = ({ children }) => {
 
             if (result.success) {
                 setToken(result.token);
-                setUser(result.user || result.data.user || result.data);
+                setRefreshToken(result.refreshToken);
+                setUser(result.user);
                 
                 // Log authentication details
                 console.log('🔐 Authentication Set in Context:');
-                console.log('Token:', result.token);
-                console.log('User:', result.user || result.data.user || result.data);
+                console.log('Access Token:', result.token);
+                console.log('Refresh Token:', result.refreshToken);
+                console.log('User:', result.user);
                 
                 return { success: true, data: result.data };
             }
@@ -66,6 +71,7 @@ export const AuthContextProvider = ({ children }) => {
     const signOutUser = async () => {
         authService.signOut();
         setToken(null);
+        setRefreshToken(null);
         setUser(null);
     };
 
@@ -83,6 +89,7 @@ export const AuthContextProvider = ({ children }) => {
         <AuthContext.Provider value={{ 
             user, 
             token,
+            refreshToken,
             isLoading,
             signUpNewUser, 
             signInUser, 

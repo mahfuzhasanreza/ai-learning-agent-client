@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://cosmos-its-production-v1.onrender.com/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * Sign up a new user
@@ -75,45 +75,51 @@ export const signUp = async (userData) => {
  */
 export const signIn = async (credentials) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/sign-in`, {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password
+      }),
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok || !data.success) {
       return {
         success: false,
-        error: data.message || 'Failed to sign in',
+        error: data.error || data.message || 'Failed to sign in',
         status: response.status,
       };
     }
 
-    // Extract token from the response structure
-    // Token can be at: data.token OR data.auth.session.access_token
-    const token = data.token || data.auth?.session?.access_token;
-    const user = data.user || data.auth?.user;
+    // Extract tokens and user from new response structure
+    const accessToken = data.tokens?.accessToken;
+    const refreshToken = data.tokens?.refreshToken;
+    const user = data.user;
 
-    // Store the auth token and user data
-    if (token) {
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user || data));
+    // Store the auth tokens and user data
+    if (accessToken) {
+      localStorage.setItem('authToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
       
       // Log stored authentication data
-      console.log('💾 Token and User Saved to LocalStorage:');
-      console.log('Token Length:', token.length);
-      console.log('Token Preview:', `${token.substring(0, 30)}...`);
-      console.log('User Data:', user || data);
+      console.log('💾 Tokens and User Saved to LocalStorage:');
+      console.log('Access Token Length:', accessToken.length);
+      console.log('Access Token Preview:', `${accessToken.substring(0, 30)}...`);
+      console.log('Refresh Token Length:', refreshToken?.length || 0);
+      console.log('User Data:', user);
     }
 
     return {
       success: true,
       data: data,
-      token: token,
+      token: accessToken,
+      refreshToken: refreshToken,
       user: user,
     };
   } catch (error) {
@@ -144,6 +150,14 @@ export const getAuthToken = () => {
 };
 
 /**
+ * Get the refresh token
+ * @returns {string|null} The refresh token or null if not found
+ */
+export const getRefreshToken = () => {
+  return localStorage.getItem('refreshToken');
+};
+
+/**
  * Get the current user data
  * @returns {Object|null} The user object or null if not found
  */
@@ -165,6 +179,7 @@ export const isAuthenticated = () => {
  */
 export const signOut = () => {
   localStorage.removeItem('authToken');
+  localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
 };
 
