@@ -525,14 +525,14 @@ const StudyPlan = () => {
       <div key="nav" className="flex items-center justify-between mb-4">
         <button 
           onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
-          className="p-1 hover:bg-[#2a2938] rounded text-white"
+          className="p-1 hover:bg-gray-200 rounded text-gray-800"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <h3 className="font-medium text-white">{monthName}</h3>
+        <h3 className="font-medium text-gray-800">{monthName}</h3>
         <button 
           onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
-          className="p-1 hover:bg-[#2a2938] rounded text-white"
+          className="p-1 hover:bg-gray-200 rounded text-gray-800"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -543,7 +543,7 @@ const StudyPlan = () => {
     calendar.push(
       <div key="headers" className="grid grid-cols-7 mb-2">
         {days.map(day => (
-          <div key={day} className="text-center text-xs text-gray-400 font-medium p-1">
+          <div key={day} className="text-center text-xs text-gray-600 font-medium p-1">
             {day}
           </div>
         ))}
@@ -568,14 +568,14 @@ const StudyPlan = () => {
       calendarDays.push(
         <div 
           key={day} 
-          className={`min-h-24 border border-gray-700 p-2 text-xs cursor-pointer transition-all hover:bg-orange-600/10 ${
-            isToday ? 'bg-orange-600/10 border-orange-600' : ''
-          } ${selectedDate === dateString ? 'ring-2 ring-orange-600 bg-orange-600/20' : ''} ${
+          className={`min-h-24 border border-gray-300 p-2 text-xs cursor-pointer transition-all hover:bg-orange-50 ${
+            isToday ? 'bg-orange-50 border-orange-500' : 'bg-white'
+          } ${selectedDate === dateString ? 'ring-2 ring-orange-500 bg-orange-100' : ''} ${
             hasEvents ? 'hover:shadow-lg' : ''
           }`}
           onClick={() => handleDateClick(day)}
         >
-          <div className={`font-medium mb-1 ${isToday ? 'bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-white'}`}>
+          <div className={`font-medium mb-1 ${isToday ? 'bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs' : 'text-gray-800'}`}>
             {day}
           </div>
           <div className="space-y-1">
@@ -584,8 +584,8 @@ const StudyPlan = () => {
                 key={index} 
                 className={`text-xs px-2 py-1 rounded truncate ${
                   task.completed 
-                    ? 'bg-green-600/20 text-green-400 border border-green-600/30' 
-                    : 'bg-orange-600/20 text-orange-300 border border-orange-600/30'
+                    ? 'bg-green-50 text-green-600 border border-green-200' 
+                    : 'bg-orange-50 text-orange-600 border border-orange-200'
                 }`}
                 title={`${task.title} - ${task.time || 'No time'}`}
               >
@@ -617,12 +617,12 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700/50 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-300 shadow-2xl">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold capitalize text-white">
+            <h3 className="text-lg font-semibold capitalize text-gray-800">
               Add {addType === 'ct' ? 'Class Test' : addType}
             </h3>
-            <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-white">
+            <button onClick={() => setShowAddModal(false)} className="text-gray-600 hover:text-gray-800">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -631,31 +631,31 @@ const StudyPlan = () => {
             <input
               type="text"
               placeholder={`${addType === 'ct' ? 'Class Test' : addType.charAt(0).toUpperCase() + addType.slice(1)} title`}
-              className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+              className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
               value={taskForm.title}
               onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
             />
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Date</label>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Date</label>
               <input
                 type="date"
-                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600 [color-scheme:dark]"
+                className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                 value={taskForm.event_date}
                 onChange={(e) => setTaskForm({ ...taskForm, event_date: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Time</label>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Time</label>
               <input
                 type="time"
-                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600 [color-scheme:dark]"
+                className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                 value={taskForm.event_time}
                 onChange={(e) => setTaskForm({ ...taskForm, event_time: e.target.value })}
               />
             </div>
             <textarea
               placeholder="Description"
-              className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+              className="w-full p-3 bg-white border border-gray-300 rounded-lg h-24 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
               value={taskForm.description}
               onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
             />
@@ -664,14 +664,14 @@ const StudyPlan = () => {
           <div className="flex gap-2 mt-6">
             <button
               onClick={() => setShowAddModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-800"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               onClick={handleAddItem}
-              className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               {isLoading ? 'Adding...' : `Add ${addType}`}
@@ -687,32 +687,32 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md border border-gray-700/50 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 shadow-2xl">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-gray-800">
               Edit {taskToEdit.type === 'CT' ? 'Class Test' : taskToEdit.type}
             </h3>
-            <button onClick={cancelEdit} className="text-gray-400 hover:text-white">
+            <button onClick={cancelEdit} className="text-gray-600 hover:text-gray-800">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Title</label>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Title</label>
               <input
                 type="text"
                 placeholder="Title"
-                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+                className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                 value={taskForm.title}
                 onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Description</label>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Description</label>
               <textarea
                 placeholder="Description"
-                className="w-full p-3 bg-[#13121D]/80 backdrop-blur-sm border border-gray-700 rounded-lg h-24 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+                className="w-full p-3 bg-white border border-gray-300 rounded-lg h-24 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                 value={taskForm.description}
                 onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
               />
@@ -722,14 +722,14 @@ const StudyPlan = () => {
           <div className="flex gap-2 mt-6">
             <button
               onClick={cancelEdit}
-              className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-800"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               onClick={handleEditItem}
-              className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               {isLoading ? 'Updating...' : 'Update'}
@@ -745,25 +745,25 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-[#1e1d2e]/90 backdrop-blur-xl rounded-lg p-6 w-full max-w-md border border-gray-700/50 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 shadow-2xl">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
               <Trash2 className="w-6 h-6 text-red-500" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">Delete Event</h3>
-              <p className="text-sm text-gray-400">This action cannot be undone</p>
+              <h3 className="text-lg font-semibold text-gray-800">Delete Event</h3>
+              <p className="text-sm text-gray-600">This action cannot be undone</p>
             </div>
           </div>
 
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-700 mb-6">
             All data associated with this event will be permanently removed.
           </p>
 
           <div className="flex gap-3">
             <button
               onClick={cancelDelete}
-              className="flex-1 px-4 py-2 border border-gray-700 rounded-lg hover:bg-[#2a2938] text-white transition-colors"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-800 transition-colors"
             >
               Cancel
             </button>
@@ -785,16 +785,16 @@ const StudyPlan = () => {
   return (
     
     <div className="">
-       <div className="mx-auto p-15 pt-14 min-h-screen" style={{ backgroundColor: '#13121D' }}>
+       <div className="mx-auto p-15 pt-14 min-h-screen bg-white">
      
       {/* Header */}
       <div className="mb-5 mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            {/* <Calendar className="w-6 h-6 text-orange-600" /> */}
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            {/* <Calendar className="w-6 h-6 text-orange-500" /> */}
             Study Plan
           </h1>
-          <p className="text-gray-400 text-sm">Track your tasks</p>
+          <p className="text-gray-600 text-sm">Track your tasks</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -803,19 +803,19 @@ const StudyPlan = () => {
             <input
               type="text"
               placeholder="Search by title, course, date"
-              className="pl-10 pr-4 py-2 bg-[#1e1d2e] border border-gray-700 rounded-lg w-80 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-orange-600 focus:border-orange-600"
+              className="pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg w-80 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           
-          <div className="flex items-center bg-[#1e1d2e] rounded-lg border border-gray-700 overflow-hidden">
+          <div className="flex items-center bg-gray-100 rounded-lg border border-gray-300 overflow-hidden">
             <button
               onClick={() => setActiveView('Active')}
               className={`px-4 py-2 text-sm font-medium ${
                 activeView === 'Active'
-                  ? 'bg-orange-600 text-white'
-                  : 'text-gray-400 hover:bg-[#2a2938]'
+                  ? 'bg-orange-500 text-white'
+                  : 'text-gray-600 hover:bg-gray-200'
               }`}
             >
               Active
@@ -824,8 +824,8 @@ const StudyPlan = () => {
               onClick={() => setActiveView('Completed')}
               className={`px-4 py-2 text-sm font-medium ${
                 activeView === 'Completed'
-                  ? 'bg-orange-600 text-white'
-                  : 'text-gray-400 hover:bg-[#2a2938]'
+                  ? 'bg-orange-500 text-white'
+                  : 'text-gray-600 hover:bg-gray-200'
               }`}
             >
               Completed
@@ -835,33 +835,33 @@ const StudyPlan = () => {
           <div className="relative">
             <button
               onClick={() => setShowAddDropdown(!showAddDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+              className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
             >
               <Plus className="w-4 h-4" />
               Add
             </button>
             
             {showAddDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-[#1e1d2e] border border-gray-700 rounded-lg shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                 <button
                   onClick={() => { setAddType('task'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-800"
                 >
-                  <BookOpen className="w-4 h-4 text-orange-600" />
+                  <BookOpen className="w-4 h-4 text-orange-500" />
                   Add Task
                 </button>
                 <button
                   onClick={() => { setAddType('assignment'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-800"
                 >
-                  <PenTool className="w-4 h-4 text-orange-600" />
+                  <PenTool className="w-4 h-4 text-orange-500" />
                   Add Assignment
                 </button>
                 <button
                   onClick={() => { setAddType('ct'); setShowAddModal(true); setShowAddDropdown(false); }}
-                  className="w-full text-left px-4 py-2 hover:bg-[#2a2938] flex items-center gap-2 text-white"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-800"
                 >
-                  <GraduationCap className="w-4 h-4 text-orange-600" />
+                  <GraduationCap className="w-4 h-4 text-orange-500" />
                   Add Class Test
                 </button>
               </div>
@@ -874,26 +874,26 @@ const StudyPlan = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         
           {/* All Stats */}
-        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
-          <h3 className="font-medium text-white mb-3">All</h3>
+        <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
+          <h3 className="font-medium text-gray-800 mb-3">All</h3>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium">
+              <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-medium">
                 {allStats.total} total
               </span>
-              <span className="text-sm text-gray-400">{allStats.pending} pending</span>
+              <span className="text-sm text-gray-600">{allStats.pending} pending</span>
             </div>
           </div>
         </div>
         {/* This Month Stats */}
-        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
-          <h3 className="font-medium text-white mb-3">This Month</h3>
+        <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
+          <h3 className="font-medium text-gray-800 mb-3">This Month</h3>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium">
+              <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-medium">
                 {monthStats.total} items
               </span>
-              <span className="text-sm text-gray-400">{monthStats.pending} pending</span>
+              <span className="text-sm text-gray-600">{monthStats.pending} pending</span>
             </div>
           </div>
         </div>
@@ -901,8 +901,8 @@ const StudyPlan = () => {
       
 
         {/* Filter Type */}
-        <div className="bg-[#1e1d2e] rounded-lg p-4 border border-gray-700">
-          <h3 className="font-medium text-white mb-3">Filter Type</h3>
+        <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
+          <h3 className="font-medium text-gray-800 mb-3">Filter Type</h3>
           <div className="flex flex-wrap gap-2">
             {['All', 'Task', 'Assignment', 'CT'].map(type => (
               <button
@@ -910,8 +910,8 @@ const StudyPlan = () => {
                 onClick={() => setFilterType(type)}
                 className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${
                   filterType === type
-                    ? 'bg-orange-600 text-white'
-                    : 'text-gray-400 hover:bg-[#2a2938] border border-gray-700'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-gray-600 hover:bg-gray-200 border border-gray-300'
                 }`}
               >
                 {type === 'Task' && <BookOpen className="w-4 h-4" />}
@@ -926,13 +926,13 @@ const StudyPlan = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Calendar View - Left Half */}
-        <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700">
+        <div className="bg-gray-100 rounded-lg p-6 border border-gray-300">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-orange-600" />
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-orange-500" />
               Calendar View
             </h2>
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-gray-600">
               {selectedDate ? 'Click date again to show all items' : 'Click a date to filter'}
             </div>
           </div>
@@ -941,9 +941,9 @@ const StudyPlan = () => {
 
         {/* Main Content - Card Layout - Right Half */}
         <div className="space-y-4">
-          <div className="bg-[#1e1d2e] rounded-lg p-6 border border-gray-700 h-full">
+          <div className="bg-gray-100 rounded-lg p-6 border border-gray-300 h-full">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-white">
+              <h2 className="text-xl font-semibold text-gray-800">
                 {selectedDate ? `Items for ${formatDate(selectedDate)}` : `${activeView} Items`}
               </h2>
               {selectedDate && (
@@ -952,7 +952,7 @@ const StudyPlan = () => {
                     setSelectedDate(null);
                     setSelectedDateEvents([]);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 text-sm bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/30 border border-orange-600/30"
+                  className="flex items-center gap-2 px-4 py-2 text-sm bg-orange-50 text-orange-500 rounded-lg hover:bg-orange-100 border border-orange-200"
                 >
                   <X className="w-4 h-4" />
                   Clear Filter
@@ -963,24 +963,24 @@ const StudyPlan = () => {
             <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-hide">
               {(isLoadingEvents || isLoadingDateEvents) ? (
                 <div className="col-span-full text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-                  <p className="text-gray-400 mt-4">Loading events...</p>
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                  <p className="text-gray-600 mt-4">Loading events...</p>
                 </div>
               ) : filteredTasks.map(task => (
-              <div key={task.id} className="bg-[#1e1d2e] rounded-lg border border-gray-700 p-4 hover:shadow-lg hover:border-orange-600/50 transition-all">
+              <div key={task.id} className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-lg hover:border-orange-500 transition-all">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    {task.type === 'Task' && <BookOpen className="w-5 h-5 text-orange-600" />}
-                    {task.type === 'Assignment' && <PenTool className="w-5 h-5 text-orange-600" />}
-                    {task.type === 'CT' && <GraduationCap className="w-5 h-5 text-orange-600" />}
-                    <span className="text-sm font-medium text-gray-400 capitalize">
+                    {task.type === 'Task' && <BookOpen className="w-5 h-5 text-orange-500" />}
+                    {task.type === 'Assignment' && <PenTool className="w-5 h-5 text-orange-500" />}
+                    {task.type === 'CT' && <GraduationCap className="w-5 h-5 text-orange-500" />}
+                    <span className="text-sm font-medium text-gray-600 capitalize">
                       {task.type === 'CT' ? 'Class Test' : task.type}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openEditModal(task)}
-                      className="p-1 text-gray-500 hover:text-orange-600"
+                      className="p-1 text-gray-500 hover:text-orange-500"
                       title="Edit"
                     >
                       <Edit2 className="w-4 h-4" />
@@ -995,7 +995,7 @@ const StudyPlan = () => {
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-white mb-2 text-lg leading-tight">{task.title}</h3>
+                <h3 className="font-semibold text-gray-800 mb-2 text-lg leading-tight">{task.title}</h3>
                 
                 <div className="flex items-center gap-2 mb-3">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(task.deadline).class}`}>
@@ -1004,7 +1004,7 @@ const StudyPlan = () => {
                 
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     {formatDate(task.deadline)}
@@ -1018,28 +1018,28 @@ const StudyPlan = () => {
                 </div>
 
                 {task.description && (
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">{task.description}</p>
+                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{task.description}</p>
                 )}
 
                 {task.syllabus && (
-                  <p className="text-gray-400 text-sm mb-3">
-                    <span className="font-medium text-white">Syllabus:</span> {task.syllabus}
+                  <p className="text-gray-600 text-sm mb-3">
+                    <span className="font-medium text-gray-800">Syllabus:</span> {task.syllabus}
                   </p>
                 )}
 
                 {task.links && (
                   <a href={task.links} target="_blank" rel="noopener noreferrer" 
-                     className="text-orange-600 text-sm hover:underline block mb-3 truncate">
+                     className="text-orange-500 text-sm hover:underline block mb-3 truncate">
                     {task.links}
                   </a>
                 )}
 
                 {task.files && task.files.length > 0 && (
                   <div className="mb-3">
-                    <p className="text-sm font-medium text-white mb-1">Files:</p>
+                    <p className="text-sm font-medium text-gray-800 mb-1">Files:</p>
                     <div className="flex flex-wrap gap-1">
                       {task.files.slice(0, 2).map((file, index) => (
-                        <span key={index} className="inline-block bg-[#2a2938] text-gray-300 px-2 py-1 rounded text-xs">
+                        <span key={index} className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">
                           {file}
                         </span>
                       ))}
@@ -1054,8 +1054,8 @@ const StudyPlan = () => {
                   onClick={() => toggleComplete(task.id)}
                   className={`w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-colors ${
                     task.completed
-                      ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-600/30'
-                      : 'bg-orange-600 text-white hover:bg-orange-700'
+                      ? 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'
+                      : 'bg-orange-500 text-white hover:bg-orange-600'
                   }`}
                 >
                   <CheckCircle className="w-4 h-4" />
@@ -1067,7 +1067,7 @@ const StudyPlan = () => {
 
             {!isLoadingEvents && !isLoadingDateEvents && filteredTasks.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-500 text-lg">
+                <div className="text-gray-600 text-lg">
                   {selectedDate 
                     ? `No ${activeView.toLowerCase()} items found for ${formatDate(selectedDate)}`
                     : activeView === 'Completed' 
@@ -1088,7 +1088,7 @@ const StudyPlan = () => {
       {/* Success Message Toast */}
       {successMessage && (
         <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
-          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-green-500/50">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-green-500">
             <CheckCircle className="w-5 h-5" />
             <span className="font-medium">{successMessage}</span>
           </div>
@@ -1098,7 +1098,7 @@ const StudyPlan = () => {
       {/* Error Message Toast */}
       {errorMessage && (
         <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
-          <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-red-500/50">
+          <div className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-red-500">
             <X className="w-5 h-5" />
             <span className="font-medium">{errorMessage}</span>
           </div>
