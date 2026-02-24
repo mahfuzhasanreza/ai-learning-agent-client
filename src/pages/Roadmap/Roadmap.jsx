@@ -682,7 +682,7 @@ const Roadmap = () => {
   }, [chatHistory, searchQuery, sortBy]);
 
   return (
-    <div className=" min-w-[1585px] w-full h-screen bg-[#13121D] flex flex-col">
+    <div className=" min-w-[1585px] w-full h-screen bg-white flex flex-col">
       {/* Header with Input Section */}
 
       {/* Main Content */}
@@ -690,25 +690,25 @@ const Roadmap = () => {
         
         {/* Chat History Panel (Left Side) */}
         {showHistoryPanel && (
-          <div className="w-80 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+          <div className="w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
             {/* Header */}
-            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
-              <h3 className="text-lg font-bold bg-gradient-to-r from-[#FF4B00] to-[#a200ff] bg-clip-text text-transparent">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-orange-50">
+              <h3 className="text-lg font-bold text-orange-500">
                 Chat History
               </h3>
               <button
                 onClick={() => setShowHistoryPanel(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all group"
                 title="Close History"
               >
-                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
             {/* Search and Sort Controls */}
-            <div className="px-4 py-3 space-y-2 border-b border-[#2a2938]">
+            <div className="px-4 py-3 space-y-2 border-b border-gray-200">
               {/* Search Input */}
               <div className="mb-2 relative">
                 <input
@@ -716,7 +716,7 @@ const Roadmap = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search title..."
-                  className="w-full px-3 py-2 pl-9 bg-[#0f0f0f]/50 text-white text-sm rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent placeholder-gray-500 transition-all"
+                  className="w-full px-3 py-2 pl-9 bg-gray-50 text-gray-800 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent placeholder-gray-400 transition-all"
                 />
                 <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -724,9 +724,9 @@ const Roadmap = () => {
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded transition-all"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-all"
                   >
-                    <svg className="w-3 h-3 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 text-gray-400 hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -735,11 +735,11 @@ const Roadmap = () => {
 
               {/* Sort Dropdown */}
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-400 font-medium">Sort by:</span>
+                <span className="text-xs text-gray-600 font-medium">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="flex-1 px-2 py-1.5 bg-[#0f0f0f]/50 text-white text-xs rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent cursor-pointer transition-all"
+                  className="flex-1 px-2 py-1.5 bg-gray-50 text-gray-800 text-xs rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent cursor-pointer transition-all"
                 >
                   <option className='hover:bg-orange-600' value="date">Newest First</option>
                   <option value="progress">Progress (High to Low)</option>
@@ -752,10 +752,10 @@ const Roadmap = () => {
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {loadingHistory ? (
                 <div className="flex items-center justify-center py-8">
-                  <Loader className="w-6 h-6 animate-spin text-[#a200ff]" />
+                  <Loader className="w-6 h-6 animate-spin text-orange-500" />
                 </div>
               ) : filteredAndSortedHistory.length === 0 ? (
-                <div className="text-center py-8 text-gray-400 text-sm">
+                <div className="text-center py-8 text-gray-500 text-sm">
                   {searchQuery ? 'No matching threads found' : 'No chat history yet'}
                 </div>
               ) : (
@@ -772,24 +772,24 @@ const Roadmap = () => {
                     <div
                       key={thread.thread_id}
                       onClick={() => loadThread(thread)}
-                      className={`bg-[#0f0f0f]/50 hover:bg-[#0f0f0f]/80 border rounded-lg p-4 cursor-pointer transition-all group ${
+                      className={`bg-white hover:bg-gray-50 border rounded-lg p-4 cursor-pointer transition-all group ${
                         thread.thread_id === threadId 
-                          ? 'border-[#a200ff] bg-[#a200ff]/10' 
-                          : 'border-white/5 hover:border-[#a200ff]/30'
+                          ? 'border-orange-500 bg-orange-50' 
+                          : 'border-gray-200 hover:border-orange-300'
                       }`}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className={`font-semibold text-sm group-hover:text-[#a200ff] transition-colors ${
-                          thread.thread_id === threadId ? 'text-[#a200ff]' : 'text-white'
+                        <h4 className={`font-semibold text-sm group-hover:text-orange-500 transition-colors ${
+                          thread.thread_id === threadId ? 'text-orange-500' : 'text-gray-800'
                         }`}>
                           {thread.title || 'Untitled'}
                         </h4>
                       
                       </div>
-                      <div className="space-y-1 text-xs text-gray-400">
+                      <div className="space-y-1 text-xs text-gray-600">
                         <div className="flex items-center justify-between">
                           <span>Progress:</span>
-                          <span className="text-[#FF4B00] font-medium">
+                          <span className="text-orange-500 font-medium">
                             {progress.overall_progress_percentage?.toFixed(0) || 0}%
                           </span>
                         </div>
@@ -802,9 +802,9 @@ const Roadmap = () => {
                         </div>
                       </div>
                       {/* Progress Bar */}
-                      <div className="mt-3 w-full bg-gray-700 rounded-full h-1.5">
+                      <div className="mt-3 w-full bg-gray-200 rounded-full h-1.5">
                         <div
-                          className="bg-gradient-to-r from-[#FF4B00] to-[#a200ff] h-1.5 rounded-full transition-all"
+                          className="bg-orange-500 h-1.5 rounded-full transition-all"
                           style={{ width: `${progress.overall_progress_percentage || 0}%` }}
                         />
                       </div>
@@ -820,18 +820,18 @@ const Roadmap = () => {
         
         {/* Left Side Panel - Details */}
         {selectedNode && showDetails && (
-          <div className="w-96 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+          <div className="w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
             {/* Header with Close Button */}
-            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
-              <h3 className="text-lg font-bold bg-gradient-to-r from-[#FF4B00] to-[#a200ff] bg-clip-text text-transparent">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-orange-50">
+              <h3 className="text-lg font-bold text-orange-500">
                 Details
               </h3>
               <button
                 onClick={() => setShowDetails(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all group"
                 title="Close Details"
               >
-                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -839,7 +839,7 @@ const Roadmap = () => {
 
             {/* Content */}
             <div className="px-6 py-4 flex-1 overflow-y-auto">
-              <h4 className="text-xl font-bold text-white mb-4 leading-tight">
+              <h4 className="text-xl font-bold text-gray-800 mb-4 leading-tight">
                 {selectedNode.name}
               </h4>
 
@@ -847,9 +847,9 @@ const Roadmap = () => {
               {selectedNode.type === "item" && (
                 <div className="mb-6 flex flex-wrap items-center gap-2">
                   <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md
-                    ${selectedNode.difficulty === "Easy" && "bg-green-500/20 text-green-300 border border-green-500/30"}
-                    ${selectedNode.difficulty === "Medium" && "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"}
-                    ${selectedNode.difficulty === "Hard" && "bg-red-500/20 text-red-300 border border-red-500/30"}
+                    ${selectedNode.difficulty === "Easy" && "bg-green-50 text-green-600 border border-green-200"}
+                    ${selectedNode.difficulty === "Medium" && "bg-yellow-50 text-yellow-600 border border-yellow-200"}
+                    ${selectedNode.difficulty === "Hard" && "bg-red-50 text-red-600 border border-red-200"}
                   `}>
                     {selectedNode.difficulty}
                   </span>
@@ -859,7 +859,7 @@ const Roadmap = () => {
                   </span> */}
 
                   {completedItems.has(selectedNode.id) && (
-                    <span className="px-3 py-1.5 bg-green-500/20 text-green-300 rounded-lg text-xs font-semibold border border-green-500/30 flex items-center gap-1">
+                    <span className="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-xs font-semibold border border-green-200 flex items-center gap-1">
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
@@ -870,7 +870,7 @@ const Roadmap = () => {
               )}
 
               {/* Description */}
-              <div className="text-sm leading-relaxed text-gray-300 bg-[#0f0f0f]/50 rounded-xl p-4 border border-white/5">
+              <div className="text-sm leading-relaxed text-gray-700 bg-gray-50 rounded-xl p-4 border border-gray-200">
                 {selectedNode.description.split("\n").map((line, index) => (
                   <p key={index} className="mb-2 last:mb-0">{line}</p>
                 ))}
@@ -882,8 +882,8 @@ const Roadmap = () => {
                   onClick={() => toggleCompletion(selectedNode.id)}
                   className={`mt-6 w-full px-4 py-3 rounded-xl font-semibold transition-all shadow-lg transform hover:scale-105
                     ${completedItems.has(selectedNode.id)
-                      ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
-                      : "bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] hover:from-[#e04600] hover:to-[#ff5520] text-white"
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-orange-500 hover:bg-orange-600 text-white"
                     }`}
                 >
                   {completedItems.has(selectedNode.id)
@@ -901,13 +901,13 @@ const Roadmap = () => {
             <>
               <svg ref={svgRef} className="w-full h-full"></svg>
               {/* Floating hint for Shift+Click */}
-              <div className="absolute top-4 right-4 p-3 bg-gradient-to-r from-[#1a1926]/90 to-[#0f0f1a]/90 backdrop-blur-sm border border-[#a200ff]/30 rounded-lg shadow-xl">
-                <p className="text-xs text-gray-300 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#FF4B00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute top-4 right-4 p-3 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl">
+                <p className="text-xs text-gray-700 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span>
-                    Hold <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-white text-xs mx-1">Shift</kbd> + Click to explain in chat
+                    Hold <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-gray-800 text-xs mx-1">Shift</kbd> + Click to explain in chat
                   </span>
                 </p>
               </div>
@@ -915,25 +915,25 @@ const Roadmap = () => {
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
-                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] rounded-full flex items-center justify-center shadow-lg shadow-[#FF4B00]/30">
+                <div className="w-32 h-32 mx-auto mb-6 bg-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-orange-500/30">
                   <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-3">
+                <h1 className="text-2xl font-bold text-gray-800 mb-3">
                   Hello, {user.email.split("@")[0].replace(/\d+$/, "")}!
                 </h1>
                 {/* <h2 className="text-lg font-semibold text-white mb-3">
                   Welcome to COSMOS Roadmap Generator
                 </h2> */}
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-600 mb-6">
                   Enter a topic in the bottom input to generate a personalized learning roadmap. You can type your query or use voice input to get started.
                 </p>
                 
                 {/* Hint for Shift+Click feature */}
-                <div className="mt-4 p-3 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10 border border-[#FF4B00]/20 rounded-lg">
-                  <p className="text-xs text-gray-300">
-                    💡 <span className="font-semibold text-[#FF4B00]">Pro Tip:</span> Hold <kbd className="px-2 py-1 bg-gray-700 rounded text-white text-xs">Shift</kbd> and click any stage or item to get AI explanation in chat
+                <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <p className="text-xs text-gray-700">
+                    💡 <span className="font-semibold text-orange-500">Pro Tip:</span> Hold <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-800 text-xs">Shift</kbd> and click any stage or item to get AI explanation in chat
                   </p>
                 </div>
               
@@ -944,18 +944,18 @@ const Roadmap = () => {
 
         {/* Right Side panel - AI Chatbot */}
         {selectedNode && showChatbot && (
-          <div className="w-120 bg-gradient-to-br from-[#1a1926] to-[#0f0f1a] rounded-2xl shadow-2xl border border-[#a200ff]/20 flex flex-col">
+          <div className="w-120 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
             {/* Header with Close Button */}
-            <div className="px-6 py-4 border-b border-[#2a2938] flex items-center justify-between bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
-              <h3 className="text-lg font-bold bg-gradient-to-r from-[#a200ff] to-[#FF4B00] bg-clip-text text-transparent">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-orange-50">
+              <h3 className="text-lg font-bold text-orange-500">
                 COSMOS Chatbot
               </h3>
               <button
                 onClick={() => setShowChatbot(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-all group"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all group"
                 title="Close Chatbot"
               >
-                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -977,7 +977,7 @@ const Roadmap = () => {
           
           {/* Error Message */}
           {error && (
-            <div className="mb-2 p-2 bg-[#FF4B00]/20 border border-[#FF4B00]/50 rounded-lg text-[#FF4B00] text-xs">
+            <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs">
               <span className="font-medium">⚠ {error}</span>
             </div>
           )}
@@ -990,8 +990,8 @@ const Roadmap = () => {
               onClick={() => setShowHistoryPanel(!showHistoryPanel)}
               className={`p-2.5 rounded-lg transition-all hover:scale-105 ${
                 showHistoryPanel 
-                  ? 'bg-gradient-to-r from-[#a200ff] to-[#c240ff] text-white' 
-                  : 'bg-[#1e1e1e]/70 hover:bg-[#1e1e1e] text-gray-400 hover:text-white border border-white/10'
+                  ? 'bg-orange-500 text-white' 
+                  : 'bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-800 border border-gray-200'
               }`}
               title="Chat History"
             >
@@ -1001,14 +1001,14 @@ const Roadmap = () => {
             </button>
             <div className="flex-1 relative group">
               {/* Subtle Glow Effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-lg opacity-0 group-hover:opacity-20 group-focus-within:opacity-20 blur transition duration-300"></div>
+              <div className="absolute -inset-0.5 bg-orange-500 rounded-lg opacity-0 group-hover:opacity-10 group-focus-within:opacity-10 blur transition duration-300"></div>
               
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter your learning topic..."
-                className="relative w-full px-4 py-2.5 pr-11 bg-[#1e1e1e]/70 backdrop-blur-sm text-white text-sm rounded-lg border border-white/10 focus:outline-none focus:ring-1 focus:ring-[#a200ff] focus:border-transparent placeholder-gray-500 transition-all"
+                className="relative w-full px-4 py-2.5 pr-11 bg-white backdrop-blur-sm text-gray-800 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent placeholder-gray-400 transition-all"
                 disabled={isLoading}
               />
               
@@ -1018,8 +1018,8 @@ const Roadmap = () => {
                 onClick={toggleVoiceInput}
                 className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md transition-all ${
                   isListening 
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse' 
-                    : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white'
+                    ? 'bg-red-500 text-white animate-pulse' 
+                    : 'bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800'
                 }`}
                 disabled={isLoading}
                 title={isListening ? 'Stop listening' : 'Use voice input'}
@@ -1032,7 +1032,7 @@ const Roadmap = () => {
             <button
               type="submit"
               disabled={isLoading || !query.trim()}
-              className="px-5 py-2.5 bg-gradient-to-r from-[#a200ff] to-[#c240ff] text-white text-sm font-semibold rounded-lg hover:from-[#b520ff] hover:to-[#d050ff] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 hover:scale-105"
+              className="px-5 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 hover:scale-105"
             >
               {isLoading ? (
                 <>
@@ -1059,7 +1059,7 @@ const Roadmap = () => {
                   setError(null);
                   setThreadId(null);
                 }}
-                className="p-2.5 bg-gradient-to-r from-[#FF4B00] to-[#ff6b2d] hover:from-[#e04600] hover:to-[#ff5520] text-white rounded-lg transition-all hover:scale-105"
+                className="p-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all hover:scale-105"
                 title="Reset and create new roadmap"
               >
                 <RefreshCw className="w-4 h-4" />
