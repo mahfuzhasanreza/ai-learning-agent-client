@@ -1243,7 +1243,7 @@ const StudentDashboard = () => {
   return (
 
     <div className="w-full flex flex-col min-h-screen">
-      <div className="bg-gray-900 text-white p-3 sm:p-4 md:p-6 pb-20 w-full overflow-x-hidden">
+      <div className=" text-gray-800 p-3 sm:p-4 md:p-6 pb-20 w-full overflow-x-hidden">
         {/* Header */}
 
         <div className="flex items-center justify-between mb-6 sm:mb-8">
@@ -1267,8 +1267,8 @@ const StudentDashboard = () => {
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="mb-4 p-4 bg-primary-color rounded-lg text-center">
-            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
+          <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-lg text-center text-gray-800">
+            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-orange-500" />
             Loading data...
           </div>
         )}
@@ -1277,7 +1277,7 @@ const StudentDashboard = () => {
           {/* Left Column */}
           <div className="space-y-4 sm:space-y-6">
             {/* Current Trimester */}
-            <div className="bg-gray-800 rounded-lg p-4 sm:p-6">
+            <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 sm:p-6">
               <div className='mb-4 sm:mb-5'>
                 <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Current Trimester</h2>
 
@@ -1286,7 +1286,7 @@ const StudentDashboard = () => {
                   <select
                     value={selectedTrimester}
                     onChange={(e) => setSelectedTrimester(e.target.value)}
-                    className="w-full p-2.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors text-sm sm:text-base"
+                    className="w-full p-2.5 bg-white text-gray-800 rounded-lg border border-gray-300 focus:outline-none focus:border-orange-500 transition-colors text-sm sm:text-base"
                   >
                     {availableTrimesters.map((trimester) => (
                       <option key={trimester.value} value={trimester.value}>
@@ -1302,7 +1302,7 @@ const StudentDashboard = () => {
                 <button
                   onClick={fetchCourses}
                   disabled={loadingCourses}
-                  className="btn cursor-pointer border-1 border-gray-600 w-full rounded-lg p-2 text-base sm:text-lg font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn cursor-pointer border border-gray-300 w-full rounded-lg p-2 text-base sm:text-lg font-bold hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-gray-800"
                 >
                   {loadingCourses ? 'Loading...' : '+ Add Courses'}
                 </button>
@@ -1313,15 +1313,15 @@ const StudentDashboard = () => {
 
               {/* Add Assessment Form */}
               {showAddAssessmentForm && (
-                <div className="mb-4 p-4 bg-gray-700 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-3">Add New Assessment</h3>
+                <div className="mb-4 p-4 bg-white border border-gray-300 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-800">Add New Assessment</h3>
                   <form onSubmit={handleAddAssessment} className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium mb-1">Type</label>
                       <select
                         value={assessmentForm.assessment_type}
                         onChange={(e) => setAssessmentForm({ ...assessmentForm, assessment_type: e.target.value })}
-                        className="w-full p-2 bg-gray-600 rounded"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800"
                       >
                         <option value="CT">CT</option>
                         <option value="Assignment">Assignment</option>
@@ -1337,7 +1337,7 @@ const StudentDashboard = () => {
                         step="0.1"
                         value={assessmentForm.score}
                         onChange={(e) => setAssessmentForm({ ...assessmentForm, score: e.target.value })}
-                        className="w-full p-2 bg-gray-600 rounded"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800"
                         required
                       />
                     </div>
@@ -1348,30 +1348,30 @@ const StudentDashboard = () => {
                         step="0.1"
                         value={assessmentForm.max_marks}
                         onChange={(e) => setAssessmentForm({ ...assessmentForm, max_marks: e.target.value })}
-                        className="w-full p-2 bg-gray-600 rounded"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1">Feedback (Optional)</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700">Feedback (Optional)</label>
                       <textarea
                         value={assessmentForm.feedback}
                         onChange={(e) => setAssessmentForm({ ...assessmentForm, feedback: e.target.value })}
-                        className="w-full p-2 bg-gray-600 rounded h-20"
+                        className="w-full p-2 bg-white border border-gray-300 rounded h-20 text-gray-800"
                         placeholder="Enter feedback..."
                       />
                     </div>
                     <div className="flex space-x-2">
                       <button
                         type="submit"
-                        className="flex-1 bg-orange-500 hover:bg-blue-700 py-2 rounded"
+                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded"
                       >
                         Add
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowAddAssessmentForm(false)}
-                        className="flex-1 bg-gray-600 hover:bg-gray-700 py-2 rounded"
+                        className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded"
                       >
                         Cancel
                       </button>
@@ -1384,14 +1384,14 @@ const StudentDashboard = () => {
                 {/* Loading state */}
                 {loadingEnrolledCourses && (
                   <div className="text-center py-4">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
-                    <p className="text-sm text-gray-400">Loading courses...</p>
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-orange-500" />
+                    <p className="text-sm text-gray-600">Loading courses...</p>
                   </div>
                 )}
 
                 {/* Error state */}
                 {enrolledCoursesError && (
-                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
+                  <div className="bg-red-50 border border-red-300 rounded-lg p-3 text-red-600 text-sm">
                     No courses found for the selected trimester.
                   </div>
                 )}
@@ -1402,8 +1402,8 @@ const StudentDashboard = () => {
                     <div
                       key={course.course_id}
                       className={`mb-4 w-full rounded-lg transition-all ${selectedCourse?.course_id === course.course_id
-                        ? 'bg-[#FF4B00] text-white shadow-lg'
-                        : 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                        ? 'bg-orange-500 text-white shadow-lg'
+                        : 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-800'
                         }`}
                     >
                       <div className="flex items-center justify-between p-3">
@@ -1423,7 +1423,7 @@ const StudentDashboard = () => {
                           }}
                           className={`ml-2 p-1.5 rounded hover:bg-red-600 transition-colors ${selectedCourse?.course_id === course.course_id
                             ? 'text-white hover:bg-red-700'
-                            : 'text-gray-400 hover:text-white'
+                            : 'text-gray-500 hover:text-white'
                             }`}
                           title="Delete Course"
                         >
@@ -1468,21 +1468,21 @@ const StudentDashboard = () => {
           {/* Center Column - Course Details */}
           <div className="space-y-4 sm:space-y-6">
             {/* Course Header */}
-            <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
+            <div className="bg-gray-100 border border-gray-300 rounded-t-lg p-4 sm:p-6">
               {selectedCourse ? (
                 <>
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-2">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-gray-800">
                     {selectedCourse.title}
                   </h2>
                   <div className="flex justify-between">
-                    <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                    <div className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                       ({selectedCourse.code})
                     </div>
-                    <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">Credits: {selectedCourse.credits}</div>
+                    <div className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">Credits: {selectedCourse.credits}</div>
                   </div>
 
 
-                  <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base space-y-1">
+                  <div className="text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base space-y-1">
                     <div><span className="font-semibold">Section:</span> {selectedCourse.section}</div>
                     <div><span className="font-semibold">Faculty:</span> {selectedCourse.faculty_name}</div>
 
@@ -1496,7 +1496,7 @@ const StudentDashboard = () => {
                             min="0"
                             value={tempCTCount !== null ? tempCTCount : selectedCourse.ct_count}
                             onChange={(e) => setTempCTCount(e.target.value)}
-                            className="w-20 px-2 py-1 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-[#FF4B00]"
+                            className="w-20 px-2 py-1 bg-white text-gray-800 rounded border border-gray-300 focus:outline-none focus:border-orange-500"
                             autoFocus
                           />
                           <button
@@ -1504,7 +1504,7 @@ const StudentDashboard = () => {
                               updateCTCount(tempCTCount !== null ? tempCTCount : selectedCourse.ct_count);
                             }}
                             disabled={updatingCounts}
-                            className="px-3 py-1 bg-[#FF4B00] hover:bg-[#E04300] text-white text-xs rounded transition-colors disabled:opacity-50"
+                            className="px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded transition-colors disabled:opacity-50"
                           >
                             {updatingCounts ? 'Saving...' : 'Save'}
                           </button>
@@ -1513,7 +1513,7 @@ const StudentDashboard = () => {
                               setEditingCTCount(false);
                               setTempCTCount(null);
                             }}
-                            className="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded transition-colors"
+                            className="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 text-xs rounded transition-colors"
                           >
                             Cancel
                           </button>
@@ -1526,7 +1526,7 @@ const StudentDashboard = () => {
                               setEditingCTCount(true);
                               setTempCTCount(selectedCourse.ct_count);
                             }}
-                            className="text-gray-400 hover:text-[#FF4B00] transition-colors"
+                            className="text-gray-600 hover:text-orange-500 transition-colors"
                             title="Edit CT Count"
                           >
                             <Edit className="w-4 h-4" />
@@ -1545,7 +1545,7 @@ const StudentDashboard = () => {
                             min="0"
                             value={tempAssignmentCount !== null ? tempAssignmentCount : selectedCourse.assignment_count}
                             onChange={(e) => setTempAssignmentCount(e.target.value)}
-                            className="w-20 px-2 py-1 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-[#FF4B00]"
+                            className="w-20 px-2 py-1 bg-white text-gray-800 rounded border border-gray-300 focus:outline-none focus:border-orange-500"
                             autoFocus
                           />
                           <button
@@ -1553,7 +1553,7 @@ const StudentDashboard = () => {
                               updateAssignmentCount(tempAssignmentCount !== null ? tempAssignmentCount : selectedCourse.assignment_count);
                             }}
                             disabled={updatingCounts}
-                            className="px-3 py-1 bg-[#FF4B00] hover:bg-[#E04300] text-white text-xs rounded transition-colors disabled:opacity-50"
+                            className="px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded transition-colors disabled:opacity-50"
                           >
                             {updatingCounts ? 'Saving...' : 'Save'}
                           </button>
@@ -1562,7 +1562,7 @@ const StudentDashboard = () => {
                               setEditingAssignmentCount(false);
                               setTempAssignmentCount(null);
                             }}
-                            className="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded transition-colors"
+                            className="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-gray-800 text-xs rounded transition-colors"
                           >
                             Cancel
                           </button>
@@ -1575,7 +1575,7 @@ const StudentDashboard = () => {
                               setEditingAssignmentCount(true);
                               setTempAssignmentCount(selectedCourse.assignment_count);
                             }}
-                            className="text-gray-400 hover:text-[#FF4B00] transition-colors"
+                            className="text-gray-600 hover:text-orange-500 transition-colors"
                             title="Edit Assignment Count"
                           >
                             <Edit className="w-4 h-4" />
@@ -1587,13 +1587,13 @@ const StudentDashboard = () => {
                 </>
               ) : (
                 <>
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-2">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-gray-800">
                     {studentData.selectedCourse.title}
                   </h2>
-                  <div className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                  <div className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                     ({studentData.selectedCourse.code})
                   </div>
-                  <div className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
+                  <div className="text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base">
                     {studentData.selectedCourse.instructor}<br />
                     {studentData.selectedCourse.credits} credits
                   </div>
@@ -1617,15 +1617,15 @@ const StudentDashboard = () => {
             </div>
 
             {/* Scores */}
-            <div className="bg-gray-800 p-4 sm:p-6 rounded-b-lg">
+            <div className="bg-gray-100 border border-gray-300 p-4 sm:p-6 rounded-b-lg">
               <div className={`flex items-center justify-between mb-4`}>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
                   All Scores
                 </h3>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowAddAssessmentModal(true)}
-                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-[#FF4B00] hover:bg-[#E04300] text-white text-sm font-semibold transition-all transform hover:scale-105"
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-all transform hover:scale-105"
                     title="Add Assessment"
                   >
                     <Plus className="w-4 h-4" />
@@ -1639,14 +1639,14 @@ const StudentDashboard = () => {
                 {/* Loading state */}
                 {loadingFetchedAssessments && (
                   <div className="text-center py-4">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#FF4B00]" />
-                    <p className="text-sm text-gray-400">Loading scores...</p>
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-orange-500" />
+                    <p className="text-sm text-gray-600">Loading scores...</p>
                   </div>
                 )}
 
                 {/* Error state */}
                 {fetchedAssessmentsError && (
-                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm">
+                  <div className="bg-red-50 border border-red-300 rounded-lg p-3 text-red-600 text-sm">
                     No assessments found.
                   </div>
                 )}
@@ -1714,15 +1714,15 @@ const StudentDashboard = () => {
           {/* Third Column - Topic Mastery */}
           <div className="space-y-4 sm:space-y-6">
               {/* Topic Mastery */}
-              <div className="bg-gray-800 rounded-t-lg p-4 sm:p-6">
+              <div className="bg-gray-100 border border-gray-300 rounded-t-lg p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg sm:text-xl font-semibold">Topic Mastery</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Topic Mastery</h3>
                   <div className="flex items-center gap-2">
                     {/* Quiz button - always visible on the right */}
                     {!showAddTopicQuiz && (
                       <button
                         onClick={() => setShowAddTopicQuiz(true)}
-                        className="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium shadow-lg hover:shadow-xl"
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium shadow-lg hover:shadow-xl text-white"
                       >
                         <Plus className="w-4 h-4" />
                         Quiz
@@ -1735,33 +1735,33 @@ const StudentDashboard = () => {
                           setShowAddTopicQuiz(false);
                           setSelectedQuizTopic('');
                         }}
-                        className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
                         title="Close quiz section"
                       >
-                        <X className="w-5 h-5 text-gray-400 hover:text-white" />
+                        <X className="w-5 h-5 text-gray-600 hover:text-gray-800" />
                       </button>
                     )}
                   </div>
                 </div>              {/* Quiz Section - Shown when Add Topic is clicked */}
               {showAddTopicQuiz && (
-                <div className="bg-gray-700 rounded-lg p-3 sm:p-4 mb-4 space-y-3 sm:space-y-4">
+                <div className="bg-white border border-gray-300 rounded-lg p-3 sm:p-4 mb-4 space-y-3 sm:space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Select Quiz Topic</label>
+                    <label className="block text-sm font-medium mb-2 text-gray-700">Select Quiz Topic</label>
                     
                     {loadingCourseTopics ? (
-                      <div className="w-full p-2 bg-gray-600 rounded text-white mb-2 text-center">
-                        <RefreshCw className="w-4 h-4 animate-spin inline-block mr-2" />
+                      <div className="w-full p-2 bg-gray-100 border border-gray-300 rounded text-gray-800 mb-2 text-center">
+                        <RefreshCw className="w-4 h-4 animate-spin inline-block mr-2 text-orange-500" />
                         Loading topics...
                       </div>
                     ) : courseTopicsError ? (
-                      <div className="w-full p-2 bg-red-500/20 border border-red-500/50 rounded text-red-300 mb-2 text-sm">
+                      <div className="w-full p-2 bg-red-50 border border-red-300 rounded text-red-600 mb-2 text-sm">
                         No topics found.
                       </div>
                     ) : (
                       <select
                         value={selectedQuizTopic}
                         onChange={(e) => setSelectedQuizTopic(e.target.value)}
-                        className="w-full p-2 bg-gray-600 rounded text-white mb-2"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800 mb-2"
                         disabled={courseTopics.length === 0}
                       >
                         <option value="">
@@ -1776,7 +1776,7 @@ const StudentDashboard = () => {
                   <button
                     onClick={handleGenerateQuiz}
                     disabled={loadingCourseTopics || courseTopics.length === 0 || loadingQuizGeneration}
-                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loadingQuizGeneration ? (
                       <>
@@ -1795,15 +1795,15 @@ const StudentDashboard = () => {
                 <>
                   {loadingCourseTopics ? (
                     <div className="flex items-center justify-center py-8">
-                      <RefreshCw className="w-6 h-6 animate-spin text-amber-500 mr-2" />
-                      <span className="text-gray-400">Loading topics...</span>
+                      <RefreshCw className="w-6 h-6 animate-spin text-orange-500 mr-2" />
+                      <span className="text-gray-600">Loading topics...</span>
                     </div>
                   ) : courseTopicsError ? (
-                    <div className="text-center py-8 text-gray-400">
+                    <div className="text-center py-8 text-gray-600">
                       <p>No topics available for this course.</p>
                     </div>
                   ) : courseTopics.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
+                    <div className="text-center py-8 text-gray-600">
                       <p>No topics found. Click "Quiz" to load topics.</p>
                     </div>
                   ) : (
@@ -1811,9 +1811,9 @@ const StudentDashboard = () => {
                       {(showAllTopics ? courseTopics : courseTopics.slice(0, 6)).map((topic, index) => (
                         <div 
                           key={topic.id || index} 
-                          className="bg-gray-700/50 hover:bg-gray-700 transition-colors rounded-lg p-3 border border-gray-600/30"
+                          className="bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-lg p-3"
                         >
-                          <p className="text-sm font-medium text-white" title={topic.name}>
+                          <p className="text-sm font-medium text-gray-800" title={topic.name}>
                             {topic.name}
                           </p>
                         </div>
@@ -1826,7 +1826,7 @@ const StudentDashboard = () => {
                     <div className="mt-6">
                       <button
                         onClick={() => setShowAllTopics(!showAllTopics)}
-                        className="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm font-medium"
+                        className="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors text-sm font-medium"
                       >
                         {showAllTopics ? 'Show Less' : 'See All'}
                       </button>
@@ -1836,12 +1836,12 @@ const StudentDashboard = () => {
               )}
             </div>
 
-            {!showAllTopics && <div className="bg-gray-800 rounded-b-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
+            {!showAllTopics && <div className="bg-gray-100 border border-gray-300 rounded-b-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Course Assessment */}
-              <div className="bg-gray-800 rounded-t-lg">
-                <h3 className="text-lg sm:text-xl font-semibold mb-4">Course Assessment</h3>
+              <div className="bg-gray-100 rounded-t-lg">
+                <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Course Assessment</h3>
                 <div className="space-y-2">
-                  <div className="grid grid-cols-3 gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-center border-b border-gray-600 pb-2">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-center border-b border-gray-400 pb-2 text-gray-800">
                     <span>Assessment</span>
                     <span>Total Marks</span>
                     <span>Total Obtained</span>
@@ -1983,7 +1983,7 @@ const StudentDashboard = () => {
               </div>
 
               {/* Performance Insights */}
-              <div className="bg-gray-800 rounded-b-lg pt-4 sm:pt-6">
+              <div className="rounded-b-lg pt-4 sm:pt-6">
                 <div className="rounded-lg text-sm">
                   {/* Display insights based on API data */}
                   {coursePerformance && (
@@ -2014,7 +2014,7 @@ const StudentDashboard = () => {
      
 
                   <button
-                    className="w-full btn-bg-primary hover:bg-amber-700 py-2 rounded-lg text-sm mb-3"
+                    className="w-full bg-orange-500 hover:bg-orange-600 py-2 rounded-lg text-sm mb-3"
                     onClick={handleAskAgentForPlan}
                   >
                     Ask agent for tailored plan
@@ -2037,15 +2037,15 @@ const StudentDashboard = () => {
 
         {/* Additional Data Section */}
         {studentSummary && (
-          <div className="mt-6 sm:mt-8 bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div className="mt-6 sm:mt-8 bg-gray-100 border border-gray-300 rounded-lg p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold">All Courses Summary</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800">All Courses Summary</h3>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setEditingCourses(prev => !prev)}
                   aria-expanded={editingCourses}
                   aria-controls="all-courses-editor"
-                  className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 rounded text-sm ${editingCourses ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gray-700 hover:bg-gray-600'}`}
+                  className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 rounded text-sm ${editingCourses ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-800'}`}
                   title="Edit All Courses"
                 >
                   <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -2055,12 +2055,12 @@ const StudentDashboard = () => {
             </div>
 
             {editingCourses ? (
-              <div id="all-courses-editor" className="bg-gray-700 rounded-md p-3 sm:p-4 md:p-6">
+              <div id="all-courses-editor" className="bg-white border border-gray-300 rounded-md p-3 sm:p-4 md:p-6">
                 <div className="space-y-3 sm:space-y-4">
                   <button
                     type="button"
                     onClick={() => setCourseEditForm(prev => ({ ...prev, addedCTs: [...prev.addedCTs, `CT ${prev.addedCTs.length + 1}`] }))}
-                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded text-sm sm:text-base"
+                    className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm sm:text-base"
                   >
                     Add Another CT
                   </button>
@@ -2068,38 +2068,38 @@ const StudentDashboard = () => {
                   <button
                     type="button"
                     onClick={() => setCourseEditForm(prev => ({ ...prev, addedAssignments: [...prev.addedAssignments, `Assignment ${prev.addedAssignments.length + 1}`] }))}
-                    className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 rounded text-sm sm:text-base"
+                    className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm sm:text-base"
                   >
                     Add Assignment/ project
                   </button>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-start sm:items-center">
                     <div className="sm:col-span-2">
-                      <div className="text-xs sm:text-sm font-semibold mb-1">CT Count</div>
+                      <div className="text-xs sm:text-sm font-semibold mb-1 text-gray-700">CT Count</div>
                       <input
                         type="number"
                         min={0}
                         value={courseEditForm.ctCount}
                         onChange={(e) => setCourseEditForm(prev => ({ ...prev, ctCount: parseInt(e.target.value || 0) }))}
-                        className="w-full p-2 bg-gray-600 rounded text-white text-sm sm:text-base"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800 text-sm sm:text-base"
                       />
                     </div>
                     <div className="flex items-center justify-start sm:justify-center">
-                      <div className="text-sm sm:text-base">{courseEditForm.ctCount}</div>
+                      <div className="text-sm sm:text-base text-gray-800">{courseEditForm.ctCount}</div>
                     </div>
 
                     <div className="sm:col-span-2">
-                      <div className="text-xs sm:text-sm font-semibold mb-1">Assignment Count</div>
+                      <div className="text-xs sm:text-sm font-semibold mb-1 text-gray-700">Assignment Count</div>
                       <input
                         type="number"
                         min={0}
                         value={courseEditForm.assignmentCount}
                         onChange={(e) => setCourseEditForm(prev => ({ ...prev, assignmentCount: parseInt(e.target.value || 0) }))}
-                        className="w-full p-2 bg-gray-600 rounded text-white text-sm sm:text-base"
+                        className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800 text-sm sm:text-base"
                       />
                     </div>
                     <div className="flex items-center justify-start sm:justify-center">
-                      <div className="text-sm sm:text-base">{courseEditForm.assignmentCount}</div>
+                      <div className="text-sm sm:text-base text-gray-800">{courseEditForm.assignmentCount}</div>
                     </div>
                   </div>
 
@@ -2110,13 +2110,13 @@ const StudentDashboard = () => {
                         console.log('Saved course edits', courseEditForm);
                         setEditingCourses(false);
                       }}
-                      className="flex-1 bg-amber-600 hover:bg-amber-700 py-2 rounded text-white text-sm sm:text-base"
+                      className="flex-1 bg-orange-500 hover:bg-orange-600 py-2 rounded text-white text-sm sm:text-base"
                     >
                       Save
                     </button>
                     <button
                       onClick={() => setEditingCourses(false)}
-                      className="flex-1 bg-gray-600 hover:bg-gray-500 py-2 rounded text-white text-sm sm:text-base"
+                      className="flex-1 bg-gray-300 hover:bg-gray-400 py-2 rounded text-gray-800 text-sm sm:text-base"
                     >
                       Cancel
                     </button>
@@ -2148,20 +2148,20 @@ const StudentDashboard = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {studentSummary.courses.map((course, index) => (
-                  <div key={index} className="bg-gray-700 rounded-lg p-3 sm:p-4">
-                    <div className="font-semibold mb-2 text-sm sm:text-base">{course.courseId}</div>
+                  <div key={index} className="bg-white border border-gray-300 rounded-lg p-3 sm:p-4">
+                    <div className="font-semibold mb-2 text-sm sm:text-base text-gray-800">{course.courseId}</div>
                     <div className="text-xs sm:text-sm space-y-1">
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Average:</span>
-                        <span>{course.average || 'N/A'}%</span>
+                        <span className="text-gray-600">Average:</span>
+                        <span className="text-gray-800">{course.average || 'N/A'}%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Count:</span>
-                        <span>{course.count}</span>
+                        <span className="text-gray-600">Count:</span>
+                        <span className="text-gray-800">{course.count}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Range:</span>
-                        <span>{course.lowest}% - {course.highest}%</span>
+                        <span className="text-gray-600">Range:</span>
+                        <span className="text-gray-800">{course.lowest}% - {course.highest}%</span>
                       </div>
                     </div>
                   </div>
@@ -2174,30 +2174,30 @@ const StudentDashboard = () => {
         {/* Quiz Info Modal - Shows before starting quiz */}
         {showQuizModal && generatedQuiz && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-gray-300">
               <div className="p-6">
-                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full">
-                  <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-orange-50 rounded-full">
+                  <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
 
-                <h3 className="text-2xl font-bold text-white text-center mb-2">
+                <h3 className="text-2xl font-bold text-gray-800 text-center mb-2">
                   Quiz Ready!
                 </h3>
                 
-                <p className="text-gray-300 text-center mb-6">
-                  Your quiz on <span className="font-semibold text-amber-500">{generatedQuiz.topics?.join(', ')}</span> has been generated
+                <p className="text-gray-700 text-center mb-6">
+                  Your quiz on <span className="font-semibold text-orange-500">{generatedQuiz.topics?.join(', ')}</span> has been generated
                 </p>
 
-                <div className="bg-gray-700/50 rounded-lg p-4 mb-6 space-y-3">
+                <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Total Questions:</span>
-                    <span className="text-white font-semibold">{generatedQuiz.generated_quiz?.length || 0}</span>
+                    <span className="text-gray-600">Total Questions:</span>
+                    <span className="text-gray-800 font-semibold">{generatedQuiz.generated_quiz?.length || 0}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Time Limit:</span>
-                    <span className="text-white font-semibold">
+                    <span className="text-gray-600">Time Limit:</span>
+                    <span className="text-gray-800 font-semibold">
                       {(generatedQuiz.generated_quiz?.length || 0) * 2} minutes
                     </span>
                   </div>
@@ -2277,7 +2277,7 @@ const StudentDashboard = () => {
                         faculty: ''
                       });
                     }}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-gray-600 hover:text-gray-800 transition-colors"
                     title="Close"
                   >
                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -2292,10 +2292,10 @@ const StudentDashboard = () => {
                       value={courseSearchQuery}
                       onChange={(e) => setCourseSearchQuery(e.target.value)}
                       placeholder="Search courses by code or title..."
-                      className="w-full p-2.5 sm:p-3 pl-9 sm:pl-10 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                      className="w-full p-2.5 sm:p-3 pl-9 sm:pl-10 bg-white text-gray-800 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:border-orange-500 transition-colors"
                     />
                     <svg
-                      className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
+                      className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -2317,11 +2317,11 @@ const StudentDashboard = () => {
                   /* Add Course Form */
                   <form onSubmit={handleAddCourse} className="space-y-3 sm:space-y-4">
                     {/* Selected Course Info */}
-                    <div className="bg-gray-700 rounded-lg p-3 sm:p-4 border border-gray-600">
-                      <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">
+                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-300">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1.5 sm:mb-2">
                         {selectedCourseToAdd.code}
                       </h3>
-                      <p className="text-gray-300 text-xs sm:text-sm mb-2">
+                      <p className="text-gray-700 text-xs sm:text-sm mb-2">
                         {selectedCourseToAdd.title}
                       </p>
                       <span className="px-2 py-1 bg-orange-500 text-white text-xs rounded-full">
@@ -2332,7 +2332,7 @@ const StudentDashboard = () => {
                     {/* Form Fields */}
                     <div className="space-y-3 sm:space-y-4">
                       <div>
-                        <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                           Trimester <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -2346,7 +2346,7 @@ const StudentDashboard = () => {
                       </div>
 
                       <div>
-                        <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                           Section <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -2355,12 +2355,12 @@ const StudentDashboard = () => {
                           onChange={(e) => setAddCourseForm({ ...addCourseForm, section: e.target.value })}
                           placeholder="e.g., A"
                           required
-                          className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                          className="w-full p-2.5 sm:p-3 bg-white text-gray-800 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs sm:text-sm font-medium text-white mb-1.5 sm:mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                           Faculty <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -2369,7 +2369,7 @@ const StudentDashboard = () => {
                           onChange={(e) => setAddCourseForm({ ...addCourseForm, faculty: e.target.value })}
                           placeholder="e.g., Dr. Mahfuz"
                           required
-                          className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                          className="w-full p-2.5 sm:p-3 bg-white text-gray-800 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                       </div>
                     </div>
@@ -2977,9 +2977,6 @@ const StudentDashboard = () => {
             </div>
           </div>
         )}
-      </div>
-      <div className=''>
-        <FooterSection></FooterSection>
       </div>
     </div>
 
