@@ -133,7 +133,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            className="h-screen w-80 fixed top-0 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border-r border-white/10 shadow-2xl flex-shrink-0 flex flex-col"
+            className="h-screen w-80 fixed top-0 bg-white border-r border-gray-200 shadow-2xl flex-shrink-0 flex flex-col"
             initial={{ x: -320, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -320, opacity: 0 }}
@@ -145,13 +145,13 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
             }}
           >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200 bg-orange-50">
           <div className="flex items-center gap-3">
             {/* <div className="w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF4B00]/20">
               <MessageSquare className="w-5 h-5 text-white" />
             </div> */}
             <div>
-              <h2 className="text-lg font-bold text-white">Chat Menu</h2>
+              <h2 className="text-lg font-bold text-gray-800">Chat Menu</h2>
               {/* <p className="text-xs text-gray-400">Chat History</p> */}
             </div>
           </div>
@@ -164,12 +164,12 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-white/10 flex-shrink-0">
+        <div className="p-4 border-b border-gray-200 flex-shrink-0">
           <button
             onClick={() => {
               newChat();
             }}
-            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white font-semibold hover:shadow-lg hover:shadow-[#FF4B00]/30 transition-all duration-300 transform hover:-translate-y-0.5"
+            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-0.5"
           >
             <PlusCircle className="w-5 h-5" />
             New Chat
@@ -177,7 +177,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Search Bar */}
-        <div className="p-4 border-b border-white/10 flex-shrink-0">
+        <div className="p-4 border-b border-gray-200 flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -185,7 +185,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
               placeholder="Search chats..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-[#FF4B00]/50 focus:bg-white/10 transition-all duration-200"
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 text-sm focus:outline-none focus:border-orange-500 focus:bg-white transition-all duration-200"
             />
           </div>
         </div>
@@ -195,7 +195,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
           <div className="p-4 space-y-3">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4B00]"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
               </div>
             ) : (
               sections.map((section) => {
@@ -216,21 +216,21 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                         ...prev,
                         [section.key]: !prev[section.key]
                       }))}
-                      className="w-full flex items-center justify-between px-2 py-2 rounded-lg hover:bg-white/5 transition-colors duration-200 group"
+                      className="w-full flex items-center justify-between px-2 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
                     >
                       <div className="flex items-center gap-2">
-                        <section.icon className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-gray-300">
+                        <section.icon className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
+                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider group-hover:text-gray-800">
                           {section.label}
                         </h3>
-                        <span className="text-xs text-gray-600 bg-white/5 px-2 py-0.5 rounded-full">
+                        <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
                           {filteredChats.length}
                         </span>
                       </div>
                       {isExpanded ? (
-                        <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                        <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
                       ) : (
-                        <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-400" />
+                        <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
                       )}
                     </button>
                     
@@ -252,8 +252,8 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                               onClick={() => handleChatClick(chat.id)}
                               className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left border ${
                                 isActive 
-                                  ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 border-[#FF4B00]/50' 
-                                  : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10'
+                                  ? 'bg-orange-50 border-orange-500' 
+                                  : 'bg-transparent border-transparent hover:bg-gray-50 hover:border-gray-200'
                               }`}
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
@@ -264,19 +264,19 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                               whileHover={{ x: 5 }}
                             >
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className={`w-8 h-8 bg-gradient-to-br from-[#FF4B00]/20 to-[#a200ff]/20 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                                isActive ? 'ring-2 ring-[#FF4B00]/50' : ''
+                              <div className={`w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                isActive ? 'ring-2 ring-orange-500' : ''
                               }`}>
-                                <MessageSquare className={`w-4 h-4 ${isActive ? 'text-[#FF4B00]' : 'text-[#FF4B00]'}`} />
+                                <MessageSquare className={`w-4 h-4 ${isActive ? 'text-orange-500' : 'text-orange-500'}`} />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className={`text-sm font-medium truncate transition-colors ${
-                                  isActive ? 'text-white' : 'text-gray-200 group-hover:text-white'
+                                  isActive ? 'text-gray-800' : 'text-gray-700 group-hover:text-gray-900'
                                 }`}>
                                   {chat.title}
                                 </p>
                                 <p className={`text-xs mt-0.5 ${
-                                  isActive ? 'text-gray-400' : 'text-gray-500'
+                                  isActive ? 'text-gray-600' : 'text-gray-500'
                                 }`}>{chat.time}</p>
                               </div>
                             </div>
@@ -288,11 +288,11 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                                   e.stopPropagation();
                                   console.log('Delete chat', chat.id);
                                 }}
-                                className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-red-100 text-gray-500 hover:text-red-600 transition-colors"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
-                              <ChevronRight className="w-4 h-4 text-gray-500" />
+                              <ChevronRight className="w-4 h-4 text-gray-400" />
                             </div>
                           </motion.button>
                           );
@@ -307,7 +307,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Bottom Actions */}
-        <div className="border-t border-white/10 p-4 space-y-2 bg-gradient-to-t from-[#0a0a0a] to-transparent flex-shrink-0">
+        <div className="border-t border-gray-200 p-4 space-y-2 bg-gray-50 flex-shrink-0">
         
 
           <button
@@ -316,7 +316,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
               setTtsSettingsOpen(true);
               // setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
+            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-white hover:text-gray-900 transition-all duration-200 text-sm font-medium"
           >
             <Volume2 className="w-5 h-5" />
             Text-to-Speech Setting
@@ -327,7 +327,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
               console.log('Open settings');
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200 text-sm font-medium"
+            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-white hover:text-gray-900 transition-all duration-200 text-sm font-medium"
           >
             <Settings className="w-5 h-5" />
             Settings
@@ -345,12 +345,12 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
           }
           
           .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 75, 0, 0.3);
+            background: rgba(249, 115, 22, 0.3);
             border-radius: 10px;
           }
           
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 75, 0, 0.5);
+            background: rgba(249, 115, 22, 0.5);
           }
         `}</style>
           </motion.div>
@@ -361,7 +361,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
       {!isOpen && (
         <motion.button
           onClick={() => setIsOpen(true)}
-          className="fixed top-50 left-6 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] text-white p-3 rounded-xl shadow-lg shadow-[#FF4B00]/30 hover:shadow-2xl hover:shadow-[#FF4B00]/40 z-30 transition-all duration-300 transform hover:scale-110 group"
+          className="fixed top-50 left-6 bg-orange-500 text-white p-3 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 hover:bg-orange-600 z-30 transition-all duration-300 transform hover:scale-110 group"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}

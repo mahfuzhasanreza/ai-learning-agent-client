@@ -129,7 +129,7 @@ const Chat = () => {
     return (
         // <div className='main'>
 
-        <div className={`main w-full ${isDark ? 'bg-[#13121d]' : ''} pt-25 transition-all duration-300 flex`}>
+        <div className={`main w-full bg-white pt-25 transition-all duration-300 flex`}>
             {/* Sidebar - ChatSidebar will always be open */}
             <ChatSidebar
                 isOpen={true}
@@ -157,7 +157,7 @@ const Chat = () => {
                             <p className="greeting-line-1">
                                 <span className="greeting-highlight">Hello, {user.email.split("@")[0].replace(/\d+$/, "")}.</span>
                             </p>
-                            <p className="greeting-line-2">How can I help you today?</p>
+                            <p className="greeting-line-2 text-gray-600">How can I help you today?</p>
                         </div>
                         <div className="cards">
                             <div onClick={() => onSent("What is C Programming?")} className="card">
@@ -204,7 +204,7 @@ const Chat = () => {
                                     <div className="result-title">
                                         <img src={assets.user_icon} alt="" />
                                         <div className="message-content">
-                                            <p className={`${isDark? '': 'text-black'}`}>{item.input}</p>
+                                            <p className="text-gray-800">{item.input}</p>
                                             <ListenButton
                                                 text={item.input}
                                                 size="small"
@@ -247,20 +247,20 @@ const Chat = () => {
 
                                     {/* Display Questions if available for THIS specific message */}
                                     {item.questions && item.questions.length > 0 && (
-                                        <div className="questions-container mt-6 text-gray-200">
+                                        <div className="questions-container mt-6 text-gray-700">
                                             {/* Collapsible Header */}
                                             <div
-                                                className="flex items-center justify-between mb-6 cursor-pointer p-4 bg-gradient-to-r from-[#FF4B00]/10 to-[#a200ff]/10 rounded-xl border border-white/10 hover:border-[#FF4B00]/50 transition-all duration-300"
+                                                className="flex items-center justify-between mb-6 cursor-pointer p-4 bg-orange-50 rounded-xl border border-gray-200 hover:border-orange-500 transition-all duration-300"
                                                 onClick={() => setIsQuestionsExpanded(!isQuestionsExpanded)}
                                             >
-                                                <h3 className="text-2xl font-bold text-white">
-                                                    Questions Found: <span className="text-[#FF4B00]">{item.questions.length}</span>
+                                                <h3 className="text-2xl font-bold text-gray-800">
+                                                    Questions Found: <span className="text-orange-500">{item.questions.length}</span>
                                                 </h3>
-                                                <button className="p-2 rounded-lg hover:bg-white/10 transition-all duration-200">
+                                                <button className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200">
                                                     {isQuestionsExpanded ? (
-                                                        <ChevronUp className="w-6 h-6 text-[#FF4B00]" />
+                                                        <ChevronUp className="w-6 h-6 text-orange-500" />
                                                     ) : (
-                                                        <ChevronDown className="w-6 h-6 text-[#FF4B00]" />
+                                                        <ChevronDown className="w-6 h-6 text-orange-500" />
                                                     )}
                                                 </button>
                                             </div>
@@ -271,14 +271,14 @@ const Chat = () => {
                                                     {item.questions.map((question, qIndex) => (
                                                         <div
                                                             key={question.id || qIndex}
-                                                            className="question-card relative bg-[#1b1a27] p-5 rounded-2xl border border-gray-700 shadow-lg hover:shadow-[0_0_20px_rgba(255,75,0,0.2)] transition-all duration-300 group"
+                                                            className="question-card relative bg-white p-5 rounded-2xl border border-gray-200 shadow-lg hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] transition-all duration-300 group"
                                                         >
                                                             {/* Gradient Accent Line */}
-                                                            <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-gradient-to-r from-[#FF4B00] to-[#a200ff]" />
+                                                            <div className="absolute top-0 left-0 w-full h-1 rounded-t-2xl bg-orange-500" />
 
                                                             {/* Header */}
                                                             <div className="flex items-start justify-between mb-3">
-                                                                <span className="text-sm font-semibold text-[#FF4B00] bg-[#FF4B0015] px-3 py-1 rounded-full">
+                                                                <span className="text-sm font-semibold text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
                                                                     Q{question.question_number}
                                                                     {question.sub_question && question.sub_question !== '-' && (
                                                                         <span>.{question.sub_question}</span>
@@ -287,12 +287,12 @@ const Chat = () => {
 
                                                                 <div className="flex gap-2">
                                                                     {question.course_code && (
-                                                                        <span className="text-xs text-gray-300 bg-[#2a2938] px-2 py-1 rounded-md font-medium">
+                                                                        <span className="text-xs text-gray-700 bg-gray-100 px-2 py-1 rounded-md font-medium">
                                                                             {question.course_code}
                                                                         </span>
                                                                     )}
                                                                     {question.exam_type && (
-                                                                        <span className="text-xs text-[#a200ff] bg-[#a200ff15] px-2 py-1 rounded-md font-medium uppercase">
+                                                                        <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-md font-medium uppercase">
                                                                             {question.exam_type}
                                                                         </span>
                                                                     )}
@@ -301,13 +301,13 @@ const Chat = () => {
 
                                                             {/* Course Title */}
                                                             {question.course_title && (
-                                                                <p className="text-xs text-gray-400 mb-2 capitalize">
+                                                                <p className="text-xs text-gray-600 mb-2 capitalize">
                                                                     {question.course_title}
                                                                 </p>
                                                             )}
 
                                                             {/* Question Text */}
-                                                            <p className="text-gray-100 text-sm leading-relaxed mb-3 whitespace-pre-line">
+                                                            <p className="text-gray-800 text-sm leading-relaxed mb-3 whitespace-pre-line">
                                                                 {question.question_text}
                                                             </p>
 
@@ -360,26 +360,26 @@ const Chat = () => {
                                                             {question.has_description &&
                                                                 question.description_content &&
                                                                 question.description_content !== 'N/A' && (
-                                                                    <div className="mb-3 p-3 bg-[#FF4B0010] rounded-lg border border-[#FF4B0030]">
-                                                                        <p className="text-xs font-semibold text-[#FF4B00] mb-1">
+                                                                    <div className="mb-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                                                                        <p className="text-xs font-semibold text-orange-500 mb-1">
                                                                             Description:
                                                                         </p>
-                                                                        <p className="text-xs text-gray-300 whitespace-pre-line">
+                                                                        <p className="text-xs text-gray-700 whitespace-pre-line">
                                                                             {question.description_content}
                                                                         </p>
                                                                     </div>
                                                                 )}
 
                                                             {/* Footer */}
-                                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
                                                                 <div className="flex gap-2 items-center">
                                                                     {question.marks && (
-                                                                        <span className="text-xs font-medium text-[#10b981] bg-[#10b98115] px-2 py-1 rounded">
+                                                                        <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
                                                                             Marks: {question.marks}
                                                                         </span>
                                                                     )}
                                                                     {question.semester_term && (
-                                                                        <span className="text-xs text-gray-400">
+                                                                        <span className="text-xs text-gray-600">
                                                                             Term: {question.semester_term}
                                                                         </span>
                                                                     )}
@@ -391,7 +391,7 @@ const Chat = () => {
                                                                             href={question.pdf_url}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
-                                                                            className="text-xs text-[#dc2626] hover:text-white bg-[#dc262615] hover:bg-[#dc2626] px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
+                                                                            className="text-xs text-red-600 hover:text-white bg-red-50 hover:bg-red-600 px-2 py-1 rounded flex items-center gap-1 transition-all duration-200"
                                                                         >
                                                                             <svg
                                                                                 className="w-3 h-3"
@@ -450,8 +450,8 @@ const Chat = () => {
                     </div>
                 }
 
-                <div className={`main-bottom ${isDark ? 'bg-[#13121d]' : ''}`}>
-                    <div className={`search-box ${isDark ? 'bg-[#1e1e2f]' : 'bg-gray-800'}`}>
+                <div className="main-bottom bg-white">
+                    <div className="search-box bg-white border-2 border-gray-200">
                         <GrAttachment className='attachment-icon' />
 
                         <input
@@ -491,8 +491,8 @@ const Chat = () => {
                             <button
                                 onClick={() => setShowAgentDropdown(!showAgentDropdown)}
                                 className={`flex items-center gap-1 px-2 py-1 border rounded-lg transition-colors text-xs ${selectedAgent
-                                    ? 'border-[#FF4B00] bg-[#FF4B00]/20 text-[#FF4B00] hover:bg-[#FF4B00]/30'
-                                    : 'border-gray-600 bg-[#101828] text-gray-300 hover:border-[#FF4B00] hover:bg-[#FF4B00]/10'
+                                    ? 'border-orange-500 bg-orange-50 text-orange-500 hover:bg-orange-100'
+                                    : 'border-gray-300 bg-white text-gray-700 hover:border-orange-500 hover:bg-orange-50'
                                     }`}
                                 title={selectedAgent ? agents.find(a => a.id === selectedAgent)?.name : 'Select Agent'}
                             >
@@ -507,7 +507,7 @@ const Chat = () => {
                             </button>
 
                             {!selectedAgent && showAgentDropdown && (
-                                <div className="absolute bottom-13 right-0 bg-[#1a1f2e] border border-gray-700 rounded-lg shadow-lg w-100 z-50 overflow-hidden">
+                                <div className="absolute bottom-13 right-0 bg-white border border-gray-200 rounded-lg shadow-lg w-100 z-50 overflow-hidden">
                                     <div className="p-2 flex flex-col gap-2">
                                         {/* Default agent */}
                                         <button
@@ -515,14 +515,14 @@ const Chat = () => {
                                                 setSelectedAgent(null);
                                                 setShowAgentDropdown(false);
                                             }}
-                                            className={` w-full text-left px-3 py-2 rounded-md transition-all duration-200 border border-transparent hover:border-[#FF4B00] hover:bg-[#FF4B00]/10 ${!selectedAgent ? "bg-[#FF4B00]/20 text-[#FF4B00]" : "text-gray-300"
+                                            className={` w-full text-left px-3 py-2 rounded-md transition-all duration-200 border border-transparent hover:border-orange-500 hover:bg-orange-50 ${!selectedAgent ? "bg-orange-50 text-orange-500" : "text-gray-700"
                                                 }`}
                                         >
                                             <p className="font-semibold text-sm">No Agent (Default)</p>
-                                            <p className="text-xs text-gray-400">Use general AI assistant</p>
+                                            <p className="text-xs text-gray-600">Use general AI assistant</p>
                                         </button>
 
-                                        <div className="border-t border-gray-700"></div>
+                                        <div className="border-t border-gray-200"></div>
 
                                         {/* Agent list */}
                                         {agents.map((agent) => (
@@ -532,13 +532,13 @@ const Chat = () => {
                                                     setSelectedAgent(agent.id);
                                                     setShowAgentDropdown(false);
                                                 }}
-                                                className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 border border-transparent hover:border-[#FF4B00] hover:bg-[#FF4B00]/10 flex flex-col ${selectedAgent === agent.id
-                                                    ? "bg-[#FF4B00]/20 text-[#FF4B00]"
-                                                    : "text-gray-300"
+                                                className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 border border-transparent hover:border-orange-500 hover:bg-orange-50 flex flex-col ${selectedAgent === agent.id
+                                                    ? "bg-orange-50 text-orange-500"
+                                                    : "text-gray-700"
                                                     }`}
                                             >
                                                 <p className="font-semibold text-sm">{agent.name}</p>
-                                                <p className="text-xs text-gray-400">{agent.description}</p>
+                                                <p className="text-xs text-gray-600">{agent.description}</p>
                                             </button>
                                         ))}
                                     </div>
@@ -559,8 +559,8 @@ const Chat = () => {
                                 }
                             }}
                             className={`send-icon p-2 rounded-full transition-all duration-200 ${!(input || listening)
-                                ? 'opacity-60 cursor-not-allowed bg-gray-600/20'
-                                : 'cursor-pointer bg-[#ff4d00ab] hover:bg-[#FF4B00]/90'
+                                ? 'opacity-60 cursor-not-allowed bg-gray-200'
+                                : 'cursor-pointer bg-orange-500 hover:bg-orange-600'
                                 }`}
                             style={{
                                 pointerEvents: !(input || listening) ? 'none' : 'auto'
@@ -576,7 +576,7 @@ const Chat = () => {
                             >
                                 <path
                                     d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
-                                    stroke={!(input || listening) ? '#6B7280' : '#FFFFFF'}
+                                    stroke={!(input || listening) ? '#9CA3AF' : '#FFFFFF'}
                                     strokeWidth="2"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -584,7 +584,7 @@ const Chat = () => {
                             </svg>
                         </button>
                     </div>
-                    <p className="bottom-info">COSMOS can make mistakes. Check our Terms & Conditions.</p>
+                    <p className="bottom-info text-gray-500">COSMOS can make mistakes. Check our Terms & Conditions.</p>
                 </div>
             </motion.div>
 
