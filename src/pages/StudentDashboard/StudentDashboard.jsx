@@ -999,7 +999,7 @@ const StudentDashboard = () => {
       green: "stroke-green-500",
       yellow: "stroke-yellow-500",
       red: "stroke-red-500",
-      primary: "stroke-[#FF4B00]",
+      primary: "stroke-orange-500",
     };
 
     return (
@@ -1012,7 +1012,7 @@ const StudentDashboard = () => {
             stroke="currentColor"
             strokeWidth={strokeWidth}
             fill="none"
-            className="text-gray-700"
+            className="text-gray-300"
           />
           <circle
             cx={size / 2}
@@ -1027,7 +1027,7 @@ const StudentDashboard = () => {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl font-semibold text-white">{percentage}</span>
+          <span className="text-2xl font-semibold text-gray-800">{percentage}</span>
         </div>
       </div>
     );
