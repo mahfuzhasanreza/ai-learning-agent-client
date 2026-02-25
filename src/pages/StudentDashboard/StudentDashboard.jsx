@@ -2259,11 +2259,11 @@ const StudentDashboard = () => {
         {/* Courses Modal */}
         {showCoursesModal && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-hidden flex flex-col">
               {/* Header */}
-              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-700">
+              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-300">
                 <div className="flex justify-between items-center mb-3 sm:mb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                     {selectedCourseToAdd ? 'Add Course Details' : 'Available Courses'}
                   </h2>
                   <button
@@ -2317,7 +2317,7 @@ const StudentDashboard = () => {
                   /* Add Course Form */
                   <form onSubmit={handleAddCourse} className="space-y-3 sm:space-y-4">
                     {/* Selected Course Info */}
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-300">
+                    <div className="bg-gray-100 rounded-lg p-3 sm:p-4 border border-gray-300">
                       <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1.5 sm:mb-2">
                         {selectedCourseToAdd.code}
                       </h3>
@@ -2341,7 +2341,7 @@ const StudentDashboard = () => {
                           onChange={(e) => setAddCourseForm({ ...addCourseForm, trimester: e.target.value })}
                           placeholder="e.g., 263"
                           required
-                          className="w-full p-2.5 sm:p-3 bg-gray-700 text-white text-sm sm:text-base rounded-lg border border-gray-600 focus:outline-none focus:border-[#FF4B00] transition-colors"
+                          className="w-full p-2.5 sm:p-3 bg-gray-50 text-gray-800 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                       </div>
 
@@ -2386,14 +2386,14 @@ const StudentDashboard = () => {
                             faculty: ''
                           });
                         }}
-                        className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2.5 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
+                        className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
                       >
                         Back
                       </button>
                       <button
                         type="submit"
                         disabled={addingCourse}
-                        className="flex-1 bg-[#FF4B00] hover:bg-[#E04300] text-white py-2.5 sm:py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2.5 sm:py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                       >
                         {addingCourse ? 'Adding...' : 'Add Course'}
                       </button>
@@ -2413,14 +2413,14 @@ const StudentDashboard = () => {
                           {filteredCourses.map((course) => (
                             <div
                               key={course.id}
-                              className="bg-gray-700 rounded-lg p-3 sm:p-4 hover:bg-gray-600 transition-colors border border-gray-600"
+                              className="bg-gray-100 rounded-lg p-3 sm:p-4 hover:bg-gray-200 transition-colors border border-gray-300"
                             >
                               <div className="flex justify-between items-start mb-2">
                                 <div className="flex-1">
-                                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">
+                                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">
                                     {course.code}
                                   </h3>
-                                  <p className="text-gray-300 text-xs sm:text-sm mb-2">
+                                  <p className="text-gray-700 text-xs sm:text-sm mb-2">
                                     {course.title}
                                   </p>
                                 </div>
@@ -2429,17 +2429,17 @@ const StudentDashboard = () => {
                                 </span>
                               </div>
 
-                              <div className="text-xs text-gray-400 space-y-1 mb-2 sm:mb-3">
+                              <div className="text-xs text-gray-600 space-y-1 mb-2 sm:mb-3">
                                 <div>Created: {new Date(course.created_at).toLocaleDateString()}</div>
                                 {course.updated_at !== course.created_at && (
                                   <div>Updated: {new Date(course.updated_at).toLocaleDateString()}</div>
                                 )}
                               </div>
 
-                              <div className="pt-2 sm:pt-3 border-t border-gray-600">
+                              <div className="pt-2 sm:pt-3 border-t border-gray-300">
                                 <button
                                   onClick={() => setSelectedCourseToAdd(course)}
-                                  className="w-full bg-[#FF4B00] hover:bg-[#E04300] text-white py-2 rounded transition-colors text-xs sm:text-sm font-medium"
+                                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded transition-colors text-xs sm:text-sm font-medium"
                                 >
                                   Select Course
                                 </button>
@@ -2450,7 +2450,7 @@ const StudentDashboard = () => {
                       );
                     } else if (courseSearchQuery && filteredCourses.length === 0) {
                       return (
-                        <div className="text-center text-gray-400 py-6 sm:py-8">
+                        <div className="text-center text-gray-600 py-6 sm:py-8">
                           <svg
                             className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 opacity-50"
                             fill="none"
@@ -2470,7 +2470,7 @@ const StudentDashboard = () => {
                       );
                     } else {
                       return (
-                        <div className="text-center text-gray-400 py-6 sm:py-8">
+                        <div className="text-center text-gray-600 py-6 sm:py-8">
                           <BookOpen className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 opacity-50" />
                           <p className="text-sm sm:text-base">No courses available</p>
                         </div>
@@ -2482,8 +2482,8 @@ const StudentDashboard = () => {
 
               {/* Footer - Only show when not in add form */}
               {!selectedCourseToAdd && (
-                <div className="p-3 sm:p-4 border-t border-gray-700 bg-gray-750 flex justify-between items-center">
-                  <p className="text-xs sm:text-sm text-gray-400">
+                <div className="p-3 sm:p-4 border-t border-gray-300 bg-gray-50 flex justify-between items-center">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {(() => {
                       const filteredCount = availableCourses.filter(course =>
                         course.code.toLowerCase().includes(courseSearchQuery.toLowerCase()) ||
@@ -2499,7 +2499,7 @@ const StudentDashboard = () => {
                       setShowCoursesModal(false);
                       setCourseSearchQuery('');
                     }}
-                    className="bg-gray-600 hover:bg-gray-500 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded transition-colors text-xs sm:text-sm"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 sm:px-6 py-1.5 sm:py-2 rounded transition-colors text-xs sm:text-sm"
                   >
                     Close
                   </button>
