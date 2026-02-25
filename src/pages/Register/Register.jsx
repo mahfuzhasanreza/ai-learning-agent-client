@@ -659,9 +659,7 @@ const Register = () => {
           <div className="absolute bottom-32 right-20 w-56 h-56 bg-orange-300 opacity-20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
           <div className="absolute top-1/2 left-10 w-32 h-32 bg-orange-400 opacity-25 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
 
-          {/* Geometric shapes */}
-          <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-orange-300 rotate-45 animate-spin" style={{ animationDuration: '10s' }} />
-          <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-orange-400 rounded-full animate-pulse" />
+        
         </div>
 
         {/* Enhanced Content */}
@@ -672,9 +670,7 @@ const Register = () => {
               <div className="relative">
                 <div className="relative bg-white rounded-3xl p-6 border-2 border-gray-300 shadow-xl">
                   <Brain className="w-20 h-20 text-orange-500 animate-pulse" />
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-orange-500 rounded-full animate-bounce flex items-center justify-center shadow-lg">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -682,43 +678,6 @@ const Register = () => {
               COSMOS-ITS
             </h1>
             <p className="text-gray-700 text-xl font-semibold tracking-wide">AI-Powered Learning Platform</p>
-            <div className="w-24 h-1 bg-orange-500 rounded-full mx-auto mt-4" />
-          </div>
-
-          {/* Enhanced Animated Features */}
-          <div className="space-y-8 max-w-md">
-            {[
-              { icon: Brain, title: "Smart AI Tutoring", desc: "Personalized learning paths powered by AI", delay: "0.5s" },
-              { icon: BookOpen, title: "Adaptive Content", desc: "Content that adapts to your learning style", delay: "1s" },
-              { icon: Zap, title: "Real-time Feedback", desc: "Instant insights to accelerate learning", delay: "1.5s" }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center space-x-6 mb-10 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-300"
-                style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
-              >
-                <div className="relative">
-                  <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center border border-gray-300 group-hover:border-orange-500 transition-all duration-300 shadow-lg">
-                    <feature.icon className="w-8 h-8 text-orange-500" />
-                  </div>
-                </div>
-                <div className="ml-5 text-left">
-                  <h3 className="font-bold text-xl text-gray-800 mb-1">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{feature.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Enhanced Floating Elements */}
-          <div className="absolute top-1/4 right-20 animate-float">
-            <Star className="w-6 h-6 text-orange-300 opacity-70" />
-          </div>
-          <div className="absolute bottom-1/3 left-1/4 animate-float" style={{ animationDelay: '1s' }}>
-            <Sparkles className="w-5 h-5 text-orange-300 opacity-60" />
-          </div>
-          <div className="absolute top-3/4 right-1/3 animate-float" style={{ animationDelay: '2s' }}>
-            <div className="w-4 h-4 bg-orange-400 rounded-full opacity-70" />
           </div>
         </div>
       </div>
