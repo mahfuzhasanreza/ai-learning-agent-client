@@ -27,6 +27,38 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100
+    });
+  };
+
+
+   // Enhanced particles with COSMOS colors
+  const particles = Array.from({ length: 25 }, (_, i) => (
+    <div
+      key={i}
+      className="absolute animate-float opacity-20"
+      style={{
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 5}s`,
+        animationDuration: `${3 + Math.random() * 4}s`
+      }}
+    >
+      <div 
+        className={`w-2 h-2 rounded-full ${
+          i % 3 === 0 ? 'bg-orange-400' : 
+          i % 3 === 1 ? 'bg-orange-500' : 
+          'bg-orange-300'
+        }`} 
+      />
+    </div>
+  ));
 
   const checkPasswordStrength = (password) => {
     let strength = 0;
@@ -609,52 +641,20 @@ const Register = () => {
 
       {/* Left Side - Enhanced Animation Area */}
       <div
-        className="hidden lg:flex lg:w-1/2 bg-gray-100 relative overflow-hidden xl:rounded-2xl border-r border-gray-300"
-        onMouseMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          const x = ((e.clientX - rect.left) / rect.width) * 100;
-          const y = ((e.clientY - rect.top) / rect.height) * 100;
-          e.currentTarget.style.setProperty('--mouse-x', `${x}%`);
-          e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
-        }}
-        style={{
-          '--mouse-x': '50%',
-          '--mouse-y': '50%',
-        }}
+        className="hidden lg:flex lg:w-1/2 bg-gray-100 relative overflow-hidden border-r border-gray-300"
+        onMouseMove={handleMouseMove}
       >
         {/* Dynamic mouse-following gradient */}
         <div
-          className="absolute inset-0 opacity-20 transition-all duration-500 ease-out"
+          className="absolute inset-0 opacity-20 transition-all duration-300 ease-out"
           style={{
-            background: 'radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.08), transparent 70%)'
+            background: `radial-gradient(500px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(249,115,22,0.08), transparent 70%)`
           }}
         />
 
         {/* Enhanced animated background elements */}
         <div className="absolute inset-0">
-          {/* Floating particles */}
-          {Array.from({ length: 20 }, (_, i) => (
-            <div
-              key={i}
-              className="absolute animate-float opacity-20"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
-              }}
-            >
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  i % 3 === 0 ? 'bg-orange-400' :
-                  i % 3 === 1 ? 'bg-orange-500' :
-                  'bg-orange-300'
-                }`}
-              />
-            </div>
-          ))}
-
-          {/* Glowing orbs */}
+          {particles}
           <div className="absolute top-20 left-20 w-40 h-40 bg-orange-200 opacity-30 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-32 right-20 w-56 h-56 bg-orange-300 opacity-20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
           <div className="absolute top-1/2 left-10 w-32 h-32 bg-orange-400 opacity-25 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
@@ -664,10 +664,10 @@ const Register = () => {
           <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-orange-400 rounded-full animate-pulse" />
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center mx-auto items-center text-center p-12">
-          {/* Logo/Brand Area - Simplified to match Login */}
-          <div className="transform hover:scale-105 transition-all duration-500 group">
+        {/* Enhanced Content */}
+        <div className="relative z-10 flex flex-col justify-center mx-auto items-center p-12 text-center">
+          {/* Enhanced Logo/Brand Area */}
+          <div className="mb-12 transform hover:scale-105 transition-all duration-500 group">
             <div className="flex items-center justify-center mb-6 relative">
               <div className="relative">
                 <div className="relative bg-white rounded-3xl p-6 border-2 border-gray-300 shadow-xl">
@@ -678,12 +678,47 @@ const Register = () => {
                 </div>
               </div>
             </div>
-
-            <h1 className="text-5xl font-black mb-3 tracking-tight text-orange-500">
+            <h1 className="text-5xl font-black text-orange-500 mb-3 tracking-tight">
               COSMOS-ITS
             </h1>
             <p className="text-gray-700 text-xl font-semibold tracking-wide">AI-Powered Learning Platform</p>
             <div className="w-24 h-1 bg-orange-500 rounded-full mx-auto mt-4" />
+          </div>
+
+          {/* Enhanced Animated Features */}
+          <div className="space-y-8 max-w-md">
+            {[
+              { icon: Brain, title: "Smart AI Tutoring", desc: "Personalized learning paths powered by AI", delay: "0.5s" },
+              { icon: BookOpen, title: "Adaptive Content", desc: "Content that adapts to your learning style", delay: "1s" },
+              { icon: Zap, title: "Real-time Feedback", desc: "Instant insights to accelerate learning", delay: "1.5s" }
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="flex items-center space-x-6 mb-10 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-300"
+                style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
+              >
+                <div className="relative">
+                  <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center border border-gray-300 group-hover:border-orange-500 transition-all duration-300 shadow-lg">
+                    <feature.icon className="w-8 h-8 text-orange-500" />
+                  </div>
+                </div>
+                <div className="ml-5 text-left">
+                  <h3 className="font-bold text-xl text-gray-800 mb-1">{feature.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Enhanced Floating Elements */}
+          <div className="absolute top-1/4 right-20 animate-float">
+            <Star className="w-6 h-6 text-orange-300 opacity-70" />
+          </div>
+          <div className="absolute bottom-1/3 left-1/4 animate-float" style={{ animationDelay: '1s' }}>
+            <Sparkles className="w-5 h-5 text-orange-300 opacity-60" />
+          </div>
+          <div className="absolute top-3/4 right-1/3 animate-float" style={{ animationDelay: '2s' }}>
+            <div className="w-4 h-4 bg-orange-400 rounded-full opacity-70" />
           </div>
         </div>
       </div>
