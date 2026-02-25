@@ -601,20 +601,15 @@ const Register = () => {
 
 
   return (
-    <div className="w-full min-h-screen bg-[#0a0a0a] flex overflow-hidden relative">
+    <div className="w-full min-h-screen bg-white flex overflow-hidden relative">
       {/* Animated background with COSMOS colors */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,75,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(162,0,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
       </div>
-
-      {/* Animated gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FF4B00] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#a200ff] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
-      <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000" />
 
       {/* Left Side - Enhanced Animation Area */}
       <div
-        className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1a0a14] via-[#0f0a1a] to-[#0a0a0a] relative overflow-hidden xl:rounded-2xl border-r border-white/5"
+        className="hidden lg:flex lg:w-1/2 bg-gray-100 relative overflow-hidden xl:rounded-2xl border-r border-gray-300"
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -629,9 +624,9 @@ const Register = () => {
       >
         {/* Dynamic mouse-following gradient */}
         <div
-          className="absolute inset-0 opacity-40 transition-all duration-500 ease-out"
+          className="absolute inset-0 opacity-20 transition-all duration-500 ease-out"
           style={{
-            background: 'radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(255,75,0,0.15), rgba(162,0,255,0.1), transparent 70%)'
+            background: 'radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.08), transparent 70%)'
           }}
         />
 
@@ -650,22 +645,23 @@ const Register = () => {
               }}
             >
               <div
-                className={`w-2 h-2 rounded-full ${i % 3 === 0 ? 'bg-[#FF4B00]' :
-                    i % 3 === 1 ? 'bg-[#a200ff]' :
-                      'bg-cyan-400'
-                  }`}
+                className={`w-2 h-2 rounded-full ${
+                  i % 3 === 0 ? 'bg-orange-400' :
+                  i % 3 === 1 ? 'bg-orange-500' :
+                  'bg-orange-300'
+                }`}
               />
             </div>
           ))}
 
           {/* Glowing orbs */}
-          <div className="absolute top-20 left-20 w-40 h-40 bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-32 right-20 w-56 h-56 bg-gradient-to-r from-[#a200ff]/20 to-cyan-500/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
-          <div className="absolute top-1/2 left-10 w-32 h-32 bg-gradient-to-r from-[#FF4B00]/30 to-orange-500/20 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
+          <div className="absolute top-20 left-20 w-40 h-40 bg-orange-200 opacity-30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-32 right-20 w-56 h-56 bg-orange-300 opacity-20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
+          <div className="absolute top-1/2 left-10 w-32 h-32 bg-orange-400 opacity-25 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
 
           {/* Geometric shapes */}
-          <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-[#FF4B00]/30 rotate-45 animate-spin" style={{ animationDuration: '10s' }} />
-          <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-[#a200ff]/30 rounded-full animate-pulse" />
+          <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-orange-300 rotate-45 animate-spin" style={{ animationDuration: '10s' }} />
+          <div className="absolute bottom-1/4 left-1/4 w-16 h-16 border-2 border-orange-400 rounded-full animate-pulse" />
         </div>
 
         {/* Content */}
@@ -674,26 +670,20 @@ const Register = () => {
           <div className="mb-16 transform hover:scale-105 transition-all duration-700 group">
             <div className="flex items-center justify-center mb-8 relative">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-3xl blur-2xl opacity-60 animate-pulse" />
-                <div className="relative bg-gradient-to-br from-[#1a0a14] to-[#0f0a1a] rounded-3xl p-6 border-2 border-white/10 backdrop-blur-xl shadow-2xl">
-                  <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-[#FF4B00] animate-pulse" style={{ filter: 'drop-shadow(0 0 20px rgba(255,75,0,0.5))' }} />
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-full animate-bounce flex items-center justify-center shadow-lg shadow-[#FF4B00]/50">
+                <div className="relative bg-white rounded-3xl p-6 border-2 border-gray-300 shadow-xl">
+                  <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-orange-500 animate-pulse" />
+                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-orange-500 rounded-full animate-bounce flex items-center justify-center shadow-lg">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </div>
             </div>
 
-            <h1 className="text-6xl xl:text-7xl 2xl:text-8xl font-black mb-4 tracking-tight">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-cyan-400 animate-gradient">
-                COSMOS-ITS
-              </span>
+            <h1 className="text-6xl xl:text-7xl 2xl:text-8xl font-black mb-4 tracking-tight text-orange-500">
+              COSMOS-ITS
             </h1>
-            <p className="text-gray-300 text-xl xl:text-2xl font-semibold tracking-wide mb-4">Join the Future of Learning</p>
+            <p className="text-gray-700 text-xl xl:text-2xl font-semibold tracking-wide mb-4">Join the Future of Learning</p>
 
-            <div className="relative w-32 h-1 mx-auto overflow-hidden rounded-full bg-white/10">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-cyan-400 animate-shimmer" />
-            </div>
           </div>
 
           {/* Registration Benefits */}
@@ -703,24 +693,21 @@ const Register = () => {
                 icon: Users,
                 title: "Join 10,000+ Learners",
                 desc: "Connect with a global learning community",
-                gradient: "from-[#FF4B00]/30 to-orange-500/30",
-                iconColor: "text-[#FF4B00]",
+                iconColor: "text-orange-500",
                 delay: "0.5s"
               },
               {
                 icon: Trophy,
                 title: "Earn Certificates",
                 desc: "Get verified certificates for your achievements",
-                gradient: "from-[#a200ff]/30 to-purple-500/30",
-                iconColor: "text-[#a200ff]",
+                iconColor: "text-orange-500",
                 delay: "1s"
               },
               {
                 icon: Shield,
                 title: "Free Forever",
                 desc: "Start learning with our free tier, upgrade anytime",
-                gradient: "from-cyan-500/30 to-blue-500/30",
-                iconColor: "text-cyan-400",
+                iconColor: "text-orange-500",
                 delay: "1.5s"
               }
             ].map((feature, index) => (
@@ -730,76 +717,59 @@ const Register = () => {
                 style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
               >
                 <div className="relative flex-shrink-0">
-                  <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100`} />
-                  <div className="relative w-20 h-20 xl:w-24 xl:h-24 bg-gradient-to-br from-white/5 to-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10 group-hover:border-white/30 transition-all duration-500 shadow-xl">
+                  <div className="relative w-20 h-20 xl:w-24 xl:h-24 bg-white rounded-2xl flex items-center justify-center border border-gray-300 group-hover:border-orange-500 transition-all duration-500 shadow-lg">
                     <feature.icon className={`w-10 h-10 xl:w-12 xl:h-12 ${feature.iconColor} group-hover:scale-110 transition-transform duration-500`} />
                   </div>
                 </div>
 
                 <div className="flex-1 text-left pt-2">
-                  <h3 className="font-bold text-xl xl:text-2xl text-white mb-2 group-hover:text-[#FF4B00] transition-colors duration-300">
+                  <h3 className="font-bold text-xl xl:text-2xl text-gray-800 mb-2 group-hover:text-orange-500 transition-colors duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 text-base xl:text-lg leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                  <p className="text-gray-600 text-base xl:text-lg leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
                     {feature.desc}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Floating Elements */}
-          <div className="absolute top-1/4 right-16 animate-float">
-            <Star className="w-8 h-8 text-[#FF4B00] opacity-60" style={{ filter: 'drop-shadow(0 0 10px rgba(255,75,0,0.5))' }} />
-          </div>
-          <div className="absolute bottom-1/3 left-1/4 animate-float" style={{ animationDelay: '1.5s' }}>
-            <Sparkles className="w-7 h-7 text-[#a200ff] opacity-60" style={{ filter: 'drop-shadow(0 0 10px rgba(162,0,255,0.5))' }} />
-          </div>
-          <div className="absolute top-2/3 right-1/3 animate-float" style={{ animationDelay: '2.5s' }}>
-            <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full opacity-60 shadow-lg shadow-cyan-400/50" />
-          </div>
         </div>
       </div>
 
       {/* Right Side - Registration Form */}
       <div className="flex-1 flex items-center justify-center p-4 lg:p-8 xl:bg-transparent relative overflow-y-auto">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
+        <div className="absolute inset-0 bg-gray-50" />
 
-        <div className="w-full max-w-2xl space-y-6 relative z-10 my-8">
+        <div className="w-full max-w-md space-y-6 relative z-10 my-8">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-10">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-2xl blur-xl opacity-60 animate-pulse" />
-                <div className="relative bg-gradient-to-br from-[#1a0a14] to-[#0f0a1a] rounded-2xl p-4 border border-white/20">
-                  <Brain className="w-14 h-14 text-[#FF4B00] animate-pulse" />
+                <div className="relative bg-white rounded-2xl p-4 border border-gray-300 shadow-lg">
+                  <Brain className="w-14 h-14 text-orange-500 animate-pulse" />
                 </div>
               </div>
             </div>
-            <h1 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-[#FF4B00] to-[#a200ff]">
+            <h1 className="text-5xl font-black text-orange-500">
               COSMOS-ITS
             </h1>
-            <p className="text-gray-400 mt-2">AI-Powered Learning Platform</p>
+            <p className="text-gray-600 mt-2">AI-Powered Learning Platform</p>
           </div>
 
           {/* Welcome Text */}
           <div className="text-center mb-6">
-            <h2 className="text-4xl xl:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400 mb-3">
+            <h2 className="text-4xl xl:text-5xl font-black text-gray-800 mb-3">
               Create Account
             </h2>
-            <p className="text-gray-400 text-lg xl:text-xl">Start your intelligent learning journey today</p>
-
-            <div className="relative w-20 h-1 mx-auto mt-4 overflow-hidden rounded-full bg-white/10">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] animate-shimmer" />
-            </div>
+            <p className="text-gray-600 text-lg xl:text-xl">Start your intelligent learning journey today</p>
           </div>
 
           {/* Registration Form */}
-          <div className="backdrop-blur-2xl bg-white/[0.03] rounded-3xl p-6 md:p-8 xl:p-10 border border-white/10 shadow-2xl hover:border-white/20 transition-all duration-500">
+          <div className="backdrop-blur-2xl bg-white rounded-3xl p-6 md:p-8 border border-gray-300 shadow-xl hover:border-gray-400 transition-all duration-500">
             {/* Error Message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl backdrop-blur-sm animate-shake">
-                <p className="text-red-400 text-sm text-center font-medium">{error}</p>
+              <div className="mb-6 p-4 bg-red-50 border border-red-300 rounded-2xl animate-shake">
+                <p className="text-red-600 text-sm text-center font-medium">{error}</p>
               </div>
             )}
 
@@ -833,17 +803,19 @@ const Register = () => {
               {/* Name Fields */}
               {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-6"> */}
               <div className="relative group">
-                <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                   Full Name
                 </label>
                 <div className="relative">
-                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'firstName'
-                      ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 blur-xl'
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                    focusedField === 'firstName'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
-                    }`} />
+                  }`} />
                   <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none z-10">
-                    <User className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${focusedField === 'firstName' ? 'text-[#FF4B00] scale-110' : 'text-gray-500'
-                      }`} />
+                    <User className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${
+                      focusedField === 'firstName' ? 'text-orange-500 scale-110' : 'text-gray-400'
+                    }`} />
                   </div>
                   <input
                     type="text"
@@ -852,10 +824,11 @@ const Register = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField('firstName')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium text-base xl:text-lg ${focusedField === 'firstName'
-                        ? 'border-[#FF4B00]/50 shadow-lg shadow-[#FF4B00]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                      }`}
+                    className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium text-base xl:text-lg ${
+                      focusedField === 'firstName'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                    }`}
                     placeholder="Full name"
                     required
                   />
@@ -898,17 +871,19 @@ const Register = () => {
 
               {/* Email Field */}
               <div className="relative group">
-                <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'email'
-                      ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 blur-xl'
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                    focusedField === 'email'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
-                    }`} />
+                  }`} />
                   <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none z-10">
-                    <Mail className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${focusedField === 'email' ? 'text-[#FF4B00] scale-110' : 'text-gray-500'
-                      }`} />
+                    <Mail className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${
+                      focusedField === 'email' ? 'text-orange-500 scale-110' : 'text-gray-400'
+                    }`} />
                   </div>
                   <input
                     type="email"
@@ -917,10 +892,11 @@ const Register = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium text-base xl:text-lg ${focusedField === 'email'
-                        ? 'border-[#FF4B00]/50 shadow-lg shadow-[#FF4B00]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                      }`}
+                    className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium text-base xl:text-lg ${
+                      focusedField === 'email'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                    }`}
                     placeholder="Enter your email"
                     required
                   />
@@ -930,17 +906,19 @@ const Register = () => {
               {/* Phone and Gender Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-6">
                 <div className="relative group">
-                  <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                  <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                     Phone <span className="text-gray-500 text-sm">(Optional)</span>
                   </label>
                   <div className="relative">
-                    <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'phone'
-                        ? 'bg-gradient-to-r from-[#a200ff]/20 to-cyan-500/20 blur-xl'
+                    <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                      focusedField === 'phone'
+                        ? 'bg-orange-100 opacity-50 blur-sm'
                         : 'bg-transparent'
-                      }`} />
+                    }`} />
                     <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none z-10">
-                      <Phone className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${focusedField === 'phone' ? 'text-[#a200ff] scale-110' : 'text-gray-500'
-                        }`} />
+                      <Phone className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${
+                        focusedField === 'phone' ? 'text-orange-500 scale-110' : 'text-gray-400'
+                      }`} />
                     </div>
                     <input
                       type="tel"
@@ -949,40 +927,43 @@ const Register = () => {
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('phone')}
                       onBlur={() => setFocusedField('')}
-                      className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium text-base xl:text-lg ${focusedField === 'phone'
-                          ? 'border-[#a200ff]/50 shadow-lg shadow-[#a200ff]/10 bg-white/10'
-                          : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                        }`}
+                      className={`relative w-full pl-12 xl:pl-14 pr-4 xl:pr-6 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium text-base xl:text-lg ${
+                        focusedField === 'phone'
+                          ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                          : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                      }`}
                       placeholder="Phone number"
                     />
                   </div>
                 </div>
 
                 <div className="relative group">
-                  <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                  <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                     Gender <span className="text-gray-500 text-sm">(Optional)</span>
                   </label>
                   <div className="relative">
-                    <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'gender'
-                        ? 'bg-gradient-to-r from-[#a200ff]/20 to-cyan-500/20 blur-xl'
+                    <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                      focusedField === 'gender'
+                        ? 'bg-orange-100 opacity-50 blur-sm'
                         : 'bg-transparent'
-                      }`} />
+                    }`} />
                     <select
                       name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('gender')}
                       onBlur={() => setFocusedField('')}
-                      className={`relative w-full px-4 xl:px-6 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white font-medium text-base xl:text-lg ${focusedField === 'gender'
-                          ? 'border-[#a200ff]/50 shadow-lg shadow-[#a200ff]/10 bg-white/10'
-                          : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                        }`}
+                      className={`relative w-full px-4 xl:px-6 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 font-medium text-base xl:text-lg ${
+                        focusedField === 'gender'
+                          ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                          : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                      }`}
                     >
-                      <option value="" className="bg-[#1a1a1a]">Select gender</option>
-                      <option value="male" className="bg-[#1a1a1a]">Male</option>
-                      <option value="female" className="bg-[#1a1a1a]">Female</option>
-                      <option value="other" className="bg-[#1a1a1a]">Other</option>
-                      <option value="prefer-not-to-say" className="bg-[#1a1a1a]">Prefer not to say</option>
+                      <option value="" className="bg-white">Select gender</option>
+                      <option value="male" className="bg-white">Male</option>
+                      <option value="female" className="bg-white">Female</option>
+                      <option value="other" className="bg-white">Other</option>
+                      <option value="prefer-not-to-say" className="bg-white">Prefer not to say</option>
                     </select>
                   </div>
                 </div>
@@ -990,17 +971,19 @@ const Register = () => {
 
               {/* Password Field */}
               <div className="relative group">
-                <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                   Password
                 </label>
                 <div className="relative">
-                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'password'
-                      ? 'bg-gradient-to-r from-[#a200ff]/20 to-[#FF4B00]/20 blur-xl'
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                    focusedField === 'password'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
-                    }`} />
+                  }`} />
                   <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none z-10">
-                    <Lock className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${focusedField === 'password' ? 'text-[#a200ff] scale-110' : 'text-gray-500'
-                      }`} />
+                    <Lock className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${
+                      focusedField === 'password' ? 'text-orange-500 scale-110' : 'text-gray-400'
+                    }`} />
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -1009,17 +992,18 @@ const Register = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField('password')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-12 xl:pl-14 pr-14 xl:pr-16 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium text-base xl:text-lg ${focusedField === 'password'
-                        ? 'border-[#a200ff]/50 shadow-lg shadow-[#a200ff]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                      }`}
+                    className={`relative w-full pl-12 xl:pl-14 pr-14 xl:pr-16 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium text-base xl:text-lg ${
+                      focusedField === 'password'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                    }`}
                     placeholder="Create a password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 xl:pr-5 flex items-center text-gray-500 hover:text-[#a200ff] transition-all duration-300 z-10 hover:scale-110"
+                    className="absolute inset-y-0 right-0 pr-4 xl:pr-5 flex items-center text-gray-400 hover:text-orange-500 transition-all duration-300 z-10 hover:scale-110"
                   >
                     {showPassword ? <EyeOff className="h-6 w-6 xl:h-7 xl:w-7" /> : <Eye className="h-6 w-6 xl:h-7 xl:w-7" />}
                   </button>
@@ -1029,16 +1013,17 @@ const Register = () => {
                 {formData.password && (
                   <div className="mt-3">
                     <div className="flex items-center space-x-2">
-                      <div className="flex-1 bg-white/10 rounded-full h-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor()}`}
                           style={{ width: `${(passwordStrength / 5) * 100}%` }}
                         ></div>
                       </div>
-                      <span className={`text-sm font-medium ${passwordStrength <= 2 ? 'text-red-400' :
-                          passwordStrength <= 3 ? 'text-yellow-400' :
-                            passwordStrength <= 4 ? 'text-blue-400' : 'text-green-400'
-                        }`}>
+                      <span className={`text-sm font-medium ${
+                        passwordStrength <= 2 ? 'text-red-500' :
+                        passwordStrength <= 3 ? 'text-yellow-500' :
+                        passwordStrength <= 4 ? 'text-blue-500' : 'text-green-500'
+                      }`}>
                         {getStrengthText()}
                       </span>
                     </div>
@@ -1048,17 +1033,19 @@ const Register = () => {
 
               {/* Confirm Password Field */}
               <div className="relative group">
-                <label className="block text-base xl:text-lg font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-base xl:text-lg font-bold text-gray-700 mb-3 ml-1">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${focusedField === 'confirmPassword'
-                      ? 'bg-gradient-to-r from-[#a200ff]/20 to-[#FF4B00]/20 blur-xl'
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                    focusedField === 'confirmPassword'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
-                    }`} />
+                  }`} />
                   <div className="absolute inset-y-0 left-0 pl-4 xl:pl-5 flex items-center pointer-events-none z-10">
-                    <Lock className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${focusedField === 'confirmPassword' ? 'text-[#a200ff] scale-110' : 'text-gray-500'
-                      }`} />
+                    <Lock className={`h-6 w-6 xl:h-7 xl:w-7 transition-all duration-300 ${
+                      focusedField === 'confirmPassword' ? 'text-orange-500 scale-110' : 'text-gray-400'
+                    }`} />
                   </div>
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -1067,30 +1054,32 @@ const Register = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField('confirmPassword')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-12 xl:pl-14 pr-14 xl:pr-16 py-4 xl:py-5 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium text-base xl:text-lg ${focusedField === 'confirmPassword'
-                        ? 'border-[#a200ff]/50 shadow-lg shadow-[#a200ff]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
-                      } ${formData.confirmPassword && formData.password !== formData.confirmPassword
-                        ? 'border-red-500/50'
+                    className={`relative w-full pl-12 xl:pl-14 pr-14 xl:pr-16 py-4 xl:py-5 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium text-base xl:text-lg ${
+                      focusedField === 'confirmPassword'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
+                    } ${
+                      formData.confirmPassword && formData.password !== formData.confirmPassword
+                        ? 'border-red-500'
                         : ''
-                      }`}
+                    }`}
                     placeholder="Confirm your password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 xl:pr-5 flex items-center text-gray-500 hover:text-[#a200ff] transition-all duration-300 z-10 hover:scale-110"
+                    className="absolute inset-y-0 right-0 pr-4 xl:pr-5 flex items-center text-gray-400 hover:text-orange-500 transition-all duration-300 z-10 hover:scale-110"
                   >
                     {showConfirmPassword ? <EyeOff className="h-6 w-6 xl:h-7 xl:w-7" /> : <Eye className="h-6 w-6 xl:h-7 xl:w-7" />}
                   </button>
                 </div>
 
                 {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                  <p className="mt-2 text-sm text-red-400 ml-1">Passwords don't match</p>
+                  <p className="mt-2 text-sm text-red-500 ml-1">Passwords don't match</p>
                 )}
                 {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                  <div className="mt-2 flex items-center text-green-400 ml-1">
+                  <div className="mt-2 flex items-center text-green-500 ml-1">
                     <CheckCircle className="w-4 h-4 mr-2" />
                     <span className="text-sm font-medium">Passwords match</span>
                   </div>
@@ -1105,16 +1094,16 @@ const Register = () => {
                     name="agreeTerms"
                     checked={formData.agreeTerms}
                     onChange={handleInputChange}
-                    className="w-5 h-5 xl:w-6 xl:h-6 text-[#FF4B00] focus:ring-[#FF4B00] focus:ring-offset-0 border-gray-600 bg-white/5 rounded-lg transition-all duration-300 cursor-pointer mt-0.5"
+                    className="w-5 h-5 xl:w-6 xl:h-6 text-orange-500 focus:ring-orange-500 focus:ring-offset-0 border-gray-300 bg-gray-50 rounded-lg transition-all duration-300 cursor-pointer mt-0.5"
                     required
                   />
-                  <span className="ml-3 text-base xl:text-lg text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                  <span className="ml-3 text-base xl:text-lg text-gray-600 group-hover:text-gray-800 transition-colors duration-300">
                     I agree to the{' '}
-                    <a href="#" className="text-[#FF4B00] hover:text-[#a200ff] font-semibold transition-colors duration-300">
+                    <a href="#" className="text-orange-500 hover:text-orange-600 font-semibold transition-colors duration-300">
                       Terms of Service
                     </a>{' '}
                     and{' '}
-                    <a href="#" className="text-[#FF4B00] hover:text-[#a200ff] font-semibold transition-colors duration-300">
+                    <a href="#" className="text-orange-500 hover:text-orange-600 font-semibold transition-colors duration-300">
                       Privacy Policy
                     </a>
                   </span>
@@ -1126,14 +1115,14 @@ const Register = () => {
                 type="submit"
                 disabled={isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword}
                 onClick={handleRegister}
-                className={`relative w-full py-4 xl:py-5 px-6 rounded-2xl font-bold text-lg xl:text-xl transition-all duration-500 transform overflow-hidden group mt-6 ${isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword
-                    ? 'bg-gray-700 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-[#FF4B00] hover:shadow-2xl hover:shadow-[#FF4B00]/30 hover:-translate-y-1 active:translate-y-0 bg-[length:200%_100%] hover:bg-right'
-                  } text-white shadow-xl shadow-[#FF4B00]/20`}
-                style={{ transition: 'all 0.5s ease, background-position 0.8s ease' }}
+                className={`relative w-full py-4 xl:py-5 px-6 rounded-2xl font-bold text-lg xl:text-xl transition-all duration-500 transform overflow-hidden group mt-6 ${
+                  isLoading || !formData.agreeTerms || formData.password !== formData.confirmPassword
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-orange-500 hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-200 hover:-translate-y-1 active:translate-y-0'
+                } text-white shadow-lg`}
               >
                 {!isLoading && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 )}
 
                 <div className="relative flex items-center justify-center">
@@ -1151,11 +1140,11 @@ const Register = () => {
 
             {/* Sign In Link */}
             <div className="text-center mt-6">
-              <p className="text-gray-400 font-medium text-base xl:text-lg">
+              <p className="text-gray-600 font-medium text-base xl:text-lg">
                 Already have an account?{' '}
                 <a
                   href="/login"
-                  className="text-[#FF4B00] hover:text-[#a200ff] font-bold transition-all duration-300 hover:underline"
+                  className="text-orange-500 hover:text-orange-600 font-bold transition-all duration-300 hover:underline"
                 >
                   Sign in here
                 </a>
@@ -1165,10 +1154,10 @@ const Register = () => {
             {/* Divider */}
             <div className="relative mt-8 mb-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
+                <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-base xl:text-lg">
-                <span className="px-6 py-2 bg-[#0a0a0a] backdrop-blur-xl rounded-full text-gray-400 border border-white/10 font-medium">
+                <span className="px-6 py-2 bg-white rounded-full text-gray-600 border border-gray-300 font-medium">
                   Or register with
                 </span>
               </div>
@@ -1176,21 +1165,21 @@ const Register = () => {
 
             {/* Social Registration Buttons */}
             <div className="grid grid-cols-2 gap-4 xl:gap-6">
-              <button className="group flex items-center justify-center px-6 py-4 xl:py-5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#FF4B00]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#FF4B00]/10 text-base xl:text-lg font-medium">
+              <button className="group flex items-center justify-center px-6 py-4 xl:py-5 bg-gray-50 border border-gray-300 rounded-2xl hover:border-orange-500 hover:bg-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100 text-base xl:text-lg font-medium">
                 <svg className="w-6 h-6 xl:w-7 xl:h-7 mr-3 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
-                <span className="text-white font-semibold">Google</span>
+                <span className="text-gray-800 font-semibold">Google</span>
               </button>
 
-              <button className="group flex items-center justify-center px-6 py-4 xl:py-5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#a200ff]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#a200ff]/10 text-base xl:text-lg font-medium">
-                <svg className="w-6 h-6 xl:w-7 xl:h-7 mr-3 group-hover:scale-110 transition-transform duration-300" fill="white" viewBox="0 0 24 24">
+              <button className="group flex items-center justify-center px-6 py-4 xl:py-5 bg-gray-50 border border-gray-300 rounded-2xl hover:border-orange-500 hover:bg-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100 text-base xl:text-lg font-medium">
+                <svg className="w-6 h-6 xl:w-7 xl:h-7 mr-3 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.024-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.748.097.118.112.223.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.691-1.378l-.731 2.725c-.265 1.026-1.016 2.324-1.527 3.117 1.154.357 2.389.551 3.68.551 6.621 0 11.988-5.367 11.988-11.987C24.005 5.367 18.637.001 12.017.001z" />
                 </svg>
-                <span className="text-white font-semibold">Microsoft</span>
+                <span className="text-gray-800 font-semibold">Microsoft</span>
               </button>
             </div>
           </div>
