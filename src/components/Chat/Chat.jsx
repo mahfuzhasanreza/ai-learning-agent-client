@@ -18,7 +18,7 @@ import ApiService from '../../services/apiService';
 import { UserAuth } from '../../context/AuthContext';
 
 const Chat = () => {
-    const {user} = UserAuth();
+    const { user } = UserAuth();
     const { isSidebarOpen, setIsSidebarOpen, ttsSettingsOpen, setTtsSettingsOpen, recentPrompt, onSent, loading, showResult, resultData, setInput, input, lastSentPrompt, conversation, activeChat, courseData, selectedAgent, setSelectedAgent, isTyping } = useContext(Context);
     const [extended, setExtended] = useState(false);
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
@@ -27,7 +27,7 @@ const Chat = () => {
     const [isQuestionsExpanded, setIsQuestionsExpanded] = useState(true); // State for questions dropdown
     const resultEndRef = useRef(null);
 
-    const {isDark} = useContext(Context)
+    const { isDark } = useContext(Context)
 
     const agentMap = { "Professor DBMS": "dbms_agent", "Professor General": "fallback_agent", "Professor OOP": "oop_agent", "System Design Specialist": "sad_agent", "Professor SE": "se_agent", "Professor SPL": "spl_agent" };
 
@@ -140,16 +140,16 @@ const Chat = () => {
             {/* <Navigation></Navigation> */}
 
 
-            <motion.div 
-              className="main-container flex-1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ 
-                type: "spring",
-                stiffness: 200,
-                damping: 20,
-                delay: 0.2
-              }}
+            <motion.div
+                className="main-container flex-1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 20,
+                    delay: 0.2
+                }}
             >
                 {!showResult
                     ? <>
@@ -213,21 +213,35 @@ const Chat = () => {
                                         </div>
                                     </div>
                                     <div className="result-data">
-                                        <img src={assets.logo} alt="" />
+
                                         <div className="message-content flex justify-between">
                                             <div className='flex flex-col'>
-                                                {/* Show agent name for each message */}
-                                                {(item.agentName || item.courseData) && (
-                                                    <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-orange-700'>
-                                                        {item.agentName || item.courseData}
-                                                    </p>
-                                                )}
-                                                {/* Fallback to global courseData if not in item */}
-                                                {!item.agentName && !item.courseData && courseData && (
-                                                    <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 rounded-lg text-white align-center items-center content-center justify-center hover:bg-orange-700'>
-                                                        {courseData}
-                                                    </p>
-                                                )}
+                                                <div className='flex justify-between'>
+                                                    <div className='flex gap-3'>
+                                                        {/* <div><img src={assets.logo} alt="" /></div> */}
+                                                        <div>
+                                                            {/* Show agent name for each message */}
+                                                            {(item.agentName || item.courseData) && (
+                                                                <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
+                                                                    {item.agentName || item.courseData}
+                                                                </p>
+                                                            )}
+                                                            {/* Fallback to global courseData if not in item */}
+                                                            {!item.agentName && !item.courseData && courseData && (
+                                                                <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
+                                                                    {courseData}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <ListenButton
+                                                            text={item.response}
+                                                            size="small"
+                                                            className="message-listen-btn"
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <br />
                                                 <p>
                                                     {item.response}
@@ -237,11 +251,7 @@ const Chat = () => {
                                                     )}
                                                 </p>
                                             </div>
-                                            <ListenButton
-                                                text={item.response}
-                                                size="small"
-                                                className="message-listen-btn"
-                                            />
+
                                         </div>
                                     </div>
 

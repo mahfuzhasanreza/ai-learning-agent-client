@@ -231,9 +231,8 @@
     position: fixed;
     bottom: 0;
 
-    /* background-color: #13121d; */
-/* background: linear-gradient(to bottom, #101828 0%, #13121d 30%); */
-    /* border: 2px solid red; */
+    background-color: #ffffff;
+    border-radius: 30px 30px 0 0;
     
 }
 
@@ -308,8 +307,6 @@
 
 /* Chat Result Area */
 .result {
-    padding: 0px 0px;
-    /* max-height: 77vh; */
     overflow: scroll;
     scrollbar-width: none;
     color: #1f2937;
@@ -340,14 +337,10 @@
     align-items: start;
     gap: 20px;
     background-color: #f9fafb;
-    padding: 16px 20px;
+    padding: 10px 15px;
     border-radius: 16px;
     margin-bottom: 10px;
     transition: background 0.3s;
-}
-
-.result-data:hover {
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), rgba(249, 115, 22, 0.03));
 }
 
 /* Loader Animation */
@@ -598,22 +591,10 @@
   display: flex;
   align-items: flex-start;
   gap: 15px;
-  padding: 20px;
   background: #f9fafb;
   border-radius: 12px;
   margin-bottom: 15px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   color: #1f2937;
-}
-
-/* Hover effects */
-.result-title:hover,
-.result-data:hover {
-  border-color: #f97316;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2),
-              0 0 10px rgba(249, 115, 22, 0.1);
-  transition: all 0.3s ease;
 }
 
 /* Responsive adjustments */
