@@ -300,6 +300,11 @@ const StudentDashboard = () => {
     setCoursesError(null);
     try {
       const courses = await ApiService.getCourses();
+      console.log('=== FETCHED COURSES ===');
+      console.log('Total courses:', courses?.length || 0);
+      console.log('First course:', courses?.[0]);
+      console.log('All course IDs:', courses?.map(c => c.id));
+      console.log('=====================');
       setAvailableCourses(courses);
       setShowCoursesModal(true);
     } catch (error) {
@@ -373,24 +378,48 @@ const StudentDashboard = () => {
     e.preventDefault();
 
     if (!selectedCourseToAdd) {
-      // alert('Please select a course first');
       return;
     }
 
     if (!addCourseForm.trimester || !addCourseForm.section || !addCourseForm.faculty) {
-      // alert('Please fill in all fields');
       return;
     }
 
     setAddingCourse(true);
     try {
-      await ApiService.addStudentCourse({
+      // First, verify the course still exists by fetching fresh course list
+      console.log('=== VERIFYING COURSE EXISTS ===');
+      const freshCourses = await ApiService.getCourses();
+      const courseExists = freshCourses.some(c => c.id === selectedCourseToAdd.id);
+      
+      if (!courseExists) {
+        console.warn('Course not found in fresh course list!');
+        console.log('Looking for ID:', selectedCourseToAdd.id);
+        console.log('Available IDs:', freshCourses.map(c => c.id));
+        throw new Error(`This course is no longer available. It may have been removed. Please refresh the course list and try again.`);
+      }
+      console.log('Course verified, proceeding with enrollment');
+      console.log('===============================');
+
+      const enrollmentData = {
         student_id: STUDENT_ID,
-        course_id: selectedCourseToAdd.id,
+        course_id: String(selectedCourseToAdd.id),
         trimester: addCourseForm.trimester,
         section: addCourseForm.section,
         faculty: addCourseForm.faculty
-      });
+      };
+
+      console.log('=== ENROLLMENT DATA BEING SENT ===');
+      console.log('Student ID:', enrollmentData.student_id);
+      console.log('Course ID:', enrollmentData.course_id);
+      console.log('Course Code:', selectedCourseToAdd.code);
+      console.log('Course Title:', selectedCourseToAdd.title);
+      console.log('Trimester:', enrollmentData.trimester);
+      console.log('Section:', enrollmentData.section);
+      console.log('Faculty:', enrollmentData.faculty);
+      console.log('================================');
+
+      await ApiService.addStudentCourse(enrollmentData);
 
       // Reset form and close modal
       setAddCourseForm({
@@ -412,15 +441,23 @@ const StudentDashboard = () => {
       fetchEnrolledCourses(selectedTrimester);
 
     } catch (error) {
-      console.error('Error adding course:', error);
+      console.error('=== ERROR ADDING COURSE ===');
+      console.error('Error object:', error);
+      console.error('Error message:', error.message);
+      console.error('Selected course:', selectedCourseToAdd);
+      console.error('===========================');
 
       // Extract error message
       let errorMessage = 'Failed to add course. Please try again.';
 
       if (error.message) {
-        // Check if it's the "already enrolled" error
-        if (error.message.includes('already enrolled')) {
+        if (error.message.includes('no longer available')) {
+          // Custom message for courses that don't exist anymore
+          errorMessage = error.message;
+        } else if (error.message.includes('already enrolled')) {
           errorMessage = 'You are already enrolled in this course for this trimester.';
+        } else if (error.message.includes('not found')) {
+          errorMessage = `The course "${selectedCourseToAdd?.code}" (${selectedCourseToAdd?.title}) is not available. It may have been removed from the system. Please refresh the course list and select a different course.`;
         } else {
           errorMessage = error.message;
         }
@@ -431,7 +468,15 @@ const StudentDashboard = () => {
       setShowAddFailureNotification(true);
       setTimeout(() => {
         setShowAddFailureNotification(false);
-      }, 5000); // Show error for 5 seconds
+      }, 7000); // Show error for 7 seconds to give user time to read
+
+      // Auto-refresh course list if it's a "not found" error
+      if (error.message && error.message.includes('not found')) {
+        console.log('Auto-refreshing course list due to course not found error...');
+        setTimeout(() => {
+          fetchCourses();
+        }, 2000);
+      }
 
     } finally {
       setAddingCourse(false);
