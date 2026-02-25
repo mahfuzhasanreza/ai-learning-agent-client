@@ -195,6 +195,60 @@ class ApiService {
     }
   }
 
+  // Send a message in an existing chat thread
+  static async sendChatMessage(message, threadId, metadata = {}) {
+    try {
+      const requestBody = {
+        message: message,
+        thread_id: threadId,
+        metadata: metadata
+      };
+
+      const response = await fetch(`${BASE_URL}/chat/message`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error sending chat message:', error);
+      throw error;
+    }
+  }
+
+  // Create a new chat thread
+  static async createChatThread(title = "New Conversation", featureType = "agentic_chat", agentName = "general_agent") {
+    try {
+      const response = await fetch(`${BASE_URL}/chat/threads`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify({
+          title: title,
+          feature_type: featureType,
+          agent_name: agentName
+        })
+      });
+      
+      if (!response.ok) {
+        this.handleAuthError(response);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating chat thread:', error);
+      throw error;
+    }
+  }
+
   // Get chat history
   static async getChatHistory() {
     try {

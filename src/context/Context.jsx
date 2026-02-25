@@ -59,15 +59,41 @@ const ContextProvider = (props) => {
     //     }, 40 * index)
     // }
 
-    const newChat = () => {
-        setLoading(false);
-        setShowResult(false);
-        setActiveChat("");
-        setThreadId(null); // Reset thread ID for new chat
-        setConversation([]); // Clear conversation
-        setQuestions([]); // Clear questions
-        setIsTyping(false); // Reset typing state
-        setSelectedAgent(null);
+    const newChat = async () => {
+        try {
+            setLoading(false);
+            setShowResult(false);
+            setActiveChat("");
+            setThreadId(null); // Reset thread ID for new chat
+            setConversation([]); // Clear conversation
+            setQuestions([]); // Clear questions
+            setIsTyping(false); // Reset typing state
+            setSelectedAgent(null);
+            
+            // Create a new chat thread via API
+            const response = await ApiService.createChatThread(
+                "New Conversation",
+                "agentic_chat",
+                "general_agent"
+            );
+            
+            console.log('=== NEW CHAT THREAD CREATED ===');
+            console.log('Thread ID:', response.thread_id);
+            console.log('Title:', response.title);
+            console.log('Created At:', response.created_at);
+            console.log('===========================');
+            
+            // Set the new thread ID
+            if (response.thread_id) {
+                setThreadId(response.thread_id);
+            }
+            
+            // Trigger sidebar refresh to show the new chat
+            refreshChatHistory();
+        } catch (error) {
+            console.error('Error creating new chat thread:', error);
+            // Continue with the local state reset even if API fails
+        }
     }
 
     // Function to trigger chat history refresh in sidebar
