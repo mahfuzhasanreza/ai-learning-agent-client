@@ -665,13 +665,13 @@ const Register = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center mx-auto items-center text-white p-12 xl:p-16 2xl:p-20 text-center max-w-2xl">
-          {/* Logo/Brand Area */}
-          <div className="mb-16 transform hover:scale-105 transition-all duration-700 group">
-            <div className="flex items-center justify-center mb-8 relative">
+        <div className="relative z-10 flex flex-col justify-center mx-auto items-center text-center p-12">
+          {/* Logo/Brand Area - Simplified to match Login */}
+          <div className="transform hover:scale-105 transition-all duration-500 group">
+            <div className="flex items-center justify-center mb-6 relative">
               <div className="relative">
                 <div className="relative bg-white rounded-3xl p-6 border-2 border-gray-300 shadow-xl">
-                  <Brain className="w-20 h-20 xl:w-24 xl:h-24 text-orange-500 animate-pulse" />
+                  <Brain className="w-20 h-20 text-orange-500 animate-pulse" />
                   <div className="absolute -top-3 -right-3 w-10 h-10 bg-orange-500 rounded-full animate-bounce flex items-center justify-center shadow-lg">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
@@ -679,59 +679,11 @@ const Register = () => {
               </div>
             </div>
 
-            <h1 className="text-6xl xl:text-7xl 2xl:text-8xl font-black mb-4 tracking-tight text-orange-500">
+            <h1 className="text-5xl font-black mb-3 tracking-tight text-orange-500">
               COSMOS-ITS
             </h1>
-            <p className="text-gray-700 text-xl xl:text-2xl font-semibold tracking-wide mb-4">Join the Future of Learning</p>
-
-          </div>
-
-          {/* Registration Benefits */}
-          <div className="space-y-10 max-w-lg xl:max-w-xl">
-            {[
-              {
-                icon: Users,
-                title: "Join 10,000+ Learners",
-                desc: "Connect with a global learning community",
-                iconColor: "text-orange-500",
-                delay: "0.5s"
-              },
-              {
-                icon: Trophy,
-                title: "Earn Certificates",
-                desc: "Get verified certificates for your achievements",
-                iconColor: "text-orange-500",
-                delay: "1s"
-              },
-              {
-                icon: Shield,
-                title: "Free Forever",
-                desc: "Start learning with our free tier, upgrade anytime",
-                iconColor: "text-orange-500",
-                delay: "1.5s"
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-start space-x-6 opacity-0 animate-fade-in-up group hover:scale-105 transition-all duration-500 cursor-pointer"
-                style={{ animationDelay: feature.delay, animationFillMode: 'forwards' }}
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="relative w-20 h-20 xl:w-24 xl:h-24 bg-white rounded-2xl flex items-center justify-center border border-gray-300 group-hover:border-orange-500 transition-all duration-500 shadow-lg">
-                    <feature.icon className={`w-10 h-10 xl:w-12 xl:h-12 ${feature.iconColor} group-hover:scale-110 transition-transform duration-500`} />
-                  </div>
-                </div>
-
-                <div className="flex-1 text-left pt-2">
-                  <h3 className="font-bold text-xl xl:text-2xl text-gray-800 mb-2 group-hover:text-orange-500 transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 text-base xl:text-lg leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                    {feature.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+            <p className="text-gray-700 text-xl font-semibold tracking-wide">AI-Powered Learning Platform</p>
+            <div className="w-24 h-1 bg-orange-500 rounded-full mx-auto mt-4" />
           </div>
         </div>
       </div>
