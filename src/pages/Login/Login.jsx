@@ -487,19 +487,19 @@ const Login = () => {
     >
       <div 
         className={`w-2 h-2 rounded-full ${
-          i % 3 === 0 ? 'bg-[#FF4B00]' : 
-          i % 3 === 1 ? 'bg-[#a200ff]' : 
-          'bg-cyan-400'
+          i % 3 === 0 ? 'bg-orange-400' : 
+          i % 3 === 1 ? 'bg-orange-500' : 
+          'bg-orange-300'
         }`} 
       />
     </div>
   ));
 
   return (
-    <div className="w-full min-h-screen bg-[#0a0a0a] flex overflow-hidden relative">
+    <div className="w-full min-h-screen bg-white flex overflow-hidden relative">
       {/* Animated background with COSMOS colors */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,75,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(162,0,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
       </div>
 
       {/* Animated gradient orbs */}
@@ -509,14 +509,14 @@ const Login = () => {
 
       {/* Left Side - Enhanced Animation Area */}
       <div
-        className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1a0a14] via-[#0f0a1a] to-[#0a0a0a] relative overflow-hidden border-r border-white/5"
+        className="hidden lg:flex lg:w-1/2 bg-gray-100 relative overflow-hidden border-r border-gray-300"
         onMouseMove={handleMouseMove}
       >
         {/* Dynamic mouse-following gradient with COSMOS colors */}
         <div
-          className="absolute inset-0 opacity-40 transition-all duration-500 ease-out"
+          className="absolute inset-0 opacity-20 transition-all duration-500 ease-out"
           style={{
-            background: `radial-gradient(500px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(255,75,0,0.15), rgba(162,0,255,0.1), transparent 70%)`
+            background: `radial-gradient(500px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(249,115,22,0.08), transparent 70%)`
           }}
         />
 
@@ -525,9 +525,9 @@ const Login = () => {
           {particles}
           
           {/* Glowing orbs with COSMOS colors */}
-          <div className="absolute top-20 left-20 w-40 h-40 bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-32 right-20 w-56 h-56 bg-gradient-to-r from-[#a200ff]/20 to-cyan-500/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
-          <div className="absolute top-1/2 left-10 w-32 h-32 bg-gradient-to-r from-[#FF4B00]/30 to-orange-500/20 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
+          <div className="absolute top-20 left-20 w-40 h-40 bg-orange-200 opacity-30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-32 right-20 w-56 h-56 bg-orange-300 opacity-20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }} />
+          <div className="absolute top-1/2 left-10 w-32 h-32 bg-orange-400 opacity-25 rounded-full blur-2xl animate-ping" style={{ animationDuration: '6s' }} />
 
           {/* Geometric shapes */}
           {/* <div className="absolute top-1/4 right-1/4 w-20 h-20 border-2 border-[#FF4B00]/30 rotate-45 animate-spin" style={{ animationDuration: '10s' }} /> */}
@@ -545,8 +545,8 @@ const Login = () => {
                 {/* <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-3xl blur-2xl opacity-60 animate-pulse" /> */}
                 
                 {/* Main logo container */}
-                <div className="relative bg-gradient-to-br from-[#1a0a14] to-[#0f0a1a] rounded-3xl p-6 border-2 border-white/10 backdrop-blur-xl shadow-2xl">
-                  <Brain className="w-20 h-20 text-[#FF4B00] animate-pulse" style={{ filter: 'drop-shadow(0 0 20px rgba(255,75,0,0.5))' }} />
+                <div className="relative bg-white rounded-3xl p-6 border-2 border-gray-300 shadow-xl">
+                  <Brain className="w-20 h-20 text-orange-500 animate-pulse" />
                   
                  
                 </div>
@@ -554,12 +554,10 @@ const Login = () => {
             </div>
             
             {/* Brand name */}
-            <h1 className="text-6xl font-black mb-4 tracking-tight">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4B00] via-[#a200ff] to-cyan-400 animate-gradient">
-                COSMOS-ITS
-              </span>
+            <h1 className="text-6xl font-black mb-4 tracking-tight text-orange-500">
+              COSMOS-ITS
             </h1>
-            <p className="text-gray-300 text-xl font-semibold tracking-wide mb-4">AI-Powered Learning Platform</p>
+            <p className="text-gray-700 text-xl font-semibold tracking-wide mb-4">AI-Powered Learning Platform</p>
             
    
             
@@ -583,62 +581,61 @@ const Login = () => {
       {/* Right Side - Enhanced Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 lg:p-12 relative">
         {/* Subtle background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
+        <div className="absolute inset-0 bg-gray-50" />
 
         <div className="w-full max-w-md space-y-8 relative z-10">
           {/* Enhanced Mobile Logo */}
           <div className="lg:hidden text-center mb-10">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF4B00] to-[#a200ff] rounded-2xl blur-xl opacity-60 animate-pulse" />
-                <div className="relative bg-gradient-to-br from-[#1a0a14] to-[#0f0a1a] rounded-2xl p-4 border border-white/20">
-                  <Brain className="w-14 h-14 text-[#FF4B00] animate-pulse" />
+                <div className="relative bg-white rounded-2xl p-4 border border-gray-300 shadow-lg">
+                  <Brain className="w-14 h-14 text-orange-500 animate-pulse" />
                 </div>
               </div>
             </div>
-            <h1 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-[#FF4B00] to-[#a200ff]">
+            <h1 className="text-5xl font-black text-orange-500">
               COSMOS-ITS
             </h1>
-            <p className="text-gray-400 mt-2">AI-Powered Learning Platform</p>
+            <p className="text-gray-600 mt-2">AI-Powered Learning Platform</p>
           </div>
 
           {/* Enhanced Welcome Text */}
           <div className="text-center mb-8">
-            <h2 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400 mb-4">
+            <h2 className="text-5xl font-black text-gray-800 mb-4">
               Welcome Back
             </h2>
-            <p className="text-gray-400 text-lg">Continue your learning journey with COSMOS</p>
+            <p className="text-gray-600 text-lg">Continue your learning journey with COSMOS</p>
             
       
           </div>
 
           {/* Enhanced Login Form */}
-          <div className="backdrop-blur-2xl bg-white/[0.03] rounded-3xl p-8 border border-white/10 shadow-2xl hover:border-white/20 transition-all duration-500">
+          <div className="backdrop-blur-2xl bg-white rounded-3xl p-8 border border-gray-300 shadow-xl hover:border-gray-400 transition-all duration-500">
             {/* Error Message Display */}
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl backdrop-blur-sm animate-shake">
-                <p className="text-red-400 text-sm text-center font-medium">{error}</p>
+              <div className="mb-6 p-4 bg-red-50 border border-red-300 rounded-2xl animate-shake">
+                <p className="text-red-600 text-sm text-center font-medium">{error}</p>
               </div>
             )}
             
             <form onSubmit={handleLogin} className="space-y-6">
               {/* Enhanced Email Field */}
               <div className="relative group">
-                <label className="block text-sm font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-sm font-bold text-gray-700 mb-3 ml-1">
                   Email Address
                 </label>
                 <div className="relative">
                   {/* Focus glow effect */}
                   <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
                     focusedField === 'email'
-                      ? 'bg-gradient-to-r from-[#FF4B00]/20 to-[#a200ff]/20 blur-xl'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
                   }`} />
                   
                   {/* Icon */}
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none z-10">
                     <Mail className={`h-5 w-5 transition-all duration-300 ${
-                      focusedField === 'email' ? 'text-[#FF4B00] scale-110' : 'text-gray-500'
+                      focusedField === 'email' ? 'text-orange-500 scale-110' : 'text-gray-400'
                     }`} />
                   </div>
                   
@@ -649,10 +646,10 @@ const Login = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-14 pr-5 py-4 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium ${
+                    className={`relative w-full pl-14 pr-5 py-4 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium ${
                       focusedField === 'email'
-                        ? 'border-[#FF4B00]/50 shadow-lg shadow-[#FF4B00]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
                     }`}
                     placeholder="Enter your email"
                     required
@@ -662,21 +659,21 @@ const Login = () => {
 
               {/* Enhanced Password Field */}
               <div className="mt-4 relative group">
-                <label className="block text-sm font-bold text-gray-300 mb-3 ml-1">
+                <label className="block text-sm font-bold text-gray-700 mb-3 ml-1">
                   Password
                 </label>
                 <div className=" relative">
                   {/* Focus glow effect */}
                   <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
                     focusedField === 'password'
-                      ? 'bg-gradient-to-r from-[#a200ff]/20 to-[#FF4B00]/20 blur-xl'
+                      ? 'bg-orange-100 opacity-50 blur-sm'
                       : 'bg-transparent'
                   }`} />
                   
                   {/* Icon */}
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none z-10">
                     <Lock className={`h-5 w-5 transition-all duration-300 ${
-                      focusedField === 'password' ? 'text-[#a200ff] scale-110' : 'text-gray-500'
+                      focusedField === 'password' ? 'text-orange-500 scale-110' : 'text-gray-400'
                     }`} />
                   </div>
                   
@@ -687,10 +684,10 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setFocusedField('password')}
                     onBlur={() => setFocusedField('')}
-                    className={`relative w-full pl-14 pr-14 py-4 bg-white/5 border backdrop-blur-xl rounded-2xl outline-none transition-all duration-300 text-white placeholder-gray-500 font-medium ${
+                    className={`relative w-full pl-14 pr-14 py-4 bg-gray-50 border rounded-2xl outline-none transition-all duration-300 text-gray-800 placeholder-gray-500 font-medium ${
                       focusedField === 'password'
-                        ? 'border-[#a200ff]/50 shadow-lg shadow-[#a200ff]/10 bg-white/10'
-                        : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'
+                        ? 'border-orange-500 shadow-lg shadow-orange-200 bg-white'
+                        : 'border-gray-300 hover:border-gray-400 hover:bg-white'
                     }`}
                     placeholder="Enter your password"
                     required
@@ -700,7 +697,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-[#a200ff] transition-all duration-300 z-10 hover:scale-110"
+                    className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-orange-500 transition-all duration-300 z-10 hover:scale-110"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -732,14 +729,13 @@ const Login = () => {
                 disabled={isLoading}
                 className={`relative w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-500 transform overflow-hidden group mt-8 ${
                   isLoading
-                    ? 'bg-gray-700 cursor-not-allowed'
-                    : 'bg-orange-600 hover:shadow-2xl hover:shadow-[#FF4B00]/30 hover:-translate-y-1 active:translate-y-0 bg-[length:200%_100%] hover:bg-right'
-                } text-white shadow-xl shadow-[#FF4B00]/20`}
-                style={{ transition: 'all 0.5s ease, background-position 0.8s ease' }}
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-orange-500 hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-200 hover:-translate-y-1 active:translate-y-0'
+                } text-white shadow-lg`}
               >
                 {/* Shimmer effect */}
                 {!isLoading && (
-                  <div className="absolute inset-0 bg-orange-600 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 )}
                 
                 <div className="relative flex items-center justify-center">
@@ -760,11 +756,11 @@ const Login = () => {
 
             {/* Enhanced Sign Up Link */}
             <div className="text-center mt-8">
-              <p className="text-gray-400 font-medium">
+              <p className="text-gray-600 font-medium">
                 Don't have an account?{' '}
                 <a 
                   href="/register" 
-                  className="text-[#FF4B00] hover:text-[#a200ff] font-bold transition-all duration-300 hover:underline"
+                  className="text-orange-500 hover:text-orange-600 font-bold transition-all duration-300 hover:underline"
                 >
                   Sign up now
                 </a>
@@ -774,10 +770,10 @@ const Login = () => {
             {/* Enhanced Divider */}
             <div className="relative mt-10 mb-8">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
+                <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-6 py-2 bg-[#0a0a0a] backdrop-blur-xl rounded-full text-gray-400 border border-white/10 font-medium">
+                <span className="px-6 py-2 bg-white rounded-full text-gray-600 border border-gray-300 font-medium">
                   Or continue with
                 </span>
               </div>
@@ -785,14 +781,14 @@ const Login = () => {
 
             {/* Enhanced Social Login Buttons */}
             <div className="grid grid-cols-1 gap-4">
-              <button className="group flex items-center justify-center px-5 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#FF4B00]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#FF4B00]/10">
+              <button className="group flex items-center justify-center px-5 py-4 bg-gray-50 border border-gray-300 rounded-2xl hover:border-orange-500 hover:bg-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100">
                 <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
-                <span className="text-white font-semibold">Google</span>
+                <span className="text-gray-800 font-semibold">Google</span>
               </button>
               
               {/* <button className="group flex items-center justify-center px-5 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:border-[#a200ff]/50 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-[#a200ff]/10">
