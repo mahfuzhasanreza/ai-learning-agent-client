@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { X, FileText, Image as ImageIcon, ExternalLink, ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Markdown from 'react-markdown';
+import CodeBlock from '../CodeBlock/CodeBlock';
 
 const QuestionCard = ({ question, index }) => {
     const [imgError, setImgError] = useState(false);
@@ -41,9 +43,28 @@ const QuestionCard = ({ question, index }) => {
                 )}
 
                 {/* Question text */}
-                <p className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-line">
-                    {question.question_text}
-                </p>
+                <div className="text-gray-800 text-sm leading-relaxed mb-4 question-markdown">
+                    <Markdown
+                        components={{
+                            code(props) {
+                                const { children, className, ...rest } = props;
+                                const match = /language-(\w+)/.exec(className || '');
+                                return match ? (
+                                    <CodeBlock language={match[1]}>{children}</CodeBlock>
+                                ) : (
+                                    <code {...rest} className={`bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded text-xs font-mono border border-orange-100 ${className || ''}`}>
+                                        {children}
+                                    </code>
+                                );
+                            },
+                            p({ children }) {
+                                return <p className="mb-2 last:mb-0 whitespace-pre-line">{children}</p>;
+                            }
+                        }}
+                    >
+                        {question.question_text}
+                    </Markdown>
+                </div>
 
                 {/* Image */}
                 {question.has_image && question.image_url && question.image_url !== 'N/A' && !imgError && (
@@ -75,9 +96,28 @@ const QuestionCard = ({ question, index }) => {
                 {question.has_description && question.description_content && question.description_content !== 'N/A' && (
                     <div className="mb-4 p-3 bg-orange-50 rounded-xl border border-orange-200">
                         <p className="text-xs font-semibold text-orange-500 mb-1">Description</p>
-                        <p className="text-xs text-gray-700 whitespace-pre-line leading-relaxed">
-                            {question.description_content}
-                        </p>
+                        <div className="text-xs text-gray-700 leading-relaxed">
+                            <Markdown
+                                components={{
+                                    code(props) {
+                                        const { children, className, ...rest } = props;
+                                        const match = /language-(\w+)/.exec(className || '');
+                                        return match ? (
+                                            <CodeBlock language={match[1]}>{children}</CodeBlock>
+                                        ) : (
+                                            <code {...rest} className={`bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-mono ${className || ''}`}>
+                                                {children}
+                                            </code>
+                                        );
+                                    },
+                                    p({ children }) {
+                                        return <p className="mb-1 last:mb-0 whitespace-pre-line">{children}</p>;
+                                    }
+                                }}
+                            >
+                                {question.description_content}
+                            </Markdown>
+                        </div>
                     </div>
                 )}
 
