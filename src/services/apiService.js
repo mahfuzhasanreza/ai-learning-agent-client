@@ -250,9 +250,9 @@ class ApiService {
   }
 
   // Get chat history
-  static async getChatHistory() {
+  static async getChatHistory(limit = 50, offset = 0) {
     try {
-      const response = await fetch(`${BASE_URL}/api/v1/chats`, {
+      const response = await fetch(`${BASE_URL}/chat/threads?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });

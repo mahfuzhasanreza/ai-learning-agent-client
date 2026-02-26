@@ -104,8 +104,8 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         setLoading(true);
         const data = await ApiService.getChatHistory();
         
-        // Organize chats by time period
-        const organized = organizeChatsByTime(data.chats || []);
+        // Organize chats by time period (new API returns data.threads)
+        const organized = organizeChatsByTime(data.threads || []);
         setChatHistory(organized);
       } catch (error) {
         console.error('Failed to fetch chat history:', error);
