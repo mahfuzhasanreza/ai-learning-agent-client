@@ -71,7 +71,7 @@ const Roadmap = () => {
       setChatHistory(data.threads || []);
     } catch (err) {
       console.error('Error fetching chat history:', err);
-      setError('Failed to load chat history');
+      
     } finally {
       setLoadingHistory(false);
     }
@@ -163,17 +163,16 @@ const Roadmap = () => {
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       const token = getToken();
-      
+
       const headers = {
         'Content-Type': 'application/json',
       };
-      
-      // Add Authorization header if token exists
+
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
-      
-      const response = await fetch(`${baseUrl}/api/v1/roadmap`, {
+
+      const response = await fetch(`${baseUrl}/roadmap/generate`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ topic: query.trim() }),
@@ -183,90 +182,30 @@ const Roadmap = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let currentEvent = null;
+      const data = await response.json();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      console.log('Roadmap generated:', data);
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+      // Use the roadmap id as the thread identifier
+      if (data.id) {
+        console.log('Roadmap ID:', data.id);
+        setThreadId(data.id);
+      }
 
-        for (const line of lines) {
-          // Skip empty lines
-          if (!line.trim()) continue;
-          
-          // Handle event type
-          if (line.startsWith('event: ')) {
-            currentEvent = line.slice(7).trim();
-            continue;
-          }
-          
-          // Handle data
-          if (line.startsWith('data: ')) {
-            try {
-              let jsonString = line.slice(6).trim();
-              
-              // Skip empty data lines
-              if (!jsonString) continue;
-              
-              // Skip non-JSON data lines (like "event: roadmap")
-              if (jsonString.startsWith('event:')) continue;
-              
-              // Handle duplicate "data: " prefix (e.g., "data: data: {...}")
-              if (jsonString.startsWith('data: ')) {
-                jsonString = jsonString.slice(6).trim();
-              }
-              
-              const jsonData = JSON.parse(jsonString);
-              
-              // Only process roadmap events
-              if (currentEvent === 'roadmap' || !currentEvent) {
-                console.log('Received roadmap data:', jsonData);
-                
-                // Extract thread_id if present in the data
-                if (jsonData.thread_id) {
-                  console.log('Thread ID found in roadmap data:', jsonData.thread_id);
-                  setThreadId(jsonData.thread_id);
-                }
-                
-                // Only set roadmap data if it has stages (actual roadmap)
-                if (jsonData.stages) {
-                  setRoadmapData(jsonData);
-                  setCompletedItems(new Set()); // Reset completed items
-                  setSelectedNode(null); // Reset selected node
-                }
-              } else if (currentEvent === 'thread_id') {
-                console.log('Thread ID event received:', jsonData);
-                // Store thread_id for chat functionality
-                // Handle both {"thread_id": "xxx"} and direct string formats
-                const threadIdValue = jsonData.thread_id || jsonData;
-                console.log('Extracted thread_id:', threadIdValue);
-                if (threadIdValue) {
-                  setThreadId(threadIdValue);
-                }
-              }
-              
-              // Reset current event after processing
-              currentEvent = null;
-            } catch (e) {
-              console.error('Error parsing SSE data:', e, 'Line:', line);
-            }
-          }
-        }
+      // Set roadmap data if stages are present
+      if (data.stages) {
+        setRoadmapData(data);
+        setCompletedItems(new Set());
+        setSelectedNode(null);
       }
 
       setIsLoading(false);
-      
-      // Auto-refresh chat history after successful roadmap generation (with 5 second delay)
+
+      // Auto-refresh chat history after successful roadmap generation
       if (showHistoryPanel) {
         setTimeout(async () => {
           await fetchChatHistory();
-        }, 5000); // 5 second delay to allow backend to save the thread
+        }, 2000);
       }
     } catch (err) {
       console.error('Error generating roadmap:', err);

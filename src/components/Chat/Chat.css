@@ -93,10 +93,10 @@
 }
 
 /* Glow Pulse Animation */
-@keyframes glowPulse {
+/* @keyframes glowPulse {
     0%, 100% { text-shadow: 0 0 10px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3); }
     50% { text-shadow: 0 0 20px rgba(249, 115, 22, 0.6), 0 0 40px rgba(249, 115, 22, 0.5); }
-}
+} */
 
 /* Fade In Animation */
 @keyframes fadeInUp {
@@ -131,8 +131,8 @@
     position: relative;
     cursor: pointer;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05),
-                0 0 8px rgba(249, 115, 22, 0.05);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05),
+                0 0 8px rgba(249, 115, 22, 0.05); */
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     transform: translateY(0);
@@ -158,8 +158,8 @@
 
 .main .card:hover .card-icon {
     background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-    box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3),
-                0 0 10px rgba(162, 0, 255, 0.3);
+    /* box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3),
+                0 0 10px rgba(162, 0, 255, 0.3); */
 }
 
 /* Icon Image */
@@ -187,7 +187,7 @@
 
 .main .card:hover p {
     color: #111827;
-    text-shadow: 0 0 8px rgba(249, 115, 22, 0.2);
+    /* text-shadow: 0 0 8px rgba(249, 115, 22, 0.2); */
 }
 
 
@@ -541,7 +541,7 @@
 
 .question-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); */
 }
 
 .line-clamp-4 {
@@ -614,7 +614,7 @@
 
 .agent-dropdown-button:hover {
   border-color: #f97316;
-  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2);
+  /* box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2); */
 }
 
 .agent-dropdown-menu {
@@ -687,7 +687,7 @@
 
 .question-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(249, 115, 22, 0.15), 0 0 8px rgba(249, 115, 22, 0.1);
+  /* box-shadow: 0 8px 16px rgba(249, 115, 22, 0.15), 0 0 8px rgba(249, 115, 22, 0.1); */
 }
 
 .line-clamp-4 {

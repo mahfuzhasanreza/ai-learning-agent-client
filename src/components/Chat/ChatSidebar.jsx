@@ -147,7 +147,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
      
 
         {/* New Chat Button */}
-        <div className="p-3 border-gray-200 flex-shrink-0">
+        <div className="p-4 border-gray-200 flex-shrink-0">
           <button
             onClick={() => {
               newChat();
@@ -160,12 +160,12 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Search Bar */}
-        <div className="px-4 pb-3 border-b border-gray-200 flex-shrink-0">
+        <div className="px-4 pb-3 border-gray-200 flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
               type="text"
-              placeholder="Search chats..."
+              placeholder="Search chats"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 text-sm focus:outline-none focus:border-orange-500 focus:bg-white transition-all duration-200"
@@ -280,25 +280,15 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Bottom Actions */}
-        <div className="border-t border-gray-200 p-4 space-y-2 bg-gray-50 flex-shrink-0">
+        <div className="border-t border-gray-200 p-4 pt-5 space-y-2 bg-gray-50 flex-shrink-0">
         
+
 
           <button
             onClick={() => {
               // setTtsSettingsOpen(true);
               setTtsSettingsOpen(true);
               // setIsOpen(false);
-            }}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-white hover:text-gray-900 transition-all duration-200 text-sm font-medium"
-          >
-            <Volume2 className="w-5 h-5" />
-            Text-to-Speech Setting
-          </button>
-
-          <button
-            onClick={() => {
-              console.log('Open settings');
-              setIsOpen(false);
             }}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-white hover:text-gray-900 transition-all duration-200 text-sm font-medium"
           >
