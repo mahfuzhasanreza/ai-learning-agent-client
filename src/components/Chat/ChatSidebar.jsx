@@ -144,32 +144,15 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
               mass: 0.8
             }}
           >
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-200 bg-orange-50">
-          <div className="flex items-center gap-3">
-            {/* <div className="w-10 h-10 bg-gradient-to-br from-[#FF4B00] to-[#a200ff] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF4B00]/20">
-              <MessageSquare className="w-5 h-5 text-white" />
-            </div> */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-800">Chat Menu</h2>
-              {/* <p className="text-xs text-gray-400">Chat History</p> */}
-            </div>
-          </div>
-          {/* <button
-            onClick={() => setIsOpen(false)}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200 text-gray-400 hover:text-white"
-          >
-            <X className="w-5 h-5" />
-          </button> */}
-        </div>
+     
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-gray-200 flex-shrink-0">
+        <div className="p-3 border-gray-200 flex-shrink-0">
           <button
             onClick={() => {
               newChat();
             }}
-            className="cursor-pointer w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-0.5"
+            className="cursor-pointer w-full flex items-center justify-center gap-3 p-3 rounded-xl bg-orange-500  font-semibold hover:shadow-lg hover:shadow-orange-500/30 hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-0.5 text-white"
           >
             <PlusCircle className="w-5 h-5" />
             New Chat
@@ -177,7 +160,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Search Bar */}
-        <div className="p-4 border-b border-gray-200 flex-shrink-0">
+        <div className="px-4 pb-3 border-b border-gray-200 flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -185,7 +168,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
               placeholder="Search chats..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 text-sm focus:outline-none focus:border-orange-500 focus:bg-white transition-all duration-200"
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 text-sm focus:outline-none focus:border-orange-500 focus:bg-white transition-all duration-200"
             />
           </div>
         </div>
