@@ -8,7 +8,7 @@ const QuestionCard = ({ question, index }) => {
     const [imgError, setImgError] = useState(false);
 
     return (
-        <div className="relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all duration-300 overflow-hidden">
+        <div className="relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all duration-300 overflow-hidden mt-3">
             {/* Top accent bar */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-orange-300" />
 
@@ -159,7 +159,8 @@ const QuestionPanel = ({ isOpen, onClose, questions = [] }) => {
                 <>
                     {/* Backdrop */}
                     <motion.div
-                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                        // className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                        className="fixed inset-0 bg-black/20 z-40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -175,16 +176,12 @@ const QuestionPanel = ({ isOpen, onClose, questions = [] }) => {
                         transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-orange-50 shrink-0">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center shadow-sm">
-                                    <BookOpen className="w-5 h-5 text-white" />
-                                </div>
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 bg-orange-50 shrink-0">
+                 
                                 <div>
-                                    <h2 className="text-base font-bold text-gray-800">Retrieved Questions</h2>
-                                    <p className="text-xs text-gray-500">{questions.length} question{questions.length !== 1 ? 's' : ''} found</p>
+                                    <h2 className="text-base font-bold text-gray-800">Questions ({questions.length})</h2>
                                 </div>
-                            </div>
+                          
                             <button
                                 onClick={onClose}
                                 className="p-2 rounded-xl hover:bg-orange-100 text-gray-500 hover:text-orange-600 transition-all duration-200"
