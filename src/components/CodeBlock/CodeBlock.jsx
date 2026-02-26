@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import './CodeBlock.css';
 
 const CodeBlock = ({ language, children }) => {
@@ -30,17 +30,19 @@ const CodeBlock = ({ language, children }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                     )}
-                    <span className="ml-2">{copied ? "Copied!" : "Copy code"}</span>
+                    
                 </button>
             </div>
             <SyntaxHighlighter
                 language={language}
-                style={vscDarkPlus}
+                style={vs}
                 customStyle={{
                     margin: 0,
-                    borderRadius: '0 0 8px 8px',
-                    fontSize: '14px',
+                    border: 0,
+                    borderRadius: '0 0 15px 15px',
+                    fontSize: '18px',
                     lineHeight: '1.5',
+                    background: '#ffffff',
                 }}
                 showLineNumbers={false}
                 wrapLines={true}

@@ -1,10 +1,10 @@
-/* Code Block Wrapper - ChatGPT Style */
+/* Code Block Wrapper - Light Theme */
 .code-block-wrapper {
     margin: 16px 0;
     border-radius: 8px;
     overflow: hidden;
-    background-color: #000000;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* background-color: #ececec; */
+    /* border: 1px solid #e2e8f0; */
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
@@ -14,14 +14,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 16px;
-    background: linear-gradient(to bottom, #2d2d2d, #252525);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    /* border-bottom: 1px solid #dee2e6; */
+    /* border: 2px solid red; */
+    margin-bottom: 3px;
+    border-radius: 15px 15px 0 0;
 }
 
 .code-block-language {
     font-size: 13px;
     font-weight: 600;
-    color: #e5e7eb;
+    color: #495057;
     text-transform: capitalize;
     letter-spacing: 0.3px;
 }
@@ -32,10 +35,10 @@
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    color: #d4d4d4;
+    /* background-color: #ffffff; */
+    /* border: 1px solid #ced4da; */
+    /* border-radius: 6px; */
+    color: #495057;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
@@ -43,8 +46,6 @@
 }
 
 .code-block-copy-btn:hover {
-    background-color: rgba(255, 75, 0, 0.1);
-    border-color: #FF4B00;
     color: #FF4B00;
 }
 
@@ -53,8 +54,8 @@
 }
 
 .code-block-copy-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 23px;
+    height: 23px;
 }
 
 /* Utility classes for SVG */
@@ -96,7 +97,7 @@ code {
 .code-block-wrapper pre {
     margin: 0 !important;
     padding: 16px !important;
-    background-color: #000000 !important;
+    background-color: #f8f9fa !important;
     overflow-x: auto;
 }
 
@@ -107,18 +108,18 @@ code {
 }
 
 .code-block-wrapper pre::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #e9ecef;
     border-radius: 4px;
 }
 
 .code-block-wrapper pre::-webkit-scrollbar-thumb {
-    background: #444;
+    background: #adb5bd;
     border-radius: 4px;
-    border: 2px solid #1a1a1a;
+    border: 2px solid #e9ecef;
 }
 
 .code-block-wrapper pre::-webkit-scrollbar-thumb:hover {
-    background: #666;
+    background: #868e96;
 }
 
 /* Responsive */
