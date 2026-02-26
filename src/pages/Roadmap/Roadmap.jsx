@@ -621,7 +621,7 @@ const Roadmap = () => {
   }, [chatHistory, searchQuery, sortBy]);
 
   return (
-    <div className=" min-w-[1585px] w-full h-screen bg-white flex flex-col">
+    <div className="min-w-[1585px] w-full h-screen  flex flex-col">
       {/* Header with Input Section */}
 
       {/* Main Content */}
@@ -629,7 +629,7 @@ const Roadmap = () => {
         
         {/* Chat History Panel (Left Side) */}
         {showHistoryPanel && (
-          <div className="w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
+          <div className=" w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
             {/* Header */}
             <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-orange-50">
               <h3 className="text-lg font-bold text-orange-500">
@@ -785,7 +785,7 @@ const Roadmap = () => {
               {/* Difficulty + Time + Completed */}
               {selectedNode.type === "item" && (
                 <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md
+                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold 
                     ${selectedNode.difficulty === "Easy" && "bg-green-50 text-green-600 border border-green-200"}
                     ${selectedNode.difficulty === "Medium" && "bg-yellow-50 text-yellow-600 border border-yellow-200"}
                     ${selectedNode.difficulty === "Hard" && "bg-red-50 text-red-600 border border-red-200"}
@@ -809,7 +809,7 @@ const Roadmap = () => {
               )}
 
               {/* Description */}
-              <div className="text-sm leading-relaxed text-gray-700 bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <div className="text-sm leading-relaxed text-gray-700 bg-gray-50  rounded-xl p-4 border border-gray-200">
                 {selectedNode.description.split("\n").map((line, index) => (
                   <p key={index} className="mb-2 last:mb-0">{line}</p>
                 ))}
@@ -835,7 +835,7 @@ const Roadmap = () => {
         )}
 
         {/* Tree visualization */}
-        <div className="flex-1  rounded-lg shadow-md overflow-hidden relative">
+        <div className="flex-1  rounded-lg overflow-hidden relative">
           {roadmapData ? (
             <>
               <svg ref={svgRef} className="w-full h-full"></svg>
@@ -854,7 +854,7 @@ const Roadmap = () => {
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
-                <div className="w-32 h-32 mx-auto mb-6 bg-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <div className="w-32 h-32 mx-auto mb-6 bg-orange-500 rounded-full flex items-center justify-center ">
                   <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
@@ -866,13 +866,13 @@ const Roadmap = () => {
                   Welcome to COSMOS Roadmap Generator
                 </h2> */}
                 <p className="text-gray-600 mb-6">
-                  Enter a topic in the bottom input to generate a personalized learning roadmap. You can type your query or use voice input to get started.
+                  Enter a topic in the bottom input to generate a personalized learning roadmap.
                 </p>
                 
                 {/* Hint for Shift+Click feature */}
-                <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <p className="text-xs text-gray-700">
-                    💡 <span className="font-semibold text-orange-500">Pro Tip:</span> Hold <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-800 text-xs">Shift</kbd> and click any stage or item to get AI explanation in chat
+                <div className="mt-4 p-3 bg-orange-50 w-full border border-orange-200 rounded-lg">
+                  <p className="text-xs text-gray-700 ">
+                    <span className="font-semibold text-orange-500">Pro Tip:</span> Hold <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-800 text-xs">Shift</kbd> and click any stage or item to get AI explanation in chat
                   </p>
                 </div>
               
@@ -930,7 +930,7 @@ const Roadmap = () => {
               className={`p-2.5 rounded-lg transition-all hover:scale-105 ${
                 showHistoryPanel 
                   ? 'bg-orange-500 text-white' 
-                  : 'bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-800 border border-gray-200'
+                  : ' hover:bg-gray-50 text-gray-600 border border-gray-200'
               }`}
               title="Chat History"
             >
@@ -947,7 +947,7 @@ const Roadmap = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter your learning topic..."
-                className="relative w-full px-4 py-2.5 pr-11 bg-white backdrop-blur-sm text-gray-800 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent placeholder-gray-400 transition-all"
+                className="relative w-full px-4 py-2.5 pr-11 text-gray-800 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent placeholder-gray-400 transition-all"
                 disabled={isLoading}
               />
               
@@ -971,7 +971,7 @@ const Roadmap = () => {
             <button
               type="submit"
               disabled={isLoading || !query.trim()}
-              className="px-5 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 hover:scale-105"
+              className="px-5 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 "
             >
               {isLoading ? (
                 <>
