@@ -201,48 +201,37 @@ const Chat = () => {
 
                             return (
                                 <div key={index}>
-                                    <div className="result-title">
-                                        <img src={assets.user_icon} alt="" />
-                                        <div className="message-content">
-                                            <p className="text-gray-800">{item.input}</p>
-                                            <ListenButton
-                                                text={item.input}
-                                                size="small"
-                                                className="message-listen-btn"
-                                            />
+                                    <div className='flex justify-end'>
+                                        <div className="mb-5 w-fit rounded-2xl bg-[#f9fafb]">
+                                            <p className="p-2 px-4">{item.input}</p>
                                         </div>
                                     </div>
+
                                     <div className="result-data">
 
                                         <div className="message-content flex justify-between">
                                             <div className='flex flex-col'>
-                                                <div className='flex justify-between'>
+                                                <div className='mb-3 flex justify-between'>
                                                     <div className='flex gap-3'>
                                                         {/* <div><img src={assets.logo} alt="" /></div> */}
                                                         <div>
                                                             {/* Show agent name for each message */}
                                                             {(item.agentName || item.courseData) && (
-                                                                <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
+                                                                <p className='w-fit px-3 py-1  bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
                                                                     {item.agentName || item.courseData}
                                                                 </p>
                                                             )}
                                                             {/* Fallback to global courseData if not in item */}
                                                             {!item.agentName && !item.courseData && courseData && (
-                                                                <p className='w-fit px-5 py-1 font-bold bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
+                                                                <p className='w-fit px-3 py-1  bg-orange-500 text-2xl border-0 !text-white rounded-lg align-center items-center content-center justify-center'>
                                                                     {courseData}
                                                                 </p>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <ListenButton
-                                                            text={item.response}
-                                                            size="small"
-                                                            className="message-listen-btn"
-                                                        />
-                                                    </div>
+
                                                 </div>
-                                                <br />
+
                                                 <p>
                                                     {item.response}
                                                     {/* Show typing cursor on the last message if typing */}
@@ -252,6 +241,13 @@ const Chat = () => {
                                                 </p>
                                             </div>
 
+                                        </div>
+                                        <div>
+                                            <ListenButton
+                                                text={item.response}
+                                                size="small"
+                                                className="message-listen-btn"
+                                            />
                                         </div>
                                     </div>
 
@@ -427,25 +423,22 @@ const Chat = () => {
                                             )}
                                         </div>
                                     )}
+
                                 </div>
                             )
                         })}
 
                         {loading ?
                             <>
-                                <div className="result-title">
-                                    <img src={assets.user_icon} alt="" />
-                                    <div className="message-content">
-                                        <p>{lastSentPrompt}</p>
-                                        <ListenButton
-                                            text={lastSentPrompt}
-                                            size="small"
-                                            className="message-listen-btn"
-                                        />
+
+                                <div className='flex justify-end'>
+                                    <div className="mb-5 w-fit rounded-2xl bg-[#f9fafb]">
+                                        <p className="p-2 px-4 text-gray-800">{lastSentPrompt}</p>
                                     </div>
                                 </div>
+
                                 <div className="result-data">
-                                    <img src={assets.logo} alt="" />
+
                                     <div className='loader'>
                                         <hr />
                                         <hr />
