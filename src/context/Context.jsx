@@ -281,13 +281,8 @@ const ContextProvider = (props) => {
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
                 
-                // Store questions for this specific message
-                const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
-                    ? data.raw.questions 
-                    : [];
-                
                 // Set questions if available (for display on current message only)
-                setQuestions(messageQuestions);
+                setQuestions(data.questions || []);
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -310,13 +305,8 @@ const ContextProvider = (props) => {
                 response = data.response;
                 setCourseData(data.course || data.agent_name || "");
                 
-                // Store questions for this specific message
-                const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
-                    ? data.raw.questions 
-                    : [];
-                
                 // Set questions if available (for display on current message only)
-                setQuestions(messageQuestions);
+                setQuestions(data.questions || []);
                 
                 // Set thread_id from response if it's the first message
                 if (!threadId && data.thread_id) {
@@ -332,9 +322,7 @@ const ContextProvider = (props) => {
             // Store the agent name and course data
             const agentName = data.course || data.agent_name || "";
             const courseDataValue = data.course || data.agent_name || "";
-            const messageQuestions = (data.raw?.questions && Array.isArray(data.raw.questions) && data.raw.questions.length > 0) 
-                ? data.raw.questions 
-                : [];
+            const messageQuestions = data.questions || [];
 
             // Add to conversation with typewriter effect
             if (!showResult) {
