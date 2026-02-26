@@ -133,7 +133,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            className="h-screen w-80 fixed top-0 bg-white border-r border-gray-200  flex-shrink-0 flex flex-col"
+            className="h-screen w-80 fixed top-0 bg-[#f9fafb] border-r border-gray-200  flex-shrink-0 flex flex-col"
             initial={{ x: -320, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -320, opacity: 0 }}
@@ -233,25 +233,15 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                             <motion.button
                               key={chat.id}
                               onClick={() => handleChatClick(chat.id)}
-                              className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left border ${
+                              className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left ${
                                 isActive 
-                                  ? 'bg-orange-50 border-orange-500' 
-                                  : 'bg-transparent border-transparent hover:bg-gray-50 hover:border-gray-200'
+                                  ? 'bg-gray-100 ' 
+                                  : 'bg-transparent  hover:bg-gray-100'
                               }`}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ 
-                                delay: index * 0.05,
-                                duration: 0.3
-                              }}
-                              whileHover={{ x: 5 }}
+                             
                             >
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className={`w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                                isActive ? 'ring-2 ring-orange-500' : ''
-                              }`}>
-                                <MessageSquare className={`w-4 h-4 ${isActive ? 'text-orange-500' : 'text-orange-500'}`} />
-                              </div>
+                              
                               <div className="flex-1 min-w-0">
                                 <p className={`text-sm font-medium truncate transition-colors ${
                                   isActive ? 'text-gray-800' : 'text-gray-700 group-hover:text-gray-900'
@@ -266,7 +256,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                             
                             {/* Action Buttons */}
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                              <button
+                              {/* <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   console.log('Delete chat', chat.id);
@@ -274,7 +264,7 @@ export default function ChatSidebar({ isOpen, setIsOpen }) {
                                 className="p-1.5 rounded-lg hover:bg-red-100 text-gray-500 hover:text-red-600 transition-colors"
                               >
                                 <Trash2 className="w-4 h-4" />
-                              </button>
+                              </button> */}
                               <ChevronRight className="w-4 h-4 text-gray-400" />
                             </div>
                           </motion.button>
