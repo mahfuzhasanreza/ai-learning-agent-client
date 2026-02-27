@@ -234,7 +234,7 @@ const HeroSection = () => {
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-400">
                         {typewriterText}
                       </span>
-                      <span className="inline-block w-1 md:h-12 bg-cyan-400 ml-1 animate-pulse"></span>
+                      {/* <span className="inline-block w-1 md:h-12 bg-orange-500 ml-1 animate-pulse"></span> */}
                       {/* <div>With COSMOS-ITS</div> */}
                     </span>
                     <span className="md:hero-title-sub block md:text-lg sm:text-xl lg:text-2xl xl:text-3xl font-medium text-blue-200 leading-relaxed">
@@ -250,29 +250,7 @@ const HeroSection = () => {
                     {slides[currentSlide].description}
                   </p>
 
-                  {/* Features */}
-                  {/* <div
-                    className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8 lg:mb-10"
-                    variants={textVariants}
-                  >
-                    {slides[currentSlide].features.map((feature, index) => (
-                      <div
-                        key={feature}
-                        custom={index}
-                        variants={featureVariants}
-                        className="hero-feature bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20"
-                        whileHover={{
-                          scale: 1.05,
-                          backgroundColor: "rgba(255,255,255,0.2)",
-                          transition: { duration: 0.2 }
-                        }}
-                      >
-                        <span className="hero-feature-text text-white font-medium text-sm">
-                          {feature}
-                        </span>
-                      </div>
-                    ))}
-                  </div> */}
+                 
 
                   {/* CTA Buttons */}
                   <div
