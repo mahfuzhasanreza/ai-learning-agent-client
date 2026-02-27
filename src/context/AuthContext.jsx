@@ -69,7 +69,7 @@ export const AuthContextProvider = ({ children }) => {
 
     // Sign out
     const signOutUser = async () => {
-        authService.signOut();
+        await authService.signOut();
         setToken(null);
         setRefreshToken(null);
         setUser(null);

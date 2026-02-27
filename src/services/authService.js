@@ -176,11 +176,26 @@ export const isAuthenticated = () => {
 
 /**
  * Sign out the current user
+ * @returns {Promise<void>}
  */
-export const signOut = () => {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('user');
+export const signOut = async () => {
+  const refreshToken = getRefreshToken();
+
+  try {
+    if (refreshToken) {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+      });
+    }
+  } catch (error) {
+    console.error('Logout API error:', error);
+  } finally {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  }
 };
 
 /**
