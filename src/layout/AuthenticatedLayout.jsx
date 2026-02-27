@@ -44,7 +44,7 @@ const AuthenticatedLayout = () => {
   }, [location.pathname]);
 
   const navItems = [
-    { name: 'Home', href: '/', id: 'home', icon: FaHome },
+    { name: 'Home', href: '/dashboard', id: 'home', icon: FaHome },
     { name: 'Performance Tracking', href: '/performance-tracking', id: 'performance', icon: FaChartLine },
     { name: 'Study Plan', href: '/study-plan', id: 'plan', icon: FaCalendarAlt },
     { name: 'Roadmap', href: '/roadmap', id: 'roadmap', icon: FaRoute },
