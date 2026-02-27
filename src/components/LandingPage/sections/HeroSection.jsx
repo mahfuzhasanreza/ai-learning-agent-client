@@ -231,7 +231,7 @@ const HeroSection = () => {
                     <span className="md:hero-title-main block text-3xl md:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 leading-tight">
 
                       <span>Learn </span>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-400">
                         {typewriterText}
                       </span>
                       <span className="inline-block w-1 md:h-12 bg-cyan-400 ml-1 animate-pulse"></span>
@@ -340,72 +340,6 @@ const HeroSection = () => {
             </div>
           </div>
         </AnimatePresence>
-
-        {/* Navigation Arrows */}
-        {/* <button
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20 z-20"
-          onClick={prevSlide}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <FaArrowLeft />
-        </button>
-
-        <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20 z-20"
-          onClick={nextSlide}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <FaArrowRight />
-        </button> */}
-
-        {/* Slide Indicators */}
-        {/* <div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
-                  ? 'bg-white scale-125'
-                  : 'bg-white/40 hover:bg-white/60'
-                }`}
-              onClick={() => goToSlide(index)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-            />
-          ))}
-        </div> */}
-
-        {/* Scroll Indicator */}
-        {/* <div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <div
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <div
-              className="w-1 h-3 bg-white/60 rounded-full mt-2"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
-        </div> */}
       </div>
     </section>
   );
