@@ -1447,7 +1447,7 @@ const StudentDashboard = () => {
                     <div
                       key={course.course_id}
                       className={`mb-4 w-full rounded-lg transition-all ${selectedCourse?.course_id === course.course_id
-                        ? 'bg-orange-500 text-white shadow-lg'
+                        ? 'bg-orange-500 text-white '
                         : 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-800'
                         }`}
                     >
@@ -1767,7 +1767,7 @@ const StudentDashboard = () => {
                     {!showAddTopicQuiz && (
                       <button
                         onClick={() => setShowAddTopicQuiz(true)}
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium shadow-lg hover:shadow-xl text-white"
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium  text-white"
                       >
                         <Plus className="w-4 h-4" />
                         Quiz
@@ -2219,7 +2219,7 @@ const StudentDashboard = () => {
         {/* Quiz Info Modal - Shows before starting quiz */}
         {showQuizModal && generatedQuiz && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-gray-300">
+            <div className="bg-white rounded-lg  max-w-md w-full border border-gray-300">
               <div className="p-6">
                 <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-orange-50 rounded-full">
                   <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2261,7 +2261,7 @@ const StudentDashboard = () => {
                   </button>
                   <button
                     onClick={handleStartGeneratedQuiz}
-                    className="flex-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors"
                   >
                     Start Quiz
                   </button>
@@ -2304,7 +2304,7 @@ const StudentDashboard = () => {
         {/* Courses Modal */}
         {showCoursesModal && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-hidden flex flex-col">
               {/* Header */}
               <div className="p-4 sm:p-5 md:p-6 border-b border-gray-300">
                 <div className="flex justify-between items-center mb-3 sm:mb-4">
@@ -2557,7 +2557,7 @@ const StudentDashboard = () => {
         {/* Add Assessment Modal */}
         {showAddAssessmentModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full border border-gray-700">
+            <div className="bg-gray-800 rounded-lg max-w-lg w-full border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-white">Add Assessment</h3>
@@ -2672,7 +2672,7 @@ const StudentDashboard = () => {
                   <button
                     onClick={handleAddAssessmentSubmit}
                     disabled={addingAssessment}
-                    className="flex-1 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {addingAssessment ? (
                       <>
@@ -2692,7 +2692,7 @@ const StudentDashboard = () => {
         {/* Update Assessment Modal */}
         {showUpdateAssessmentModal && assessmentToUpdate && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full border border-gray-700">
+            <div className="bg-gray-800 rounded-lg max-w-lg w-full border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-white">Update Assessment</h3>
@@ -2802,7 +2802,7 @@ const StudentDashboard = () => {
                   <button
                     onClick={handleUpdateAssessmentSubmit}
                     disabled={updatingAssessment}
-                    className="flex-1 bg-gradient-to-r from-[#FF4B00] to-[#E04300] hover:from-[#E04300] hover:to-[#C03800] text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {updatingAssessment ? (
                       <>
@@ -2822,7 +2822,7 @@ const StudentDashboard = () => {
         {/* Delete Assessment Confirmation Modal */}
         {showDeleteAssessmentConfirm && assessmentToDelete && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+            <div className="bg-gray-800 rounded-lg max-w-md w-full border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
                   <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2880,7 +2880,7 @@ const StudentDashboard = () => {
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && courseToDelete && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-gray-700">
+            <div className="bg-gray-800 rounded-lg max-w-md w-full border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
                   <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2934,7 +2934,7 @@ const StudentDashboard = () => {
         {/* Success Notification */}
         {showSuccessNotification && (
           <div className="fixed bottom-4 left-4 z-50">
-            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg flex items-center gap-3 max-w-sm animate-bounce-in">
               <div className="flex-shrink-0 bg-white/20 rounded-full p-2">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -2957,7 +2957,7 @@ const StudentDashboard = () => {
         {/* Course Addition Success Notification */}
         {showAddSuccessNotification && (
           <div className="fixed bottom-4 left-4 z-50">
-            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg  flex items-center gap-3 max-w-sm animate-bounce-in">
               <div className="flex-shrink-0 bg-white/20 rounded-full p-2">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -2980,7 +2980,7 @@ const StudentDashboard = () => {
         {/* Course Addition Failure Notification */}
         {showAddFailureNotification && (
           <div className="fixed bottom-4 left-4 z-50">
-            <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+            <div className="bg-red-600 text-white px-6 py-4 rounded-lg  flex items-center gap-3 max-w-sm animate-bounce-in">
               <div className="flex-shrink-0 bg-white/20 rounded-full p-2">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -3003,7 +3003,7 @@ const StudentDashboard = () => {
         {/* Count Update Success Notification */}
         {showCountUpdateSuccess && (
           <div className="fixed bottom-4 left-4 z-50">
-            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm animate-bounce-in">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg flex items-center gap-3 max-w-sm animate-bounce-in">
               <div className="flex-shrink-0 bg-white/20 rounded-full p-2">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

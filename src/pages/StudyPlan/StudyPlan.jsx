@@ -602,7 +602,7 @@ const StudyPlan = () => {
     const weeks = [];
     for (let i = 0; i < calendarDays.length; i += 7) {
       weeks.push(
-        <div key={`week-${i}`} className="grid grid-cols-7 gap-1">
+        <div key={`week-${i}`} className="grid grid-cols-7 gap-1 mb-1">
           {calendarDays.slice(i, i + 7)}
         </div>
       );
@@ -617,7 +617,7 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-300 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-300 ">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold capitalize text-gray-800">
               Add {addType === 'ct' ? 'Class Test' : addType}
@@ -687,7 +687,7 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 ">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-800">
               Edit {taskToEdit.type === 'CT' ? 'Class Test' : taskToEdit.type}
@@ -745,7 +745,7 @@ const StudyPlan = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md border border-gray-300 ">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
               <Trash2 className="w-6 h-6 text-red-500" />
@@ -785,7 +785,7 @@ const StudyPlan = () => {
   return (
     
     <div className="">
-       <div className="mx-auto p-15 pt-14 min-h-screen bg-white">
+       <div className="mx-auto p-15 pt-14 min-h-screen">
      
       {/* Header */}
       <div className="mb-5 mt-20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 ">
@@ -842,7 +842,7 @@ const StudyPlan = () => {
             </button>
             
             {showAddDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg  z-10">
                 <button
                   onClick={() => { setAddType('task'); setShowAddModal(true); setShowAddDropdown(false); }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-800"
@@ -967,7 +967,7 @@ const StudyPlan = () => {
                   <p className="text-gray-600 mt-4">Loading events...</p>
                 </div>
               ) : filteredTasks.map(task => (
-              <div key={task.id} className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-lg hover:border-orange-500 transition-all">
+              <div key={task.id} className="bg-white rounded-lg border border-gray-300 p-4  hover:border-orange-500 transition-all">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     {task.type === 'Task' && <BookOpen className="w-5 h-5 text-orange-500" />}
@@ -1088,7 +1088,7 @@ const StudyPlan = () => {
       {/* Success Message Toast */}
       {successMessage && (
         <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
-          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-green-500">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg  flex items-center gap-3 border border-green-500">
             <CheckCircle className="w-5 h-5" />
             <span className="font-medium">{successMessage}</span>
           </div>
@@ -1098,7 +1098,7 @@ const StudyPlan = () => {
       {/* Error Message Toast */}
       {errorMessage && (
         <div className="fixed bottom-6 left-6 z-50 animate-slide-up">
-          <div className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 border border-red-500">
+          <div className="bg-red-600 text-white px-6 py-3 rounded-lg  flex items-center gap-3 border border-red-500">
             <X className="w-5 h-5" />
             <span className="font-medium">{errorMessage}</span>
           </div>
