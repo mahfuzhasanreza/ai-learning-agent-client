@@ -387,20 +387,6 @@ const StudentDashboard = () => {
 
     setAddingCourse(true);
     try {
-      // First, verify the course still exists by fetching fresh course list
-      console.log('=== VERIFYING COURSE EXISTS ===');
-      const freshCourses = await ApiService.getCourses();
-      const courseExists = freshCourses.some(c => c.id === selectedCourseToAdd.id);
-      
-      if (!courseExists) {
-        console.warn('Course not found in fresh course list!');
-        console.log('Looking for ID:', selectedCourseToAdd.id);
-        console.log('Available IDs:', freshCourses.map(c => c.id));
-        throw new Error(`This course is no longer available. It may have been removed. Please refresh the course list and try again.`);
-      }
-      console.log('Course verified, proceeding with enrollment');
-      console.log('===============================');
-
       const enrollmentData = {
         student_id: STUDENT_ID,
         course_id: String(selectedCourseToAdd.id),
@@ -419,7 +405,11 @@ const StudentDashboard = () => {
       console.log('Faculty:', enrollmentData.faculty);
       console.log('================================');
 
-      await ApiService.addStudentCourse(enrollmentData);
+      const result = await ApiService.addStudentCourse(enrollmentData);
+
+      console.log('=== ENROLLMENT SUCCESS ===');
+      console.log('Response:', result);
+      console.log('==========================');
 
       // Reset form and close modal
       setAddCourseForm({
@@ -447,36 +437,23 @@ const StudentDashboard = () => {
       console.error('Selected course:', selectedCourseToAdd);
       console.error('===========================');
 
-      // Extract error message
       let errorMessage = 'Failed to add course. Please try again.';
 
       if (error.message) {
-        if (error.message.includes('no longer available')) {
-          // Custom message for courses that don't exist anymore
-          errorMessage = error.message;
-        } else if (error.message.includes('already enrolled')) {
+        if (error.message.includes('already enrolled') || error.message.includes('already exists')) {
           errorMessage = 'You are already enrolled in this course for this trimester.';
         } else if (error.message.includes('not found')) {
-          errorMessage = `The course "${selectedCourseToAdd?.code}" (${selectedCourseToAdd?.title}) is not available. It may have been removed from the system. Please refresh the course list and select a different course.`;
+          errorMessage = `The course "${selectedCourseToAdd?.code}" is not available. Please refresh the course list and try again.`;
         } else {
           errorMessage = error.message;
         }
       }
 
-      // Show failure notification
       setAddFailureMessage(errorMessage);
       setShowAddFailureNotification(true);
       setTimeout(() => {
         setShowAddFailureNotification(false);
-      }, 7000); // Show error for 7 seconds to give user time to read
-
-      // Auto-refresh course list if it's a "not found" error
-      if (error.message && error.message.includes('not found')) {
-        console.log('Auto-refreshing course list due to course not found error...');
-        setTimeout(() => {
-          fetchCourses();
-        }, 2000);
-      }
+      }, 7000);
 
     } finally {
       setAddingCourse(false);
